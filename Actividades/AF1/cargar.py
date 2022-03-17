@@ -1,5 +1,5 @@
+import os
 from collections import namedtuple
-from unicodedata import name
 
 Plato = namedtuple("Plato_type", ["nombre", "categoria", "tiempo", "precio", "ingredientes"])
 
@@ -7,7 +7,7 @@ Plato = namedtuple("Plato_type", ["nombre", "categoria", "tiempo", "precio", "in
 # los datos vienen en este orden el el .csv:
 # nombre,categoria,tiempo_preparacion,precio,ingrediente_1,...,ingrediente_n
 def cargar_platos(ruta_archivo: str) -> list:
-    with open("platos.csv", 'r') as file:
+    with open(ruta_archivo, 'r') as file:
         return_list = []
         platos = file.readlines()
         for p in platos:
@@ -21,7 +21,7 @@ def cargar_platos(ruta_archivo: str) -> list:
 # los datos vienen en este orden el el .csv:
 # nombre,cantidad
 def cargar_ingredientes(ruta_archivo: str) -> dict:
-    with open("ingredientes.csv", 'r') as file:
+    with open(ruta_archivo, 'r') as file:
         ingredientes = file.readlines()
         ll = []
         for i in ingredientes:
