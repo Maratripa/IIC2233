@@ -17,15 +17,34 @@ en cierta línea del código o comentar una función>
 
 ### Cosas implementadas y no implementadas :white_check_mark: :x:
 
-* <Nombre item pauta<sub>1</sub>>: Hecha completa
-* <Nombre item pauta<sub>2</sub>>: Me faltó hacer <insertar qué cosa faltó>
-    * <Nombre subitem pauta<sub>2.1</sub>>: Hecha completa 
-    * <Nombre subitem pauta<sub>2.2</sub>>: Me faltó hacer <insertar qué cosa faltó>
-    * ...
-* <Nombre item pauta<sub>3</sub>>: Me faltó hacer <insertar qué cosa faltó>
-* ...
-* <Nombre item pauta<sub>n</sub>>: Me faltó hacer <insertar qué cosa faltó>
+Explicación: mantén el emoji correspondiente, de manera honesta, para cada item. Si quieres, también puedes agregarlos a los títulos:
+- ❌ si **NO** completaste lo pedido
+- ✅ si completaste **correctamente** lo pedido
+- 🟠 si el item está **incompleto** o tiene algunos errores
 
+**⚠️⚠️NO BASTA CON SOLO PONER EL COLOR DE LO IMPLEMENTADO**,
+SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
+⚠️⚠️
+#### Menú de Inicio (18pts) (18%)
+##### ❌✅🟠 Requisitos <explicacion\>
+##### ❌✅🟠 Iniciar sesión <explicacion\>
+##### ❌✅🟠 Ingresar como administrador <explicacion\>
+##### ❌✅🟠 Registrar usuario <explicacion\>
+##### ❌✅🟠 Salir <explicacion\>
+#### Flujo del programa (31pts) (31%) 
+##### ❌✅🟠 Menú de Usuario <explicacion\>
+##### ❌✅🟠 Menú de Administrador <explicacion\>
+#### Entidades 15pts (15%)
+##### ❌✅🟠 Usuarios <explicacion\>
+##### ❌✅🟠 Encomiendas <explicacion\>
+##### ❌✅🟠 Reclamos <explicacion\>
+#### Archivos: 15 pts (15%)
+##### ❌✅🟠 Manejo de Archivos <explicacion\>
+#### General: 21 pts (21%)
+##### ❌✅🟠 Menús <explicacion\>
+##### ❌✅🟠 Parámetros <explicacion\>
+##### ❌✅🟠 Módulos <explicacion\>
+##### ❌✅🟠 PEP8 <explicacion\>
 ## Ejecución :computer:
 El módulo principal de la tarea a ejecutar es  ```archivo.py```. Además se debe crear los siguientes archivos y directorios adicionales:
 1. ```archivo.ext``` en ```ubicación```
@@ -95,4 +114,4 @@ Para realizar mi tarea saqué código de:
 
 
 ## Descuentos
-La guía de descuentos se encuentra [link](https://github.com/IIC2233/syllabus/blob/master/Tareas/Descuentos.md).
+La guía de descuentos se encuentra [link](https://github.com/IIC2233/syllabus/blob/main/Tareas/Descuentos.md).
