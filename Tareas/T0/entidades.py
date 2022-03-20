@@ -1,7 +1,7 @@
 import parametros
 import archivos
 import funciones
-from datetime import date
+from datetime import datetime
 
 
 class UsuarioRegistrado:
@@ -36,11 +36,6 @@ class UsuarioRegistrado:
             0: "",
             1: "\nDebes ingresar un numero",
             2: "\nPor favor ingresa una opcion valida",
-            3: "\nNombre del articulo no cumple con los requisitos",
-            4: "\nDestinatario no valido",
-            5: "\nValor no valido",
-            6: f"\nPeso mayor que el maximo permitido ({parametros.MAX_PESO})",
-            7: "\nDestino no valido",
             100: "\nEncomienda ingresada exitosamente!",
         }
 
@@ -152,5 +147,5 @@ class Encomienda:
         self.destinatario = destinatario
         self.peso = peso
         self.destino = destino
-        self.fecha = date.today().strftime("%Y/%m/%d")
+        self.fecha = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         self.estado = estado
