@@ -37,3 +37,7 @@ def registrar_usuario(username, password):
         file.write(f"{user.username},{user.password}\n")
 
     return user, 0
+
+
+def guardar_encomienda(encomienda):
+    pass

@@ -1,10 +1,18 @@
 import archivos
 import parametros
+import funciones
 
 
 def ingresar_usuario():
     username = input("Usuario: ")
+
+    if not username:
+        return menu_inicio(6)
+
     passw = input("Contrasena: ")
+
+    if not passw:
+        return menu_inicio(7)
 
     user, errn = archivos.buscar_usuario(username, passw)
 
@@ -19,8 +27,15 @@ def ingresar_usuario():
 def registrar_usuario():
     username = input(
         f"Usuario (min. {parametros.MIN_CARACTERES} caracteres): ")
+
+    if not username or not username.isalpha():
+        return menu_inicio(6)
+
     passw = input(
         f"Contrasena (min. {parametros.LARGO_CONTRASENA} caracteres): ")
+
+    if not passw or not passw.isalnum():
+        return menu_inicio(7)
 
     user, errn = archivos.registrar_usuario(username, passw)
 
@@ -77,10 +92,24 @@ def menu_inicio(errn=0):
 
 
 def menu_administrador(errn=0):
-    contrasena = input("\nContrasena administrador: ")
+    def pedir_contrasena():
+        contrasena = input("\nContrasena administrador: ")
 
-    if contrasena != parametros.CONTRASENA_ADMIN:
-        return menu_inicio(4)
+        if contrasena != parametros.CONTRASENA_ADMIN:
+            print("Contrasena incorrecta, seleccione una opcion:\n")
+            print("[1] Repetir contrasena")
+            print("[2] Volver al menu de inicio\n")
+
+            opcion_tmp = funciones.manejo_opciones(2)
+
+            if opcion_tmp == 1:
+                return pedir_contrasena()
+            elif opcion_tmp == 2:
+                return menu_inicio()
+
+        return
+
+    pedir_contrasena()
 
     errores = {
         0: "",
