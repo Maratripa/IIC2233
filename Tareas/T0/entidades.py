@@ -47,24 +47,18 @@ class UsuarioRegistrado:
 
         if opcion_usuario.isnumeric():
             opcion_usuario = int(opcion_usuario)
-
         else:
             return self.menu_usuario(1)
 
         if opcion_usuario == 1:
             pass
-
         elif opcion_usuario == 2:
             pass
-
         elif opcion_usuario == 3:
             pass
-
         elif opcion_usuario == 4:
             pass
-
         elif opcion_usuario == 5:
             return
-
         else:
             return self.menu_usuario(2)

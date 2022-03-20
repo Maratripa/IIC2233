@@ -58,28 +58,58 @@ def menu_inicio(errn=0):
 
     if opcion.isnumeric():
         opcion = int(opcion)
-
     else:
         return menu_inicio(1)
 
     if opcion == 1:
         ingresar_usuario()
         return menu_inicio()
-
     elif opcion == 2:
         registrar_usuario()
         return menu_inicio()
-
     elif opcion == 3:
-        print("Iniciaste sesion como administrador!")
+        menu_administrador()
         return menu_inicio()
-
     elif opcion == 4:
-        print("\nSaliste del programa!")
         return
-
     else:
         return menu_inicio(2)
+
+
+def menu_administrador(errn=0):
+    contrasena = input("\nContrasena administrador: ")
+
+    if contrasena != parametros.CONTRASENA_ADMIN:
+        return menu_inicio(4)
+
+    errores = {
+        0: "",
+        1: "\nDebes ingresar un numero",
+        2: "\nPor favor ingresa una opcion valida",
+    }
+
+    print("\n** Menu de administrador **\n")
+    print("[1] Actualizar encomiendas")
+    print("[2] Revisar reclamos")
+    print("[3] Cerrar sesion")
+
+    print(errores[errn])
+
+    opcion = input("Ingrese la opcion elegida: ")
+
+    if opcion.isnumeric():
+        opcion = int(opcion)
+    else:
+        return menu_administrador(1)
+
+    if opcion == 1:
+        pass
+    elif opcion == 2:
+        pass
+    elif opcion == 3:
+        return
+    else:
+        return menu_administrador(2)
 
 
 if __name__ == "__main__":
