@@ -17,4 +17,4 @@ def buscar_usuario(username, password):
     if password != users_dict[username]:
         return None, 2
 
-    return entidades.UsuarioRegistrado(username), 0
+    return entidades.UsuarioRegistrado(username, password), 0

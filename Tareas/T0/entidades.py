@@ -3,9 +3,11 @@ import parametros
 
 class UsuarioRegistrado:
 
-    def __init__(self, username):
+    def __init__(self, username, password):
         self.__username = None
+        self.__password = None
         self.username = username
+        self.password = password
 
     @property
     def username(self):
@@ -15,6 +17,15 @@ class UsuarioRegistrado:
     def username(self, value):
         if len(value) >= parametros.MIN_CARACTERES:
             self.__username = value
+
+    @property
+    def password(self):
+        return self.__password
+
+    @password.setter
+    def password(self, value):
+        if len(value) >= parametros.LARGO_CONTRASENA:
+            self.__password = value
 
     def menu_usuario(self, errn=0):
         errores = {
