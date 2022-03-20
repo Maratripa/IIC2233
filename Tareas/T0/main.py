@@ -1,7 +1,8 @@
 import archivos
+import parametros
 
 
-def log_user():
+def ingresar_usuario():
     username = input("Usuario: ")
     passw = input("Contrasena: ")
 
@@ -9,9 +10,26 @@ def log_user():
 
     if errn == 1:
         return menu_inicio(3)
-
     elif errn == 2:
         return menu_inicio(4)
+
+    user.menu_usuario()
+
+
+def registrar_usuario():
+    username = input(
+        f"Usuario (min. {parametros.MIN_CARACTERES} caracteres): ")
+    passw = input(
+        f"Contrasena (min. {parametros.LARGO_CONTRASENA} caracteres): ")
+
+    user, errn = archivos.registrar_usuario(username, passw)
+
+    if errn == 1:
+        return menu_inicio(5)
+    elif errn == 2:
+        return menu_inicio(6)
+    elif errn == 3:
+        return menu_inicio(7)
 
     user.menu_usuario()
 
@@ -23,6 +41,9 @@ def menu_inicio(errn=0):
         2: "\nPor favor ingresa una opcion valida",
         3: "\nUsuario no registrado",
         4: "\nContrasena incorrecta",
+        5: "\nUsuario ya registrado",
+        6: "\nNombre de usuario no cumple con los requisitos",
+        7: "\nContrasena no cumple con los requisitos",
     }
 
     print("\n** Menu de Inicio **\n")
@@ -42,11 +63,11 @@ def menu_inicio(errn=0):
         return menu_inicio(1)
 
     if opcion == 1:
-        log_user()
+        ingresar_usuario()
         return menu_inicio()
 
     elif opcion == 2:
-        print("Registraste a un usuario!")
+        registrar_usuario()
         return menu_inicio()
 
     elif opcion == 3:

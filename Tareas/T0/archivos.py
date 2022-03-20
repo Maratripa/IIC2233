@@ -18,3 +18,22 @@ def buscar_usuario(username, password):
         return None, 2
 
     return entidades.UsuarioRegistrado(username, password), 0
+
+
+def registrar_usuario(username, password):
+    user_tmp, no = buscar_usuario(username, password)
+
+    if no != 1:
+        return None, 1
+
+    user = entidades.UsuarioRegistrado(username, password)
+
+    if not user.username:
+        return None, 2
+    elif not user.password:
+        return None, 3
+
+    with open("usuarios.csv", 'a') as file:
+        file.write(f"{user.username},{user.password}\n")
+
+    return user, 0
