@@ -84,15 +84,15 @@ def menu_inicio(errn=0):
         registrar_usuario()
         return menu_inicio()
     elif opcion == 3:
-        menu_administrador()
+        ingresar_admin()
         return menu_inicio()
     elif opcion == 4:
-        return
+        exit()
     else:
         return menu_inicio(2)
 
 
-def menu_administrador(errn=0):
+def ingresar_admin(errn=0):
     def pedir_contrasena():
         contrasena = input("\nContrasena administrador: ")
 
@@ -112,7 +112,8 @@ def menu_administrador(errn=0):
 
     pedir_contrasena()
 
-    Admin.menu_administrador()
+    admin = Admin()
+    admin.menu_administrador()
 
 
 if __name__ == "__main__":

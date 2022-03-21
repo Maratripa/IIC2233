@@ -196,13 +196,38 @@ class Admin:
             return self.menu_administrador(1)
 
         if opcion == 1:
-            pass
+            self.actualizar_encomiendas()
         elif opcion == 2:
             pass
         elif opcion == 3:
             return
         else:
             return self.menu_administrador(2)
+
+    def actualizar_encomiendas(self):
+        encomiendas = archivos.buscar_encomiendas()
+
+        funciones.mostrar_encomiendas(encomiendas)
+
+        print(f"\n{len(encomiendas) + 1} Volver\n")
+
+        opcion = input("Ingrese la opcion elegida: ")
+
+        if not opcion or not opcion.isnumeric():
+            return self.actualizar_encomiendas()
+        else:
+            opcion = int(opcion)
+
+        if (opcion - 1) in range(len(encomiendas)):
+            encomienda = encomiendas[opcion - 1]
+            encomienda.estado = funciones.cambiar_estado(encomienda)
+        elif opcion == len(encomiendas) + 1:
+            return self.menu_administrador()
+        else:
+            return self.actualizar_encomiendas()
+
+        archivos.escribir_encomiendas(encomiendas)
+        return self.menu_administrador()
 
 
 class Encomienda:

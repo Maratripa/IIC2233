@@ -47,8 +47,8 @@ def guardar_encomienda(e: entidades.Encomienda):
     return
 
 
-def buscar_encomiendas(username: str) -> list:
-    encomiendas_usuario = []
+def buscar_encomiendas(username: str = "") -> list:
+    encomiendas_devueltas = []
 
     with open("encomiendas.csv", 'r') as file:
         encomiendas = file.readlines()
@@ -57,9 +57,11 @@ def buscar_encomiendas(username: str) -> list:
             actual = e.strip().split(',')
 
             if actual[1] == username:
-                encomiendas_usuario.append(entidades.Encomienda(*actual))
+                encomiendas_devueltas.append(entidades.Encomienda(*actual))
+            elif username == "":
+                encomiendas_devueltas.append(entidades.Encomienda(*actual))
 
-    return encomiendas_usuario
+    return encomiendas_devueltas
 
 
 def guardar_reclamo(r: entidades.Reclamo):
@@ -67,3 +69,11 @@ def guardar_reclamo(r: entidades.Reclamo):
         file.write(f"{r.usuario},{r.titulo},{r.descripcion}\n")
 
     return
+
+
+def escribir_encomiendas(datos: list):
+    with open("encomiendas.csv", 'w', encoding="utf-8") as file:
+        file.write("nombre_articulo,receptor,peso,destino,fecha,estado\n")
+        for e in datos:
+            linea = f"{e.nombre},{e.destinatario},{e.peso},{e.destino},{e.fecha},{e.estado}\n"
+            file.write(linea)
