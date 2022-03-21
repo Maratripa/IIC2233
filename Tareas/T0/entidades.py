@@ -42,7 +42,7 @@ class UsuarioRegistrado:
         print("\n** Menu de Usuario **\n")
         print("[1] Hacer encomienda")
         print("[2] Revisar estado de encomiendas realizadas")
-        print("[3] Realizar reclamos")
+        print("[3] Realizar reclamo")
         print("[4] Ver el estado de los pedidos personales")
         print("[5] Cerrar sesion")
 
@@ -60,7 +60,7 @@ class UsuarioRegistrado:
         elif opcion_usuario == 2:
             self.revisar_encomiendas()
         elif opcion_usuario == 3:
-            pass
+            self.realizar_reclamo()
         elif opcion_usuario == 4:
             pass
         elif opcion_usuario == 5:
@@ -127,18 +127,48 @@ class UsuarioRegistrado:
         return self.menu_usuario(100)
 
     def revisar_encomiendas(self):
-        print("* Encomiendas registradas *\n")
-        print("|\tNombre articulo\t|\tReceptor\t|\tPeso\t|\tDestino\t|\tEstado\t|")
 
-        for i in range(len(self.encomiendas)):
-            actual = self.encomiendas[i]
-            print(
-                f"|\t{actual.nombre}\t|\t{actual.destinatario}\t\t|\t{actual.peso}\t|\t{actual.destino}\t|\t{actual.estado}\t|")
+        funciones.mostrar_encomiendas(self.encomiendas)
 
         opcion = input("Apriete una tecla para volver: ")
 
         return self.menu_usuario()
+    
+    def realizar_reclamo(self):
+        def pedir_titulo():
+            titulo = input("Titulo del reclamo: ")
 
+            if not titulo or ',' in titulo:
+                funciones.manejo_errores(pedir_titulo, self.menu_usuario, "")
+            
+            return titulo
+        
+        titulo = pedir_titulo()
+
+        def pedir_descripcion():
+            desc = input("Descripcion del reclamo: ")
+
+            if not desc:
+                funciones.manejo_errores(pedir_descripcion, self.menu_usuario, "")
+            
+            return desc
+        
+        descripcion = pedir_descripcion()
+
+        reclamo = Reclamo(self.username, titulo, descripcion)
+
+        archivos.guardar_reclamo(reclamo)
+
+        return self.menu_usuario()
+    
+    def ver_estado(self):
+        encontradas = archivos.buscar_encomiendas(self.username)
+
+        funciones.mostrar_encomiendas(encontradas)
+
+        opcion = input("Apriete una tecla para volver: ")
+
+        return self.menu_usuario()
 
 class Encomienda:
 
@@ -149,3 +179,9 @@ class Encomienda:
         self.destino = destino
         self.fecha = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         self.estado = estado
+
+class Reclamo:
+    def __init__(self, usuario, titulo, descripcion):
+        self.usuario = usuario
+        self.titulo = titulo
+        self.descripcion = descripcion

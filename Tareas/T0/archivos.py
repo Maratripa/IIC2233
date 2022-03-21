@@ -41,3 +41,9 @@ def registrar_usuario(username, password):
 
 def guardar_encomienda(encomienda):
     pass
+
+def buscar_encomiendas(username) -> list:
+    pass
+
+def guardar_reclamo(reclamo):
+    pass

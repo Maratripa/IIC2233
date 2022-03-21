@@ -1,3 +1,6 @@
+from typing import List
+
+
 def manejo_errores(callback, previous, mensaje=""):
     print(mensaje)
     print("Por favor elija una opcion:")
@@ -25,3 +28,8 @@ def manejo_opciones(max_op, mensaje=""):
         return manejo_opciones(max_op, "Opcion no disponible")
 
     return opcion
+
+def mostrar_encomiendas(encomiendas: list) -> None:
+    for i in range(len(encomiendas)):
+        act = encomiendas[i]
+        print(f"{act.nombre}")
