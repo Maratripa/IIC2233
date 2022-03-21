@@ -62,7 +62,7 @@ class UsuarioRegistrado:
         elif opcion_usuario == 3:
             self.realizar_reclamo()
         elif opcion_usuario == 4:
-            pass
+            self.ver_estado()
         elif opcion_usuario == 5:
             return
         else:
