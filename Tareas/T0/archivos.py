@@ -1,7 +1,7 @@
 import entidades
 
 
-def buscar_usuario(username, password):
+def buscar_usuario(username: str, password: str):
     users_dict = {}
 
     with open("usuarios.csv", 'r') as file:
@@ -20,7 +20,7 @@ def buscar_usuario(username, password):
     return entidades.UsuarioRegistrado(username, password), 0
 
 
-def registrar_usuario(username, password):
+def registrar_usuario(username: str, password: str):
     user_tmp, no = buscar_usuario(username, password)
 
     if no != 1:
@@ -33,17 +33,37 @@ def registrar_usuario(username, password):
     elif not user.password:
         return None, 3
 
-    with open("usuarios.csv", 'a') as file:
+    with open("usuarios.csv", 'a', encoding="utf-8") as file:
         file.write(f"{user.username},{user.password}\n")
 
     return user, 0
 
 
-def guardar_encomienda(encomienda):
-    pass
+def guardar_encomienda(e: entidades.Encomienda):
+    with open("encomiendas.csv", 'a', encoding="utf-8") as file:
+        file.write(
+            f"{e.nombre},{e.destinatario},{e.peso},{e.destino},{e.fecha},{e.estado}\n")
 
-def buscar_encomiendas(username) -> list:
-    pass
+    return
 
-def guardar_reclamo(reclamo):
-    pass
+
+def buscar_encomiendas(username: str) -> list:
+    encomiendas_usuario = []
+
+    with open("encomiendas.csv", 'r') as file:
+        encomiendas = file.readlines()
+
+        for e in encomiendas[1:]:
+            actual = e.strip().split(',')
+
+            if actual[1] == username:
+                encomiendas_usuario.append(entidades.Encomienda(*actual))
+
+    return encomiendas_usuario
+
+
+def guardar_reclamo(r: entidades.Reclamo):
+    with open("reclamos.csv", 'a', encoding="utf-8") as file:
+        file.write(f"{r.usuario},{r.titulo},{r.descripcion}\n")
+
+    return

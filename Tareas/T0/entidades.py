@@ -133,26 +133,27 @@ class UsuarioRegistrado:
         opcion = input("Apriete una tecla para volver: ")
 
         return self.menu_usuario()
-    
+
     def realizar_reclamo(self):
         def pedir_titulo():
             titulo = input("Titulo del reclamo: ")
 
             if not titulo or ',' in titulo:
                 funciones.manejo_errores(pedir_titulo, self.menu_usuario, "")
-            
+
             return titulo
-        
+
         titulo = pedir_titulo()
 
         def pedir_descripcion():
             desc = input("Descripcion del reclamo: ")
 
             if not desc:
-                funciones.manejo_errores(pedir_descripcion, self.menu_usuario, "")
-            
+                funciones.manejo_errores(
+                    pedir_descripcion, self.menu_usuario, "")
+
             return desc
-        
+
         descripcion = pedir_descripcion()
 
         reclamo = Reclamo(self.username, titulo, descripcion)
@@ -160,7 +161,7 @@ class UsuarioRegistrado:
         archivos.guardar_reclamo(reclamo)
 
         return self.menu_usuario()
-    
+
     def ver_estado(self):
         encontradas = archivos.buscar_encomiendas(self.username)
 
@@ -170,15 +171,22 @@ class UsuarioRegistrado:
 
         return self.menu_usuario()
 
+
 class Encomienda:
 
-    def __init__(self, nombre, destinatario, peso, destino, estado="Emitida"):
+    def __init__(self, nombre, destinatario, peso, destino, fecha=None, estado="Emitida"):
         self.nombre = nombre
         self.destinatario = destinatario
         self.peso = peso
         self.destino = destino
-        self.fecha = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+
+        if not fecha:
+            self.fecha = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+        else:
+            self.fecha = fecha
+
         self.estado = estado
+
 
 class Reclamo:
     def __init__(self, usuario, titulo, descripcion):
