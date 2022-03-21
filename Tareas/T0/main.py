@@ -1,6 +1,7 @@
 import archivos
 import parametros
 import funciones
+from entidades import Admin
 
 
 def ingresar_usuario():
@@ -111,34 +112,7 @@ def menu_administrador(errn=0):
 
     pedir_contrasena()
 
-    errores = {
-        0: "",
-        1: "\nDebes ingresar un numero",
-        2: "\nPor favor ingresa una opcion valida",
-    }
-
-    print("\n** Menu de administrador **\n")
-    print("[1] Actualizar encomiendas")
-    print("[2] Revisar reclamos")
-    print("[3] Cerrar sesion")
-
-    print(errores[errn])
-
-    opcion = input("Ingrese la opcion elegida: ")
-
-    if opcion.isnumeric():
-        opcion = int(opcion)
-    else:
-        return menu_administrador(1)
-
-    if opcion == 1:
-        pass
-    elif opcion == 2:
-        pass
-    elif opcion == 3:
-        return
-    else:
-        return menu_administrador(2)
+    Admin.menu_administrador()
 
 
 if __name__ == "__main__":

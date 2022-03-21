@@ -172,6 +172,39 @@ class UsuarioRegistrado:
         return self.menu_usuario()
 
 
+class Admin:
+
+    def menu_administrador(self, errn=0):
+        errores = {
+            0: "",
+            1: "\nDebes ingresar un numero",
+            2: "\nPor favor ingresa una opcion valida",
+        }
+
+        print("\n** Menu de administrador **\n")
+        print("[1] Actualizar encomiendas")
+        print("[2] Revisar reclamos")
+        print("[3] Cerrar sesion")
+
+        print(errores[errn])
+
+        opcion = input("Ingrese la opcion elegida: ")
+
+        if opcion.isnumeric():
+            opcion = int(opcion)
+        else:
+            return self.menu_administrador(1)
+
+        if opcion == 1:
+            pass
+        elif opcion == 2:
+            pass
+        elif opcion == 3:
+            return
+        else:
+            return self.menu_administrador(2)
+
+
 class Encomienda:
 
     def __init__(self, nombre, destinatario, peso, destino, fecha=None, estado="Emitida"):
