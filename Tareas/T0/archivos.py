@@ -1,10 +1,17 @@
+import os
 import entidades
 
 
+# Buscar usuario en csv/usuarios.csv
 def buscar_usuario(username: str, password: str):
+    #
+    # Retornar None, 1 en caso de no encontrar un usuario con el username dado
+    # Retornar None, 2 en caso de que la contraseña sea incorrecta
+    #
+
     users_dict = {}
 
-    with open("usuarios.csv", 'r', encoding="utf-8") as file:
+    with open(os.path.join("csv", "usuarios.csv"), 'r', encoding="utf-8") as file:
         users = file.readlines()
 
         for user in users[1:]:
@@ -20,7 +27,14 @@ def buscar_usuario(username: str, password: str):
     return entidades.UsuarioRegistrado(username, password), 0
 
 
+# Agregar usuario nuevo a csv/usuarios.csv
 def registrar_usuario(username: str, password: str):
+    #
+    # Verificar datos y retornar None, 1 si ya hay un usuario con el username dado
+    # Retornar None, 2 si el usuario no cumple con los requisitos
+    # Retornar None, 3 si la contraseña no cumple con los requisitos
+    #
+
     user_tmp, no = buscar_usuario(username, password)
 
     if no != 1:
@@ -33,29 +47,33 @@ def registrar_usuario(username: str, password: str):
     elif not user.password:
         return None, 3
 
-    with open("usuarios.csv", 'a', encoding="utf-8") as file:
+    with open(os.path.join("csv", "usuarios.csv"), 'a', encoding="utf-8") as file:
         file.write(f"{user.username},{user.password}\n")
 
     return user, 0
 
 
+# Agrega encomienda al final de csv/encomiendas.csv
 def guardar_encomienda(e: entidades.Encomienda):
-    with open("encomiendas.csv", 'a', encoding="utf-8") as file:
+    with open(os.path.join("csv", "encomiendas.csv"), 'a', encoding="utf-8") as file:
         file.write(
             f"{e.nombre},{e.destinatario},{e.peso},{e.destino},{e.fecha},{e.estado}\n")
 
     return
 
 
+# Devolver lista con todas las encomiendas de un usuario dado
+# Devuelve todas las encomiendas por defecto
 def buscar_encomiendas(username: str = "") -> list:
     encomiendas_devueltas = []
 
-    with open("encomiendas.csv", 'r', encoding="utf-8") as file:
+    with open(os.path.join("csv", "encomiendas.csv"), 'r', encoding="utf-8") as file:
         encomiendas = file.readlines()
 
         for e in encomiendas[1:]:
             actual = e.strip().split(',')
 
+            # Filtrar encomiendas por usuario
             if actual[1] == username:
                 encomiendas_devueltas.append(entidades.Encomienda(*actual))
             elif username == "":
@@ -64,9 +82,10 @@ def buscar_encomiendas(username: str = "") -> list:
     return encomiendas_devueltas
 
 
+# Devolver lista con todos los reclamos de csv/reclamos.csv
 def buscar_reclamos() -> list:
     reclamos = []
-    with open("reclamos.csv", 'r', encoding="utf-8") as file:
+    with open(os.path.join("csv", "reclamos.csv"), 'r', encoding="utf-8") as file:
         lineas = file.readlines()
         for r in lineas[1:]:
             reclamo = r.strip().split(',', maxsplit=2)
@@ -76,16 +95,19 @@ def buscar_reclamos() -> list:
     return reclamos
 
 
+# Agregar reclamo al final de csv/reclamos.csv
 def guardar_reclamo(r: entidades.Reclamo):
-    with open("reclamos.csv", 'a', encoding="utf-8") as file:
+    with open(os.path.join("csv", "reclamos.csv"), 'a', encoding="utf-8") as file:
         file.write(f"{r.usuario},{r.titulo},{r.descripcion}\n")
 
     return
 
 
+# Sobreescribir archivo csv/encomiendas.csv dada una lista de encomiendas
 def escribir_encomiendas(datos: list):
-    with open("encomiendas.csv", 'w', encoding="utf-8") as file:
+    with open(os.path.join("csv", "encomiendas.csv"), 'w', encoding="utf-8") as file:
         file.write("nombre_articulo,receptor,peso,destino,fecha,estado\n")
+
         for e in datos:
             linea = f"{e.nombre},{e.destinatario},{e.peso},{e.destino},{e.fecha},{e.estado}\n"
             file.write(linea)

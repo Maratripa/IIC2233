@@ -4,6 +4,7 @@ import funciones
 from datetime import datetime
 
 
+# Clase de Usuario Registrado
 class UsuarioRegistrado:
 
     def __init__(self, username, password):
@@ -11,6 +12,7 @@ class UsuarioRegistrado:
         self.__password = None
         self.username = username
         self.password = password
+        # Manejo de encomiendas creadas en la sesión
         self.encomiendas = []
 
     @property
@@ -31,6 +33,7 @@ class UsuarioRegistrado:
         if len(value) >= parametros.LARGO_CONTRASENA:
             self.__password = value
 
+    # Mostrar el menú de usuario y redirigir a las funciones respectivas
     def menu_usuario(self, errn=0):
         errores = {
             0: "",
@@ -70,11 +73,17 @@ class UsuarioRegistrado:
         else:
             return self.menu_usuario(2)
 
+    # Crear nueva encomienda y guardarla si cumple con los requisitos
     def ingresar_encomienda(self):
+        #
+        # Esta función utiliza while-loops para repetir el input en caso de ser inválido
+        #
+
         funciones.clear_screen()
         print("** Ingreso de encomienda **\n")
 
         nombre_articulo = input("Ingresa el nombre del articulo (sin ','): ")
+
         while not nombre_articulo or ',' in nombre_articulo:
             funciones.print_error("\nNombre no valido\n")
 
@@ -87,7 +96,9 @@ class UsuarioRegistrado:
                 return self.menu_usuario()
 
         destinatario = input("Ingrese destinatario: ")
+        # Buscar usuario para saber si existe o no con el código de error
         user_tmp, no = archivos.buscar_usuario(destinatario, "")
+
         while not destinatario or no == 1:
             funciones.print_error("\nDestinatario no encontrado\n")
 
@@ -100,6 +111,11 @@ class UsuarioRegistrado:
                 return self.menu_usuario()
 
         def revisar_peso(peso):
+            # ---------------------------------------------------------------
+            # En esta función local se hace uso de try/except para manejar el
+            # caso donde el usuario ingrese un carácter no numérico
+            # ---------------------------------------------------------------
+
             p = peso
             try:
                 p = float(peso)
@@ -111,6 +127,7 @@ class UsuarioRegistrado:
                 return True
 
         peso = input("Ingrese el peso (kg): ")
+
         while revisar_peso(peso):
             funciones.print_error("\nPeso no valido\n")
 
@@ -124,6 +141,7 @@ class UsuarioRegistrado:
         peso = float(peso)
 
         destino = input("Ingrese el destino: ")
+
         while not destino or ',' in destino:
             funciones.print_error("\nDestino no valido\n")
 
@@ -136,11 +154,13 @@ class UsuarioRegistrado:
 
         encomienda = Encomienda(nombre_articulo, destinatario, peso, destino)
 
+        # Guardar encomienda en lista de encomiendas creadas en sesión y en el archivo
         archivos.guardar_encomienda(encomienda)
         self.encomiendas.append(encomienda)
 
         return self.menu_usuario(100)
 
+    # Mostrar las encomiendas creadas en sesión
     def revisar_encomiendas(self):
         funciones.clear_screen()
         funciones.mostrar_encomiendas(self.encomiendas)
@@ -188,13 +208,16 @@ class UsuarioRegistrado:
 
         funciones.mostrar_encomiendas(encontradas)
 
+        # Input para dejar la pantalla estática
         opcion = input("Apriete una tecla para volver: ")
 
         return self.menu_usuario()
 
 
+# Clase de Administrador
 class Admin:
 
+    # Mostrar el menú del administrador y derivar a las respectivas funciones
     def menu_administrador(self, errn=0):
         errores = {
             0: "",
@@ -227,6 +250,7 @@ class Admin:
         else:
             return self.menu_administrador(2)
 
+    # Muestra todas las encomiendas y actualiza el estado de la seleccionada
     def actualizar_encomiendas(self):
         funciones.clear_screen()
 
@@ -253,9 +277,11 @@ class Admin:
         else:
             return self.actualizar_encomiendas()
 
+        # Sobreescribir el archivo de encomiendas
         archivos.escribir_encomiendas(encomiendas)
         return self.menu_administrador()
 
+    # Mostrar títulos de los reclamos y la descripción del seleccionado
     def revisar_reclamos(self):
         funciones.clear_screen()
 
@@ -275,12 +301,14 @@ class Admin:
         else:
             opcion = int(opcion)
 
+        # Encontrar reclamo seleccionado y mostrar descripción
         if opcion in range(1, len(reclamos) + 1):
             funciones.clear_screen()
             print("* Reclamo *\n")
             print(f"-Titulo: {reclamos[opcion - 1].titulo}")
             print(f"-Descripcion: {reclamos[opcion -1].descripcion}\n")
 
+            # Input para dejar la pantalla estática
             espera = input("Apriete una tecla para volver: ")
             return self.revisar_reclamos()
         elif opcion == len(reclamos) + 1:
@@ -289,6 +317,7 @@ class Admin:
             return self.revisar_reclamos()
 
 
+# Clase de encomienda
 class Encomienda:
 
     def __init__(self, nombre, destinatario, peso, destino, fecha=None, estado="Emitida"):
@@ -297,6 +326,8 @@ class Encomienda:
         self.peso = float(peso)
         self.destino = destino
 
+        # Si es una encomienda previa, utilizar fecha guardada
+        # Si es una encomienda nueva, guardar fecha y tiempo de creación
         if not fecha:
             self.fecha = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         else:
@@ -305,6 +336,7 @@ class Encomienda:
         self.estado = estado
 
 
+# Clase de Reclamo
 class Reclamo:
     def __init__(self, usuario, titulo, descripcion):
         self.usuario = usuario

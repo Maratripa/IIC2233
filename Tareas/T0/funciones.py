@@ -1,6 +1,4 @@
-import os
-
-
+# Función para evitar repetición de prints()
 def print_error(mensaje=""):
     print(mensaje)
     print("Por favor elija una opcion:\n")
@@ -8,6 +6,7 @@ def print_error(mensaje=""):
     print("[2] Volver")
 
 
+# Función para manejar los errores al ingresar opciones
 def manejo_opciones(max_op, mensaje=""):
     print(mensaje)
     opcion = input("Ingrese la opcion elegida: ")
@@ -23,13 +22,17 @@ def manejo_opciones(max_op, mensaje=""):
     return opcion
 
 
+# Función de formato de las encomiendas
 def mostrar_encomiendas(encomiendas: list) -> None:
     print("  ~  |        Nombre articulo        |    Receptor    " +
           "|  Peso  |  Destino  |       Estado       |")
     print('-' * 97)
+
     for i in range(len(encomiendas)):
         act = encomiendas[i]
         s_inicial = f'[{i + 1}]'
+
+        # Se utiliza el formateo de strings para cortarlos si son muy largos y centrar todo
         print(
             f"{s_inicial:5.5s}|{act.nombre: ^31.31s}|{act.destinatario: ^16.16s}|" +
             f"{act.peso: ^8.1f}|{act.destino: ^11.11s}|{act.estado: ^20.20s}|")
@@ -37,6 +40,7 @@ def mostrar_encomiendas(encomiendas: list) -> None:
     print('-' * 97)
 
 
+# Función para el ciclo de estados de las encomiendas
 def cambiar_estado(encomienda):
     if encomienda.estado == "Emitida":
         return "Revisada por agencia"
@@ -50,8 +54,6 @@ def cambiar_estado(encomienda):
         return None
 
 
+# Función para limpiar pantalla y dejar el output más claro
 def clear_screen():
-    if os.name == 'nt':
-        _ = os.system('cls')
-    else:
-        _ = os.system('clear')
+    print('\n' * 2)

@@ -5,8 +5,12 @@ from entidades import Admin
 
 
 def ingresar_usuario():
-    funciones.clear_screen()
+    #
+    # Esta función ingresa al usuario y devuelve el menu del usuario ingresado,
+    # o en su defecto, el menu inicial.
+    #
 
+    funciones.clear_screen()
     print("** Iniciar sesion **\n")
 
     username = input("Usuario: ")
@@ -26,12 +30,55 @@ def ingresar_usuario():
     elif errn == 2:
         return menu_inicio(4)
 
-    user.menu_usuario()
+    return user.menu_usuario()
+
+
+def ingresar_admin(errn=0):
+    #
+    # Esta función ingresa al administrador y devuelve su respectivo menú,
+    # en caso de fallo devuelve el menu inicial.
+    #
+
+    funciones.clear_screen()
+    print("** Iniciar sesion administrador **")
+
+    def pedir_contrasena():
+        #
+        # Esta función local pide la contraseña hasta que se entregue la correcta o
+        # se vuelva al menu de inicial.
+        #
+
+        contrasena = input("\nContrasena administrador: ")
+
+        if contrasena != parametros.CONTRASENA_ADMIN:
+            funciones.clear_screen()
+            print("Contrasena incorrecta, seleccione una opcion:\n")
+            print("[1] Repetir contrasena")
+            print("[2] Volver al menu de inicio\n")
+
+            opcion_tmp = funciones.manejo_opciones(2)
+
+            if opcion_tmp == 1:
+                return pedir_contrasena()
+            elif opcion_tmp == 2:
+                return menu_inicio()
+
+        return
+
+    pedir_contrasena()
+
+    # Iniciar administrador con su menú
+    admin = Admin()
+    return admin.menu_administrador()
 
 
 def registrar_usuario():
-    funciones.clear_screen()
+    #
+    # Esta función se encarga de registrar un usuario y devolver su menú,
+    # o en su defecto, el menú inicial.
+    #
 
+    funciones.clear_screen()
     print("** Registro de usuario **\n")
 
     username = input(
@@ -55,10 +102,18 @@ def registrar_usuario():
     elif errn == 3:
         return menu_inicio(7)
 
-    user.menu_usuario()
+    return user.menu_usuario()
 
 
 def menu_inicio(errn=0):
+    #
+    # Esta función se encarga de mostrar el menú inicial y el error asociado
+    # (solo en caso que exista alguno).
+    #
+
+    if errn != 1000:
+        funciones.clear_screen()
+
     errores = {
         0: "",
         1: "\nDebes ingresar un numero",
@@ -68,9 +123,9 @@ def menu_inicio(errn=0):
         5: "\nUsuario ya registrado",
         6: "\nNombre de usuario no cumple con los requisitos",
         7: "\nContrasena no cumple con los requisitos",
+        1000: "",
     }
 
-    funciones.clear_screen()
     print("** Menu de Inicio **\n")
     print("[1] Iniciar sesion como usuario")
     print("[2] Registrarse como usuario")
@@ -97,37 +152,12 @@ def menu_inicio(errn=0):
         return menu_inicio()
     elif opcion == 4:
         funciones.clear_screen()
+        print("Gracias por utilizar DCCorreos de Chile\n")
         exit()
     else:
         return menu_inicio(2)
 
 
-def ingresar_admin(errn=0):
-    def pedir_contrasena():
-        contrasena = input("\nContrasena administrador: ")
-
-        if contrasena != parametros.CONTRASENA_ADMIN:
-            funciones.clear_screen()
-            print("Contrasena incorrecta, seleccione una opcion:\n")
-            print("[1] Repetir contrasena")
-            print("[2] Volver al menu de inicio\n")
-
-            opcion_tmp = funciones.manejo_opciones(2)
-
-            if opcion_tmp == 1:
-                return pedir_contrasena()
-            elif opcion_tmp == 2:
-                return menu_inicio()
-
-        return
-
-    funciones.clear_screen()
-    print("** Iniciar sesion administrador **")
-    pedir_contrasena()
-
-    admin = Admin()
-    admin.menu_administrador()
-
-
 if __name__ == "__main__":
-    menu_inicio()
+    print("\n*** Bienvenido a DCCorreos de Chile ***\n")
+    menu_inicio(1000)
