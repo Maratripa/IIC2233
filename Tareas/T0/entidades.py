@@ -107,7 +107,7 @@ class UsuarioRegistrado:
                     return True
                 else:
                     return False
-            except:
+            except ValueError:
                 return True
 
         peso = input("Ingrese el peso (kg): ")
