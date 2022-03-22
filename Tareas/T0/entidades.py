@@ -39,6 +39,7 @@ class UsuarioRegistrado:
             100: "\nEncomienda ingresada exitosamente!",
         }
 
+        funciones.clear_screen()
         print("\n** Menu de Usuario **\n")
         print("[1] Hacer encomienda")
         print("[2] Revisar estado de encomiendas realizadas")
@@ -69,55 +70,68 @@ class UsuarioRegistrado:
             return self.menu_usuario(2)
 
     def ingresar_encomienda(self):
-        def pedir_nombre():
-            nombre_articulo = input(
-                "Ingresa el nombre del articulo (sin ','): ")
+        funciones.clear_screen()
+        print("** Ingreso de encomienda **\n")
 
-            if not nombre_articulo or ',' in nombre_articulo:
-                funciones.manejo_errores(pedir_nombre, self.menu_usuario, "")
+        nombre_articulo = input("Ingresa el nombre del articulo (sin ','): ")
+        while not nombre_articulo or ',' in nombre_articulo:
+            funciones.print_error("\nNombre no valido\n")
 
-            return nombre_articulo
+            opcion = funciones.manejo_opciones(2)
 
-        nombre_articulo = pedir_nombre()
+            if opcion == 1:
+                nombre_articulo = input(
+                    "\nIngresa el nombre del articulo (sin ','): ")
+            elif opcion == 2:
+                return self.menu_usuario()
 
-        def pedir_destinatario():
+        destinatario = input("Ingrese destinatario: ")
+        user_tmp, no = archivos.buscar_usuario(destinatario, "")
+        while not destinatario or no == 1:
+            funciones.print_error("\nDestinatario no encontrado\n")
 
-            destinatario = input("Ingrese destinatario: ")
+            opcion = funciones.manejo_opciones(2)
 
-            user_tmp, no = archivos.buscar_usuario(destinatario, "")
+            if opcion == 1:
+                destinatario = input("\nIngrese destinatario: ")
+                user_tmp, no = archivos.buscar_usuario(destinatario, "")
+            elif opcion == 2:
+                return self.menu_usuario()
 
-            if not destinatario or no == 1:
-                funciones.manejo_errores(
-                    pedir_destinatario, self.menu_usuario, "")
+        def revisar_peso(peso):
+            p = peso
+            try:
+                p = int(peso)
+                if p > parametros.MAX_PESO:
+                    return True
+                else:
+                    return False
+            except:
+                return True
 
-            return destinatario
+        peso = input("Ingrese el peso: ")
+        while revisar_peso(peso):
+            funciones.print_error("\nPeso no valido\n")
 
-        destinatario = pedir_destinatario()
+            opcion = funciones.manejo_opciones(2)
 
-        def pedir_peso():
-            peso = input("Ingrese el peso: ")
+            if opcion == 1:
+                peso = input("\nIngrese el peso: ")
+            elif opcion == 2:
+                return self.menu_usuario()
 
-            if not peso or not peso.isnumeric():
-                funciones.manejo_errores(pedir_peso, self.menu_usuario, "")
-            else:
-                peso = int(peso)
+        peso = int(peso)
 
-            if peso > parametros.MAX_PESO:
-                funciones.manejo_errores(pedir_peso, self.menu_usuario, "")
+        destino = input("Ingrese el destino: ")
+        while not destino or ',' in destino:
+            funciones.print_error("\nDestino no valido\n")
 
-            return peso
+            opcion = funciones.manejo_opciones(2)
 
-        peso = pedir_peso()
-
-        def pedir_destino():
-            destino = input("Ingrese el destino: ")
-
-            if not destino or ',' in destino:
-                funciones.manejo_errores(pedir_destino, self.menu_usuario, "")
-
-            return destino
-
-        destino = pedir_destino()
+            if opcion == 1:
+                destino = input("\nIngrese el destino: ")
+            elif opcion == 2:
+                return self.menu_usuario()
 
         encomienda = Encomienda(nombre_articulo, destinatario, peso, destino)
 
@@ -127,7 +141,7 @@ class UsuarioRegistrado:
         return self.menu_usuario(100)
 
     def revisar_encomiendas(self):
-
+        funciones.clear_screen()
         funciones.mostrar_encomiendas(self.encomiendas)
 
         opcion = input("Apriete una tecla para volver: ")
@@ -135,6 +149,8 @@ class UsuarioRegistrado:
         return self.menu_usuario()
 
     def realizar_reclamo(self):
+        funciones.clear_screen()
+
         def pedir_titulo():
             titulo = input("Titulo del reclamo: ")
 
@@ -163,6 +179,8 @@ class UsuarioRegistrado:
         return self.menu_usuario()
 
     def ver_estado(self):
+        funciones.clear_screen()
+
         encontradas = archivos.buscar_encomiendas(self.username)
 
         funciones.mostrar_encomiendas(encontradas)
@@ -181,6 +199,8 @@ class Admin:
             2: "\nPor favor ingresa una opcion valida",
         }
 
+        funciones.clear_screen()
+
         print("\n** Menu de administrador **\n")
         print("[1] Actualizar encomiendas")
         print("[2] Revisar reclamos")
@@ -198,13 +218,15 @@ class Admin:
         if opcion == 1:
             self.actualizar_encomiendas()
         elif opcion == 2:
-            pass
+            self.revisar_reclamos()
         elif opcion == 3:
             return
         else:
             return self.menu_administrador(2)
 
     def actualizar_encomiendas(self):
+        funciones.clear_screen()
+
         encomiendas = archivos.buscar_encomiendas()
 
         funciones.mostrar_encomiendas(encomiendas)
@@ -228,6 +250,37 @@ class Admin:
 
         archivos.escribir_encomiendas(encomiendas)
         return self.menu_administrador()
+
+    def revisar_reclamos(self):
+        funciones.clear_screen()
+
+        print("** Buzon de Reclamos **\n")
+        print("* Elija uno de los siguientes reclamos para visualizar su descripcion *\n")
+
+        reclamos = archivos.buscar_reclamos()
+        for i in range(len(reclamos)):
+            print(f"[{i+1}] {reclamos[i].titulo}")
+
+        print(f"[0] Volver")
+
+        opcion = input("Ingrese la opcion elegida: ")
+
+        if not opcion or not opcion.isnumeric():
+            return self.revisar_reclamos()
+        else:
+            opcion = int(opcion)
+
+        if opcion in range(1, len(reclamos)):
+            print("* Reclamo *\n")
+            print(f"-Titulo: {reclamos[opcion - 1].titulo}")
+            print(f"-Descripcion: {reclamos[opcion -1].descripcion}")
+
+            espera = input("Apriete una tecla para volver: ")
+            return self.revisar_reclamos()
+        elif opcion == 0:
+            return self.menu_administrador()
+        else:
+            return self.revisar_reclamos()
 
 
 class Encomienda:

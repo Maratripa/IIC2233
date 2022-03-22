@@ -1,18 +1,12 @@
+import os
 from typing import List
 
 
-def manejo_errores(callback, previous, mensaje=""):
+def print_error(mensaje=""):
     print(mensaje)
-    print("Por favor elija una opcion:")
+    print("Por favor elija una opcion:\n")
     print("[1] Reintentar")
     print("[2] Volver")
-
-    opcion = manejo_opciones(2)
-
-    if opcion == 1:
-        callback()
-    elif opcion == 2:
-        previous()
 
 
 def manejo_opciones(max_op, mensaje=""):
@@ -47,3 +41,10 @@ def cambiar_estado(encomienda):
         return encomienda.estado
     else:
         return None
+
+
+def clear_screen():
+    if os.name == 'nt':
+        _ = os.system('cls')
+    else:
+        _ = os.system('clear')

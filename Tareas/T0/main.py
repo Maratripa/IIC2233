@@ -1,10 +1,15 @@
 import archivos
 import parametros
 import funciones
+from time import sleep
 from entidades import Admin
 
 
 def ingresar_usuario():
+    funciones.clear_screen()
+
+    print("** Iniciar sesion **\n")
+
     username = input("Usuario: ")
 
     if not username:
@@ -26,6 +31,10 @@ def ingresar_usuario():
 
 
 def registrar_usuario():
+    funciones.clear_screen()
+
+    print("** Registro de usuario **")
+
     username = input(
         f"Usuario (min. {parametros.MIN_CARACTERES} caracteres): ")
 
@@ -62,6 +71,7 @@ def menu_inicio(errn=0):
         7: "\nContrasena no cumple con los requisitos",
     }
 
+    funciones.clear_screen()
     print("\n** Menu de Inicio **\n")
     print("[1] Iniciar sesion como usuario")
     print("[2] Registrarse como usuario")
@@ -97,6 +107,7 @@ def ingresar_admin(errn=0):
         contrasena = input("\nContrasena administrador: ")
 
         if contrasena != parametros.CONTRASENA_ADMIN:
+            funciones.clear_screen()
             print("Contrasena incorrecta, seleccione una opcion:\n")
             print("[1] Repetir contrasena")
             print("[2] Volver al menu de inicio\n")
@@ -110,6 +121,7 @@ def ingresar_admin(errn=0):
 
         return
 
+    funciones.clear_screen()
     pedir_contrasena()
 
     admin = Admin()
@@ -119,4 +131,5 @@ def ingresar_admin(errn=0):
 if __name__ == "__main__":
     print("\n---- Bienvenid@ a DCCorreos de Chile ----")
     print("\nSelecciona una de las siguientes opciones:")
+    sleep(2)
     menu_inicio()

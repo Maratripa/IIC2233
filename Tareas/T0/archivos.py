@@ -64,6 +64,18 @@ def buscar_encomiendas(username: str = "") -> list:
     return encomiendas_devueltas
 
 
+def buscar_reclamos() -> list:
+    reclamos = []
+    with open("reclamos.csv", 'r') as file:
+        lineas = file.readlines()
+        for r in lineas[1:]:
+            reclamo = r.strip().split(',', maxsplit=2)
+            actual = entidades.Reclamo(reclamo[0], reclamo[1], reclamo[2])
+            reclamos.append(actual)
+
+    return reclamos
+
+
 def guardar_reclamo(r: entidades.Reclamo):
     with open("reclamos.csv", 'a', encoding="utf-8") as file:
         file.write(f"{r.usuario},{r.titulo},{r.descripcion}\n")
