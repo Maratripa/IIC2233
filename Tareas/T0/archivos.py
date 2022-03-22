@@ -1,5 +1,7 @@
 import os
-import entidades
+from entidades.usuario import UsuarioRegistrado
+from entidades.encomienda import Encomienda
+from entidades.reclamo import Reclamo
 
 
 # Buscar usuario en csv/usuarios.csv
@@ -24,7 +26,7 @@ def buscar_usuario(username: str, password: str):
     if password != users_dict[username]:
         return None, 2
 
-    return entidades.UsuarioRegistrado(username, password), 0
+    return UsuarioRegistrado(username, password), 0
 
 
 # Agregar usuario nuevo a csv/usuarios.csv
@@ -40,7 +42,7 @@ def registrar_usuario(username: str, password: str):
     if no != 1:
         return None, 1
 
-    user = entidades.UsuarioRegistrado(username, password)
+    user = UsuarioRegistrado(username, password)
 
     if not user.username:
         return None, 2
@@ -54,7 +56,7 @@ def registrar_usuario(username: str, password: str):
 
 
 # Agrega encomienda al final de csv/encomiendas.csv
-def guardar_encomienda(e: entidades.Encomienda):
+def guardar_encomienda(e: Encomienda):
     with open(os.path.join("csv", "encomiendas.csv"), 'a', encoding="utf-8") as file:
         file.write(
             f"{e.nombre},{e.destinatario},{e.peso},{e.destino},{e.fecha},{e.estado}\n")
@@ -75,9 +77,9 @@ def buscar_encomiendas(username: str = "") -> list:
 
             # Filtrar encomiendas por usuario
             if actual[1] == username:
-                encomiendas_devueltas.append(entidades.Encomienda(*actual))
+                encomiendas_devueltas.append(Encomienda(*actual))
             elif username == "":
-                encomiendas_devueltas.append(entidades.Encomienda(*actual))
+                encomiendas_devueltas.append(Encomienda(*actual))
 
     return encomiendas_devueltas
 
@@ -89,14 +91,14 @@ def buscar_reclamos() -> list:
         lineas = file.readlines()
         for r in lineas[1:]:
             reclamo = r.strip().split(',', maxsplit=2)
-            actual = entidades.Reclamo(reclamo[0], reclamo[1], reclamo[2])
+            actual = Reclamo(reclamo[0], reclamo[1], reclamo[2])
             reclamos.append(actual)
 
     return reclamos
 
 
 # Agregar reclamo al final de csv/reclamos.csv
-def guardar_reclamo(r: entidades.Reclamo):
+def guardar_reclamo(r: Reclamo):
     with open(os.path.join("csv", "reclamos.csv"), 'a', encoding="utf-8") as file:
         file.write(f"{r.usuario},{r.titulo},{r.descripcion}\n")
 

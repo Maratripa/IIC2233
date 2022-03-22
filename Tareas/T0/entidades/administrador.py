@@ -1,4 +1,5 @@
-from .. import archivos, funciones
+import archivos
+import funciones
 
 
 # Clase de Administrador

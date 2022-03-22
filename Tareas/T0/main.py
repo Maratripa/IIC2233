@@ -1,7 +1,8 @@
 import archivos
 import parametros
 import funciones
-from entidades import Admin
+
+from entidades.administrador import Admin
 
 
 def ingresar_usuario():

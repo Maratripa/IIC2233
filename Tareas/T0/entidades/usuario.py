@@ -1,6 +1,8 @@
-from .. import parametros, archivos, funciones
-from encomienda import Encomienda
-from reclamo import Reclamo
+import parametros
+import archivos
+import funciones
+from entidades.encomienda import Encomienda
+from entidades.reclamo import Reclamo
 
 
 class UsuarioRegistrado:
