@@ -101,7 +101,7 @@ class UsuarioRegistrado:
         def revisar_peso(peso):
             p = peso
             try:
-                p = int(peso)
+                p = float(peso)
                 if p > parametros.MAX_PESO:
                     return True
                 else:
@@ -109,18 +109,18 @@ class UsuarioRegistrado:
             except:
                 return True
 
-        peso = input("Ingrese el peso: ")
+        peso = input("Ingrese el peso (kg): ")
         while revisar_peso(peso):
             funciones.print_error("\nPeso no valido\n")
 
             opcion = funciones.manejo_opciones(2)
 
             if opcion == 1:
-                peso = input("\nIngrese el peso: ")
+                peso = input("\nIngrese el peso (kg): ")
             elif opcion == 2:
                 return self.menu_usuario()
 
-        peso = int(peso)
+        peso = float(peso)
 
         destino = input("Ingrese el destino: ")
         while not destino or ',' in destino:
@@ -231,7 +231,7 @@ class Admin:
 
         funciones.mostrar_encomiendas(encomiendas)
 
-        print(f"\n{len(encomiendas) + 1} Volver\n")
+        print(f"\n[{len(encomiendas) + 1}] Volver\n")
 
         opcion = input("Ingrese la opcion elegida: ")
 
@@ -261,7 +261,7 @@ class Admin:
         for i in range(len(reclamos)):
             print(f"[{i+1}] {reclamos[i].titulo}")
 
-        print(f"[0] Volver")
+        print(f"[0] Volver\n")
 
         opcion = input("Ingrese la opcion elegida: ")
 
@@ -271,9 +271,10 @@ class Admin:
             opcion = int(opcion)
 
         if opcion in range(1, len(reclamos)):
+            funciones.clear_screen()
             print("* Reclamo *\n")
             print(f"-Titulo: {reclamos[opcion - 1].titulo}")
-            print(f"-Descripcion: {reclamos[opcion -1].descripcion}")
+            print(f"-Descripcion: {reclamos[opcion -1].descripcion}\n")
 
             espera = input("Apriete una tecla para volver: ")
             return self.revisar_reclamos()
@@ -288,7 +289,7 @@ class Encomienda:
     def __init__(self, nombre, destinatario, peso, destino, fecha=None, estado="Emitida"):
         self.nombre = nombre
         self.destinatario = destinatario
-        self.peso = peso
+        self.peso = float(peso)
         self.destino = destino
 
         if not fecha:

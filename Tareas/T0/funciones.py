@@ -25,9 +25,12 @@ def manejo_opciones(max_op, mensaje=""):
 
 
 def mostrar_encomiendas(encomiendas: list) -> None:
+    print("     |       Nombre articulo        |   Receptor    |  Peso  |  Destino  |       Estado       |")
     for i in range(len(encomiendas)):
         act = encomiendas[i]
-        print(f"{i + 1}) {act.nombre}")
+        s_inicial = f'[{i + 1}]'
+        print(
+            f"{s_inicial:5.5s} {act.nombre: ^30.30s} {act.destinatario: ^15.15s} {act.peso: ^8.1f} {act.destino: ^10.10s} {act.estado: ^20.20s}")
 
 
 def cambiar_estado(encomienda):
