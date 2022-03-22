@@ -47,25 +47,24 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ##### ❌✅🟠 PEP8 <explicacion\>
 ## Ejecución :computer:
 El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe crear los siguientes archivos y directorios adicionales:
-1. ```archivos.py``` en ```T0/```
-2. ```entidades.py``` en ```T0/```
-3. ```funciones.py``` en ```T0/```
-4. ```parametros.py``` en ```T0/```
+1. ```csv/``` en ```T0/```
+2. ```encomiendas.csv``` en ```T0/csv/```
+3. ```reclamos.csv``` en ```T0/csv/```
+4. ```usuarios.csv``` en ```T0/csv/```
 
 
 ## Librerías :books:
 ### Librerías externas utilizadas
 La lista de librerías externas que utilicé fue la siguiente:
 
-1. ```os```: ```system("clear") or system("cls")```
-2. ```datetime```: ```now().strftime() / datetime```
+1. ```datetime```: ```now().strftime() / datetime```
 
 ### Librerías propias
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
 1. ```entidades```: Contiene a ```UsuarioRegistrado```, ```Admin```, ```Encomienda``` y ```Reclamo```
-2. ```funciones```: Hecha para <insertar descripción **breve** de lo que hace o qué contiene>
-3. ...
+2. ```archivos```: Hecha para mantener el uso de **open()** en un solo módulo.
+3. ```funciones```: Contiene funciones para el estilo del output y manejo de inputs.
 
 ## Supuestos y consideraciones adicionales :thinking:
 Los supuestos que realicé durante la tarea son los siguientes:
