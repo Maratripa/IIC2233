@@ -46,25 +46,25 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ##### ❌✅🟠 Módulos <explicacion\>
 ##### ❌✅🟠 PEP8 <explicacion\>
 ## Ejecución :computer:
-El módulo principal de la tarea a ejecutar es  ```archivo.py```. Además se debe crear los siguientes archivos y directorios adicionales:
-1. ```archivo.ext``` en ```ubicación```
-2. ```directorio``` en ```ubicación```
-3. ...
+El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe crear los siguientes archivos y directorios adicionales:
+1. ```archivos.py``` en ```T0/```
+2. ```entidades.py``` en ```T0/```
+3. ```funciones.py``` en ```T0/```
+4. ```parametros.py``` en ```T0/```
 
 
 ## Librerías :books:
 ### Librerías externas utilizadas
 La lista de librerías externas que utilicé fue la siguiente:
 
-1. ```librería_1```: ```función() / módulo```
-2. ```librería_2```: ```función() / módulo``` (debe instalarse)
-3. ...
+1. ```os```: ```system("clear") or system("cls")```
+2. ```datetime```: ```now().strftime() / datetime```
 
 ### Librerías propias
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
-1. ```librería_1```: Contiene a ```ClaseA```, ```ClaseB```, (ser general, tampoco es necesario especificar cada una)...
-2. ```librería_2```: Hecha para <insertar descripción **breve** de lo que hace o qué contiene>
+1. ```entidades```: Contiene a ```UsuarioRegistrado```, ```Admin```, ```Encomienda``` y ```Reclamo```
+2. ```funciones```: Hecha para <insertar descripción **breve** de lo que hace o qué contiene>
 3. ...
 
 ## Supuestos y consideraciones adicionales :thinking:
