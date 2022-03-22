@@ -4,7 +4,7 @@ import entidades
 def buscar_usuario(username: str, password: str):
     users_dict = {}
 
-    with open("usuarios.csv", 'r') as file:
+    with open("usuarios.csv", 'r', encoding="utf-8") as file:
         users = file.readlines()
 
         for user in users[1:]:
@@ -50,7 +50,7 @@ def guardar_encomienda(e: entidades.Encomienda):
 def buscar_encomiendas(username: str = "") -> list:
     encomiendas_devueltas = []
 
-    with open("encomiendas.csv", 'r') as file:
+    with open("encomiendas.csv", 'r', encoding="utf-8") as file:
         encomiendas = file.readlines()
 
         for e in encomiendas[1:]:
@@ -66,7 +66,7 @@ def buscar_encomiendas(username: str = "") -> list:
 
 def buscar_reclamos() -> list:
     reclamos = []
-    with open("reclamos.csv", 'r') as file:
+    with open("reclamos.csv", 'r', encoding="utf-8") as file:
         lineas = file.readlines()
         for r in lineas[1:]:
             reclamo = r.strip().split(',', maxsplit=2)
