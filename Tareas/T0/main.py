@@ -2,7 +2,6 @@ import archivos
 import parametros
 import funciones
 from entidades import Admin
-from time import sleep
 
 
 def ingresar_usuario():
@@ -131,7 +130,4 @@ def ingresar_admin(errn=0):
 
 
 if __name__ == "__main__":
-    print("\n---- Bienvenid@ a DCCorreos de Chile ----")
-    print("\nSelecciona una de las siguientes opciones:")
-    sleep(1.5)
     menu_inicio()
