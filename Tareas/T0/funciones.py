@@ -1,5 +1,4 @@
 import os
-from typing import List
 
 
 def print_error(mensaje=""):
@@ -25,12 +24,17 @@ def manejo_opciones(max_op, mensaje=""):
 
 
 def mostrar_encomiendas(encomiendas: list) -> None:
-    print("     |       Nombre articulo        |   Receptor    |  Peso  |  Destino  |       Estado       |")
+    print("  ~  |        Nombre articulo        |    Receptor    " +
+          "|  Peso  |  Destino  |       Estado       |")
+    print('-' * 97)
     for i in range(len(encomiendas)):
         act = encomiendas[i]
         s_inicial = f'[{i + 1}]'
         print(
-            f"{s_inicial:5.5s} {act.nombre: ^30.30s} {act.destinatario: ^15.15s} {act.peso: ^8.1f} {act.destino: ^10.10s} {act.estado: ^20.20s}")
+            f"{s_inicial:5.5s}|{act.nombre: ^31.31s}|{act.destinatario: ^16.16s}|" +
+            f"{act.peso: ^8.1f}|{act.destino: ^11.11s}|{act.estado: ^20.20s}|")
+
+    print('-' * 97)
 
 
 def cambiar_estado(encomienda):

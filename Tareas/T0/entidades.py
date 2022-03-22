@@ -37,10 +37,11 @@ class UsuarioRegistrado:
             1: "\nDebes ingresar un numero",
             2: "\nPor favor ingresa una opcion valida",
             100: "\nEncomienda ingresada exitosamente!",
+            101: "\nReclamo ingresado exitosamente!"
         }
 
         funciones.clear_screen()
-        print("\n** Menu de Usuario **\n")
+        print("** Menu de Usuario **\n")
         print("[1] Hacer encomienda")
         print("[2] Revisar estado de encomiendas realizadas")
         print("[3] Realizar reclamo")
@@ -144,39 +145,41 @@ class UsuarioRegistrado:
         funciones.clear_screen()
         funciones.mostrar_encomiendas(self.encomiendas)
 
-        opcion = input("Apriete una tecla para volver: ")
+        opcion = input("\nApriete una tecla para volver: ")
 
         return self.menu_usuario()
 
     def realizar_reclamo(self):
         funciones.clear_screen()
+        print("** Realizar reclamo **\n")
 
-        def pedir_titulo():
-            titulo = input("Titulo del reclamo: ")
+        titulo = input("Titulo del reclamo: ")
+        while not titulo or ',' in titulo:
+            funciones.print_error("\nTitulo no valido\n")
 
-            if not titulo or ',' in titulo:
-                funciones.manejo_errores(pedir_titulo, self.menu_usuario, "")
+            opcion = funciones.manejo_opciones(2)
 
-            return titulo
+            if opcion == 1:
+                titulo = input("\nTitulo del reclamo: ")
+            elif opcion == 2:
+                return self.menu_usuario()
 
-        titulo = pedir_titulo()
+        descripcion = input("Descripcion del reclamo: ")
+        while not descripcion:
+            funciones.print_error("\nDescripcion no valdida\n")
 
-        def pedir_descripcion():
-            desc = input("Descripcion del reclamo: ")
+            opcion = funciones.manejo_opciones(2)
 
-            if not desc:
-                funciones.manejo_errores(
-                    pedir_descripcion, self.menu_usuario, "")
-
-            return desc
-
-        descripcion = pedir_descripcion()
+            if opcion == 1:
+                descripcion = input("\nDescripcion del reclamo: ")
+            elif opcion == 2:
+                return self.menu_usuario()
 
         reclamo = Reclamo(self.username, titulo, descripcion)
 
         archivos.guardar_reclamo(reclamo)
 
-        return self.menu_usuario()
+        return self.menu_usuario(101)
 
     def ver_estado(self):
         funciones.clear_screen()
@@ -201,7 +204,7 @@ class Admin:
 
         funciones.clear_screen()
 
-        print("\n** Menu de administrador **\n")
+        print("** Menu de administrador **\n")
         print("[1] Actualizar encomiendas")
         print("[2] Revisar reclamos")
         print("[3] Cerrar sesion")
@@ -227,11 +230,13 @@ class Admin:
     def actualizar_encomiendas(self):
         funciones.clear_screen()
 
+        print("** Actualizar encomiendas **\n")
+
         encomiendas = archivos.buscar_encomiendas()
 
         funciones.mostrar_encomiendas(encomiendas)
 
-        print(f"\n[{len(encomiendas) + 1}] Volver\n")
+        print(f"[{len(encomiendas) + 1}] Volver\n")
 
         opcion = input("Ingrese la opcion elegida: ")
 
@@ -261,7 +266,7 @@ class Admin:
         for i in range(len(reclamos)):
             print(f"[{i+1}] {reclamos[i].titulo}")
 
-        print(f"[0] Volver\n")
+        print(f"\n[{len(reclamos) + 1}] Volver\n")
 
         opcion = input("Ingrese la opcion elegida: ")
 
@@ -270,7 +275,7 @@ class Admin:
         else:
             opcion = int(opcion)
 
-        if opcion in range(1, len(reclamos)):
+        if opcion in range(1, len(reclamos) + 1):
             funciones.clear_screen()
             print("* Reclamo *\n")
             print(f"-Titulo: {reclamos[opcion - 1].titulo}")
@@ -278,7 +283,7 @@ class Admin:
 
             espera = input("Apriete una tecla para volver: ")
             return self.revisar_reclamos()
-        elif opcion == 0:
+        elif opcion == len(reclamos) + 1:
             return self.menu_administrador()
         else:
             return self.revisar_reclamos()

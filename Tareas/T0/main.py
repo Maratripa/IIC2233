@@ -1,8 +1,8 @@
 import archivos
 import parametros
 import funciones
-from time import sleep
 from entidades import Admin
+from time import sleep
 
 
 def ingresar_usuario():
@@ -33,7 +33,7 @@ def ingresar_usuario():
 def registrar_usuario():
     funciones.clear_screen()
 
-    print("** Registro de usuario **")
+    print("** Registro de usuario **\n")
 
     username = input(
         f"Usuario (min. {parametros.MIN_CARACTERES} caracteres): ")
@@ -72,7 +72,7 @@ def menu_inicio(errn=0):
     }
 
     funciones.clear_screen()
-    print("\n** Menu de Inicio **\n")
+    print("** Menu de Inicio **\n")
     print("[1] Iniciar sesion como usuario")
     print("[2] Registrarse como usuario")
     print("[3] Iniciar sesion como administrador")
@@ -97,6 +97,7 @@ def menu_inicio(errn=0):
         ingresar_admin()
         return menu_inicio()
     elif opcion == 4:
+        funciones.clear_screen()
         exit()
     else:
         return menu_inicio(2)
@@ -122,6 +123,7 @@ def ingresar_admin(errn=0):
         return
 
     funciones.clear_screen()
+    print("** Iniciar sesion administrador **")
     pedir_contrasena()
 
     admin = Admin()
@@ -131,5 +133,5 @@ def ingresar_admin(errn=0):
 if __name__ == "__main__":
     print("\n---- Bienvenid@ a DCCorreos de Chile ----")
     print("\nSelecciona una de las siguientes opciones:")
-    sleep(2)
+    sleep(1.5)
     menu_inicio()
