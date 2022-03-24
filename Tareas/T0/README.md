@@ -48,9 +48,16 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ## Ejecución :computer:
 El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe crear los siguientes archivos y directorios adicionales:
 1. ```csv/``` en ```T0/```
-2. ```encomiendas.csv``` en ```T0/csv/```
-3. ```reclamos.csv``` en ```T0/csv/```
-4. ```usuarios.csv``` en ```T0/csv/```
+2. ```entidades/``` en ```T0/```
+3. ```encomiendas.csv``` en ```T0/csv/```
+4. ```reclamos.csv``` en ```T0/csv/```
+5. ```usuarios.csv``` en ```T0/csv/```
+6. ```__init__.py``` en ```T0/entidades/```
+
+7. ```administrador.py``` en ```T0/entidades/```
+8. ```encomienda.py``` en ```T0/entidades/```
+9. ```reclamo.py``` en ```T0/entidades/```
+10. ```usuario.py``` en ```T0/entidades/```
 
 
 ## Librerías :books:
@@ -58,6 +65,8 @@ El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe c
 La lista de librerías externas que utilicé fue la siguiente:
 
 1. ```datetime```: ```now().strftime() / datetime```
+2. ```sys```: ```exit()```
+3. ```os```: ```join() / path```
 
 ### Librerías propias
 Por otro lado, los módulos que fueron creados fueron los siguientes:
