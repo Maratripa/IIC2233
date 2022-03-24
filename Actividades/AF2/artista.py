@@ -1,3 +1,4 @@
+from msilib.schema import Property
 from parametros import (AFINIDAD_HIT, AFINIDAD_INICIAL, AFINIDAD_PUBLICO_POP,
                         AFINIDAD_STAFF_POP, AFINIDAD_PUBLICO_ROCK,
                         AFINIDAD_STAFF_ROCK, AFINIDAD_PUBLICO_RAP,
@@ -17,82 +18,141 @@ class Artista:
         self._afinidad_con_publico = AFINIDAD_INICIAL
         self._afinidad_con_staff = AFINIDAD_INICIAL
 
+    @property
     def afinidad_con_publico(self):
-        # COMPLETAR
-        pass
+        return self._afinidad_con_publico
 
+    @afinidad_con_publico.setter
+    def afinidad_con_publico(self, value):
+        if value >= 100:
+            self._afinidad_con_publico = 100
+        elif value <= 0:
+            self._afinidad_con_publico = 0
+        else:
+            self.afinidad_con_publico = value
+
+    @property
     def afinidad_con_staff(self):
-        # COMPLETAR
-        pass
+        return self._afinidad_con_staff
 
+    @afinidad_con_staff.setter
+    def afinidad_con_staff(self, value):
+        if value >= 100:
+            self._afinidad_con_staff = 100
+        elif value <= 0:
+            self._afinidad_con_staff = 0
+        else:
+            self.afinidad_con_staff = value
+
+    @property
     def animo(self):
-        # COMPLETAR
-        pass
+        animo = (self.afinidad_con_publico / 2) + (self.afinidad_con_staff / 2)
+        return animo
 
     def recibir_suministros(self, suministro):
-        # COMPLETAR
-        pass
+        valor = suministro.valor_de_satisfaccion
+
+        self.afinidad_con_staff += valor
+
+        if valor < 0:
+            print(f"{self.nombre} recibió {suministro.nombre} en malas condiciones.")
+        else:
+            print(f"{self.nombre} recibió un {suministro.nombre} a tiempo!")
 
     def cantar_hit(self):
-        # COMPLETAR
-        pass
+        self.afinidad_con_publico += AFINIDAD_HIT
+
+        print(f"{self.nombre} está tocando su hit: {self.hit_del_momento}!")
 
     def __str__(self):
-        # COMPLETAR
-        pass
+        string = (f"Nombre: {self.nombre}\n" +
+                  f"Genero: {self.genero}\n" +
+                  f"Animo: {self.animo}")
+
+        return string
 
 
-class ArtistaPop:
+class ArtistaPop(Artista):
     def __init__(self, *args, **kwargs):
-        # COMPLETAR
-        pass
+        super().__init__(*args)
+
+        self.accion = "Cambio de vestuario"
+        self._afinidad_con_publico = AFINIDAD_PUBLICO_POP
+        self._afinidad_con_staff = AFINIDAD_STAFF_POP
 
     def accion_especial(self):
-        # COMPLETAR
-        pass
+        self.afinidad_con_publico += AFINIDAD_ACCION_POP
 
+        print(f"{self.nombre} hará un {self.accion}")
+
+    @property
     def animo(self):
-        # COMPLETAR
-        pass
+        if super().animo < 10:
+            print(
+                f"ArtistaPop peligrando en el concierto. Animo: {super().animo}")
+
+        return super().animo
 
 
-class ArtistaRock:
+class ArtistaRock(Artista):
     def __init__(self, *args, **kwargs):
-        # COMPLETAR
-        pass
+        super().__init__(*args)
+
+        self.accion = "Solo de guitarra"
+        self._afinidad_con_publico = AFINIDAD_PUBLICO_ROCK
+        self._afinidad_con_staff = AFINIDAD_STAFF_ROCK
 
     def accion_especial(self):
-        # COMPLETAR
-        pass
+        self.afinidad_con_publico += AFINIDAD_ACCION_ROCK
 
+        print(f"{self.nombre} hará un {self.accion}")
+
+    @property
     def animo(self):
-        # COMPLETAR
-        pass
+        if super().animo < 5:
+            print(
+                f"ArtistaRock peligrando en el concierto. Animo: {self.animo}")
+
+        return super().animo
 
 
-class ArtistaRap:
+class ArtistaRap(Artista):
     def __init__(self, *args, **kwargs):
-        # COMPLETAR
-        pass
+        super().__init__(*args)
+
+        self.accion = "Doble tempo"
+        self._afinidad_con_publico = AFINIDAD_PUBLICO_RAP
+        self._afinidad_con_staff = AFINIDAD_STAFF_RAP
 
     def accion_especial(self):
-        # COMPLETAR
-        pass
+        self.afinidad_con_publico += AFINIDAD_ACCION_RAP
+
+        print(f"{self.nombre} hará un {self.accion}")
 
     def animo(self):
-        # COMPLETAR
-        pass
+        if super().animo < 20:
+            print(
+                f"ArtistaRap peligrando en el concierto. Animo: {self.animo}")
+
+        return super().animo
 
 
-class ArtistaReggaeton:
+class ArtistaReggaeton(Artista):
     def __init__(self, *args, **kwargs):
-        # COMPLETAR
-        pass
+        super().__init__(*args)
+
+        self.accion = "Perrear"
+        self._afinidad_con_publico = AFINIDAD_PUBLICO_REG
+        self._afinidad_con_staff = AFINIDAD_STAFF_REG
 
     def accion_especial(self):
-        # COMPLETAR
-        pass
+        self.afinidad_con_publico += AFINIDAD_ACCION_REG
+
+        print(f"{self.nombre} hará un {self.accion}")
 
     def animo(self):
-        # COMPLETAR
-        pass
+        if super().animo < 2:
+            print(
+                f"ArtistaReggaeton peligrando en el concierto. Animo: {self.animo}")
+
+        return super().animo
