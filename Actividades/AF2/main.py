@@ -22,7 +22,7 @@ def menu_inicio():
             for artista in dcconcierto.artistas:
                 print(artista.nombre)
             dcconcierto.asignar_lineup()
-            lista_suministros = cargar_suministros('suministros.csv')
+            lista_suministros = cargar_suministros('Suministros.csv')
             dcconcierto.suministros = lista_suministros
             menu_concierto(dcconcierto)
 
@@ -55,7 +55,7 @@ def menu_concierto(dcconcierto):
 
         elif (
             len(dcconcierto.line_up) < int(op) <= len(dcconcierto.line_up) + 2
-             ):
+        ):
             if op == str(len(dcconcierto.line_up) + 1):
                 dcconcierto.imprimir_estado()
             else:
