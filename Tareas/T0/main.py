@@ -1,3 +1,5 @@
+import sys
+
 import archivos
 import parametros
 import funciones
@@ -154,7 +156,7 @@ def menu_inicio(errn=0):
     elif opcion == 4:
         funciones.clear_screen()
         print("Gracias por utilizar DCCorreos de Chile\n")
-        exit()
+        sys.exit(0)
     else:
         return menu_inicio(2)
 
