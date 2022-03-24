@@ -55,7 +55,7 @@ class DCConcierto:
         self.dia += 1
 
         if self.funcionando:
-            self.imprimir_estado()
+            print("Comienza un nuevo dia!")
 
     def ejecutar_evento(self):
         if random() <= self.prob_evento:
