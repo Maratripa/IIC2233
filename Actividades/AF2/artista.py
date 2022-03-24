@@ -1,4 +1,3 @@
-from msilib.schema import Property
 from parametros import (AFINIDAD_HIT, AFINIDAD_INICIAL, AFINIDAD_PUBLICO_POP,
                         AFINIDAD_STAFF_POP, AFINIDAD_PUBLICO_ROCK,
                         AFINIDAD_STAFF_ROCK, AFINIDAD_PUBLICO_RAP,
@@ -24,12 +23,12 @@ class Artista:
 
     @afinidad_con_publico.setter
     def afinidad_con_publico(self, value):
-        if value >= 100:
+        if value > 100:
             self._afinidad_con_publico = 100
-        elif value <= 0:
+        elif value < 0:
             self._afinidad_con_publico = 0
         else:
-            self.afinidad_con_publico = value
+            self._afinidad_con_publico = value
 
     @property
     def afinidad_con_staff(self):
@@ -37,12 +36,12 @@ class Artista:
 
     @afinidad_con_staff.setter
     def afinidad_con_staff(self, value):
-        if value >= 100:
+        if value > 100:
             self._afinidad_con_staff = 100
-        elif value <= 0:
+        elif value < 0:
             self._afinidad_con_staff = 0
         else:
-            self.afinidad_con_staff = value
+            self._afinidad_con_staff = value
 
     @property
     def animo(self):
@@ -129,6 +128,7 @@ class ArtistaRap(Artista):
 
         print(f"{self.nombre} hará un {self.accion}")
 
+    @property
     def animo(self):
         if super().animo < 20:
             print(
@@ -150,6 +150,7 @@ class ArtistaReggaeton(Artista):
 
         print(f"{self.nombre} hará un {self.accion}")
 
+    @property
     def animo(self):
         if super().animo < 2:
             print(
