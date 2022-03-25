@@ -78,8 +78,6 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 2. Al momento de mostrar las encomiendas, se puede cortar el largo de las entradas, con el fin de hacer que queden bien en el formato de tabla. Se justifica porque de todas maneras hay suficientes carácteres en cada una de las entradas para que se entienda el contenido.
 
-3. Para verificar que el peso de la encomienda sea válido, se usa try/except con ValueError, ya que la función de python str.isnumeric() no funciona para variables de tipo float. De esta manera, se puede hacer un while loop, pidiendo input mientras no se entregue un valor de peso válido.
-
 ## Referencias de código externo :book:
 
 Para realizar mi tarea saqué código de:
