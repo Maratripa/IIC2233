@@ -11,9 +11,7 @@ Un buen ```README.md``` no tiene por que ser muy extenso tampoco, hay que ser **
 
 ## Consideraciones generales :octocat:
 
-<Descripción de lo que hace y que **_no_** hace la tarea que entregaron junto
-con detalles de último minuto y consideraciones como por ejemplo cambiar algo
-en cierta línea del código o comentar una función>
+<DCCorreos es un programa que simula una empresa de correos, donde existen los usuarios que pueden crear y mandar encomiendas, revisar las encomiendas creadas, realizar reclamos y ver las encomiendas que tienen como destinatario al usuario. También se permite el registro de nuevos usuarios con un usuario y contraseña. Además, el administrador puede iniciar sesión para revisar y actualizar todas las encomiendas, además de revisar todos los reclamos creados.>
 
 ### Cosas implementadas y no implementadas :white_check_mark: :x:
 
@@ -27,24 +25,24 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ⚠️⚠️
 #### Menú de Inicio (18pts) (18%)
 ##### ✅ Requisitos <explicacion\>
-##### ✅ Iniciar sesión <explicacion\>
-##### ✅ Ingresar como administrador <explicacion\>
-##### ✅ Registrar usuario <explicacion\>
-##### ✅ Salir <explicacion\>
+##### ✅ Iniciar sesión <Implementado.\>
+##### ✅ Ingresar como administrador <Implementado.\>
+##### ✅ Registrar usuario <Implementado.\>
+##### ✅ Salir <Implementado usando sys.exit().\>
 #### Flujo del programa (31pts) (31%) 
-##### ✅ Menú de Usuario <explicacion\>
-##### ✅ Menú de Administrador <explicacion\>
+##### ✅ Menú de Usuario <Implementado completamente.\>
+##### ✅ Menú de Administrador <Implementado completamente.\>
 #### Entidades 15pts (15%)
-##### ✅ Usuarios <Esta entidad está implementada en su propio archivo, y contiene la función para mostrar el menú del usuario, junto con todas sus respectivas funciones.\>
-##### ✅ Encomiendas <explicacion\>
-##### ✅ Reclamos <explicacion\>
+##### ✅ Usuarios <Esta entidad está implementada en su totalidad.\>
+##### ✅ Encomiendas <Esta entidad está implementada en su totalidad.\>
+##### ✅ Reclamos <Esta entidad está implementada en su totalidad.\>
 #### Archivos: 15 pts (15%)
 ##### ✅ Manejo de Archivos <Todos los archivos se abren con encoding "utf'8" y no se usa el modo 'w' a menos que sea necesario o contraproductivo no usarlo. Se usan paths relativos para todos los archivos.\>
 #### General: 21 pts (21%)
-##### ✅ Menús <explicacion\>
-##### ✅ Parámetros <explicacion\>
-##### ✅ Módulos <explicacion\>
-##### ✅ PEP8 <explicacion\>
+##### ✅ Menús <Todos los menús están implementados.\>
+##### ✅ Parámetros <El archivo parámetros no fue modificado.\>
+##### ✅ Módulos <Se utiliza un archivo para cada entidad, ningún archivo supera las 400 líneas.\>
+##### ✅ PEP8 <Todos los archivos .py cumplen con la norma PEP8.\>
 ## Ejecución :computer:
 El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe crear los siguientes archivos y directorios adicionales:
 1. ```csv/``` en ```T0/```
@@ -82,45 +80,10 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 3. Para verificar que el peso de la encomienda sea válido, se usa try/except con ValueError, ya que la función de python str.isnumeric() no funciona para variables de tipo float. De esta manera, se puede hacer un while loop, pidiendo input mientras no se entregue un valor de peso válido.
 
-4. 
-
-PD: <una última consideración (de ser necesaria) o comentario hecho anteriormente que se quiera **recalcar**>
-
-
----
-
-
-
-**EXTRA:** si van a explicar qué hace específicamente un método, no lo coloquen en el README mismo. Pueden hacerlo directamente comentando el método en su archivo. Por ejemplo:
-
-```python
-class Corrector:
-
-    def __init__(self):
-          pass
-
-    # Este método coloca un 6 en las tareas que recibe
-    def corregir(self, tarea):
-        tarea.nota  = 6
-        return tarea
-```
-
-Si quieren ser más formales, pueden usar alguna convención de documentación. Google tiene la suya, Python tiene otra y hay muchas más. La de Python es la [PEP287, conocida como reST](https://www.python.org/dev/peps/pep-0287/). Lo más básico es documentar así:
-
-```python
-def funcion(argumento):
-    """
-    Mi función hace X con el argumento
-    """
-    return argumento_modificado
-```
-Lo importante es que expliquen qué hace la función y que si saben que alguna parte puede quedar complicada de entender o tienen alguna función mágica usen los comentarios/documentación para que el ayudante entienda sus intenciones.
-
 ## Referencias de código externo :book:
 
 Para realizar mi tarea saqué código de:
-1. \<link de código>: este hace \<lo que hace> y está implementado en el archivo <nombre.py> en las líneas <número de líneas> y hace <explicación breve de que hace>
-
+1. \<https://stackoverflow.com/questions/1260792/import-a-file-from-a-subdirectory>: De esta respuesta es que manejo el uso de módulos en subdirectorios, usando un archivo __init__.py.
 
 
 ## Descuentos
