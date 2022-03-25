@@ -54,24 +54,22 @@ El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe c
 5. ```usuarios.csv``` en ```T0/csv/```
 6. ```__init__.py``` en ```T0/entidades/```
 
-7. ```administrador.py``` en ```T0/entidades/```
-8. ```encomienda.py``` en ```T0/entidades/```
-9. ```reclamo.py``` en ```T0/entidades/```
-10. ```usuario.py``` en ```T0/entidades/```
-
 
 ## Librerías :books:
 ### Librerías externas utilizadas
 La lista de librerías externas que utilicé fue la siguiente:
 
-1. ```datetime```: ```now().strftime() / datetime```
-2. ```sys```: ```exit()```
-3. ```os```: ```join() / path```
+1. ```datetime```: ```now().strftime() / datetime```.
+2. ```sys```: ```exit()```.
+3. ```os```: ```join() / path```.
 
 ### Librerías propias
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
-1. ```entidades```: Contiene a ```UsuarioRegistrado```, ```Admin```, ```Encomienda``` y ```Reclamo```
+1. ```usuario```: Contiene a la clase ```UsuarioRegistrado```, que se encarga del menú y las funciones de un usuario registrado.
+2. ```encomienda```: Contiene a la clase ```Encomienda```, que se encarga de crear las encomiendas con sus respectivos atributos.
+3. ```reclamo```: Contiene a la clase ```Reclamo```, que se encarga de crear los reclamos con sus respectivos atributos.
+4. ```administrador```: Contiene a la clase ```Admin```, que se encarga del menú y las funciones del administrador.
 2. ```archivos```: Hecha para mantener el uso de **open()** en un solo módulo.
 3. ```funciones```: Contiene funciones para el estilo del output y manejo de inputs.
 
