@@ -24,9 +24,9 @@ def manejo_opciones(max_op, mensaje=""):
 
 # Función de formato de las encomiendas
 def mostrar_encomiendas(encomiendas: list) -> None:
-    print("  ~  |        Nombre articulo        |    Receptor    " +
-          "|  Peso  |  Destino  |       Estado       |")
-    print('-' * 97)
+    print("  ~  |         Nombre articulo         |     Receptor     " +
+          "|   Peso   |   Destino   |        Estado        |")
+    print('-' * 107)
 
     for i in range(len(encomiendas)):
         act = encomiendas[i]
@@ -34,10 +34,10 @@ def mostrar_encomiendas(encomiendas: list) -> None:
 
         # Se utiliza el formateo de strings para cortarlos si son muy largos y centrar todo
         print(
-            f"{s_inicial:5.5s}|{act.nombre: ^31.31s}|{act.destinatario: ^16.16s}|" +
-            f"{act.peso: ^8.1f}|{act.destino: ^11.11s}|{act.estado: ^20.20s}|")
+            f"{s_inicial:5.5s}| {act.nombre: ^31.31s} | {act.destinatario: ^16.16s} |" +
+            f" {act.peso: ^8.1f} | {act.destino: ^11.11s} | {act.estado: ^20.20s} |")
 
-    print('-' * 97)
+    print('-' * 107)
 
 
 # Función para el ciclo de estados de las encomiendas
