@@ -47,7 +47,8 @@ def ingresar_admin(errn=0):
 
     def pedir_contrasena():
         #
-        # Esta función local pide la contraseña hasta que se entregue la correcta o
+        # Esta función local pide la contraseña hasta que se
+        # entregue la correcta o
         # se vuelva al menu de inicial.
         #
 
