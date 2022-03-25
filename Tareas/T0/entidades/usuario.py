@@ -117,14 +117,15 @@ class UsuarioRegistrado:
             # ---------------------------------------------------------------
 
             p = peso
-            try:
-                p = float(peso)
+
+            if not p.replace('.', '').isnumeric():
+                return True
+            else:
+                p = float(p)
                 if p > parametros.MAX_PESO or p < 0:
                     return True
                 else:
                     return False
-            except ValueError:
-                return True
 
         peso = input("Ingrese el peso (kg): ")
 
