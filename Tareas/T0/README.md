@@ -26,25 +26,25 @@ Explicación: mantén el emoji correspondiente, de manera honesta, para cada ite
 SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ⚠️⚠️
 #### Menú de Inicio (18pts) (18%)
-##### ❌✅🟠 Requisitos <explicacion\>
-##### ❌✅🟠 Iniciar sesión <explicacion\>
-##### ❌✅🟠 Ingresar como administrador <explicacion\>
-##### ❌✅🟠 Registrar usuario <explicacion\>
-##### ❌✅🟠 Salir <explicacion\>
+##### ✅ Requisitos <explicacion\>
+##### ✅ Iniciar sesión <explicacion\>
+##### ✅ Ingresar como administrador <explicacion\>
+##### ✅ Registrar usuario <explicacion\>
+##### ✅ Salir <explicacion\>
 #### Flujo del programa (31pts) (31%) 
-##### ❌✅🟠 Menú de Usuario <explicacion\>
-##### ❌✅🟠 Menú de Administrador <explicacion\>
+##### ✅ Menú de Usuario <explicacion\>
+##### ✅ Menú de Administrador <explicacion\>
 #### Entidades 15pts (15%)
-##### ❌✅🟠 Usuarios <explicacion\>
-##### ❌✅🟠 Encomiendas <explicacion\>
-##### ❌✅🟠 Reclamos <explicacion\>
+##### ✅ Usuarios <Esta entidad está implementada en su propio archivo, y contiene la función para mostrar el menú del usuario, junto con todas sus respectivas funciones.\>
+##### ✅ Encomiendas <explicacion\>
+##### ✅ Reclamos <explicacion\>
 #### Archivos: 15 pts (15%)
-##### ❌✅🟠 Manejo de Archivos <explicacion\>
+##### ✅ Manejo de Archivos <Todos los archivos se abren con encoding "utf'8" y no se usa el modo 'w' a menos que sea necesario o contraproductivo no usarlo. Se usan paths relativos para todos los archivos.\>
 #### General: 21 pts (21%)
-##### ❌✅🟠 Menús <explicacion\>
-##### ❌✅🟠 Parámetros <explicacion\>
-##### ❌✅🟠 Módulos <explicacion\>
-##### ❌✅🟠 PEP8 <explicacion\>
+##### ✅ Menús <explicacion\>
+##### ✅ Parámetros <explicacion\>
+##### ✅ Módulos <explicacion\>
+##### ✅ PEP8 <explicacion\>
 ## Ejecución :computer:
 El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe crear los siguientes archivos y directorios adicionales:
 1. ```csv/``` en ```T0/```
@@ -76,14 +76,18 @@ Por otro lado, los módulos que fueron creados fueron los siguientes:
 ## Supuestos y consideraciones adicionales :thinking:
 Los supuestos que realicé durante la tarea son los siguientes:
 
-1. <Descripción/consideración 1 y justificación del por qué es válido/a> 
-2. <Descripción/consideración 2 y justificación del por qué es válido/a>
-3. ...
+1. Las encomiendas que el usuario crea en sesión, dejan de estar disponibles en su menú después de cerrar sesión, incluso si ingresa de nuevo en una misma ejecución del código. Esto con el fin de evitar tener una lista, diccionario o archivo grande para contener las encomiendas creadas, solo para borrarlo una vez termine la ejecución del código.
+
+2. Al momento de mostrar las encomiendas, se puede cortar el largo de las entradas, con el fin de hacer que queden bien en el formato de tabla. Se justifica porque de todas maneras hay suficientes carácteres en cada una de las entradas para que se entienda el contenido.
+
+3. Para verificar que el peso de la encomienda sea válido, se usa try/except con ValueError, ya que la función de python str.isnumeric() no funciona para variables de tipo float. De esta manera, se puede hacer un while loop, pidiendo input mientras no se entregue un valor de peso válido.
+
+4. 
 
 PD: <una última consideración (de ser necesaria) o comentario hecho anteriormente que se quiera **recalcar**>
 
 
--------
+---
 
 
 
