@@ -119,7 +119,7 @@ class UsuarioRegistrado:
             p = peso
             try:
                 p = float(peso)
-                if p > parametros.MAX_PESO:
+                if p > parametros.MAX_PESO or p < 0:
                     return True
                 else:
                     return False
