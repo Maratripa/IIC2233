@@ -24,7 +24,7 @@ Explicación: mantén el emoji correspondiente, de manera honesta, para cada ite
 SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ⚠️⚠️
 #### Menú de Inicio (18pts) (18%)
-##### ✅ Requisitos <explicacion\>
+##### ✅ Requisitos <Implementado\>
 ##### ✅ Iniciar sesión <Implementado.\>
 ##### ✅ Ingresar como administrador <Implementado.\>
 ##### ✅ Registrar usuario <Implementado.\>
@@ -43,6 +43,7 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ##### ✅ Parámetros <El archivo parámetros no fue modificado.\>
 ##### ✅ Módulos <Se utiliza un archivo para cada entidad, ningún archivo supera las 400 líneas.\>
 ##### ✅ PEP8 <Todos los archivos .py cumplen con la norma PEP8.\>
+
 ## Ejecución :computer:
 El módulo principal de la tarea a ejecutar es  ```main.py```. Además se debe crear los siguientes archivos y directorios adicionales:
 1. ```csv/``` en ```T0/```
