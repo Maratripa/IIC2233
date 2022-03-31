@@ -138,4 +138,12 @@ class Reino:
 
     def avanzar_edad(self):
         # Completar
-        pass
+        if self.edad == "Media":
+            self.edad = "Moderna"
+            self.para_construir.append("MuroCatapulta")
+
+            for key in self.construcciones:
+                for struct in self.construcciones[key]:
+                    struct.avanzar_edad()
+
+            print(f"\n {self.nombre} HA AVANZADO HACIA LA EDAD MODERNA \n")
