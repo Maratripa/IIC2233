@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from parametros import PROB_REVIVIR, PROB_CRITICO_GUERRERO, \
-                    PROB_CRITICO_MAGO, PROB_CRITICO_MAGO_GUERRERO
+    PROB_CRITICO_MAGO, PROB_CRITICO_MAGO_GUERRERO
 import math
 import random
 
 
 # Recuerda que es una clase abstracta
-class Persona:
+class Persona(ABC):
 
     def __init__(self, xp, stamina, **kwargs):
         # No modificar
@@ -39,46 +39,104 @@ class Persona:
 
     # ---------------
     # Completar los métodos abstractos aquí
+    @abstractmethod
+    def asignar_parametros(self):
+        pass
 
+    @abstractmethod
+    def accion(self):
+        pass
+
+    @abstractmethod
+    def __str__(self):
+        pass
     # ---------------
 
 
 # Recuerda completar la herencia
-class Guerrero:
+class Guerrero(Persona):
 
     def __init__(self, armado, **kwargs):
         # Completar
-        pass
+        self.armado = armado
+        super().__init__(**kwargs)
 
     # ---------------
     # Completar los métodos aquí
+    def asignar_parametros(self):
+        ataque = round(5 * math.pi * self.xp / 2)
+        if self.armado:
+            self.ataque = ataque * 2
+        else:
+            self.ataque = ataque
 
+    def accion(self):
+        if random.random() < PROB_CRITICO_GUERRERO:
+            return round(self.ataque * 3 / 2)
+        else:
+            return self.ataque
+
+    def __str__(self):
+        string = None
+        if self.armado:
+            string = f"Guerrero Armado con {self.ataque} pts de ataque"
+        else:
+            string = f"Guerrero con {self.ataque} pts de ataque"
+
+        return string
     # ---------------
 
 
 # Recuerda completar la herencia
-class Mago:
+class Mago(Persona):
 
     def __init__(self, bendito, **kwargs):
         # Completar
-        pass
+        self.bendito = bendito
+        super().__init__(**kwargs)
 
     # ---------------
     # Completar los métodos aquí
+    def asignar_parametros(self):
+        curacion = round(1.6180 * math.pi * self.xp / 2)
 
+        if self.bendito:
+            self.curacion = curacion * 2
+        else:
+            self.curacion = curacion
+
+    def accion(self):
+        if random.random() < PROB_CRITICO_MAGO:
+            return round(self.curacion * 3 / 2)
+        else:
+            return self.curacion
+
+    def __str__(self):
+        if self.bendito:
+            return f"Mago BENDITO con {self.curacion} pts de curación"
+        else:
+            return f"Mago con {self.curacion} pts de curación"
     # ---------------
 
 
 # Recuerda completar la herencia
-class MagoGuerrero:
+class MagoGuerrero(Mago, Guerrero):
 
     def __init__(self, **kwargs):
         # Completar
-        pass
+        super().__init__(**kwargs)
 
     # ---------------
     # Completar los métodos aquí
+    def asignar_parametros(self):
+        Mago.asignar_parametros(self)
+        Guerrero.asignar_parametros(self)
 
+    def accion(self):
+        if random.random() < PROB_CRITICO_MAGO_GUERRERO:
+            return (self.ataque * 2, self.curacion * 2)
+        else:
+            return (self.ataque, self.curacion)
     # ---------------
 
     def __str__(self):
@@ -95,4 +153,5 @@ if __name__ == "__main__":
     # ---------------
     # En esta sección puedes probar tu codigo
     # ---------------
-    pass
+    magoguerrero = MagoGuerrero(bendito=True, armado=False, xp=100, stamina=5)
+    print(magoguerrero)
