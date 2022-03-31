@@ -164,13 +164,11 @@ if __name__ == "__main__":
     # ---------------
     # En esta sección puedes probar tu codigo
     # ---------------
-    mc = MuroCatapulta("Moderna")
+    mc = Muro("Media")
 
     print(mc.accion())
     print(mc.edad)
     print(mc.reparacion)
-    print(mc.ataque)
     mc.avanzar_edad()
     print(mc.edad)
     print(mc.reparacion)
-    print(mc.ataque)

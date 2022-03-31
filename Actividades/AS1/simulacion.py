@@ -59,7 +59,7 @@ class Simulacion:
         if daño_atacante > 0:
             defensor.hp -= daño_atacante
             print(f"{atacante.nombre}: Ha dañado en {daño_atacante} pts "
-                  + "el castillo del {defensor.nombre}\n")
+                  + f"el castillo del {defensor.nombre}\n")
 
     def datos_finales(self, reino):
         # No modificar
