@@ -125,8 +125,12 @@ class Jugador(ABC):
             return 0
 
     @abstractmethod
-    def apostar(self, juego):
-        pass
+    def apostar(self, juego) -> None:
+        apuesta, gane = juego.menu_de_juego(self)
+
+        juego.entregar_resultados(self, apuesta, gane)
+
+        self.juegos_jugados.append(juego.nombre)
 
     def probabilidad_ganar(self, nombre_juego, apuesta):
         es_favorito = nombre_juego == self.juego_favorito
@@ -160,7 +164,15 @@ class JugadorLudopata(Jugador):
         return super().comprar_bebestible(bebestible)
 
     def apostar(self):
-        return super().apostar()
+        gane = None
+        apuesta = None
+        super().apostar()
+
+        self.ego += 2
+        self.suerte += 3
+
+        if not gane:
+            self.frustracion += 5
 
 
 class JugadorTacano(Jugador):
@@ -172,7 +184,12 @@ class JugadorTacano(Jugador):
         return super().comprar_bebestible(bebestible)
 
     def apostar(self):
-        return super().apostar()
+        gane = None
+        apuesta = None
+        super().apostar()
+
+        if apuesta < (parametros.PORCENTAJE_APUESTA_TACANO * self.dinero):
+            self.dinero += parametros.BONIFICACION_TACANO
 
 
 class JugadorBebedor(Jugador):
@@ -201,7 +218,12 @@ class JugadorCasual(Jugador):
         return super().comprar_bebestible(bebestible)
 
     def apostar(self):
-        return super().apostar()
+        self.suerte_principiante()
+        super().apostar()
+
+    def suerte_principiante(self):
+        if not self.juegos_jugados:
+            self.suerte += parametros.BONIFICACION_SUERTE_CASUAL
 
 
 class Juego:
@@ -212,23 +234,52 @@ class Juego:
         self.apuesta_minima = int(ap_min)
         self.apuesta_maxima = int(ap_max)
 
-    def entregar_resultados(self):
-        pass
+    def entregar_resultados(self, jugador: Jugador, apuesta: int, gano: bool) -> None:
+        if gano:
+            jugador.ego += parametros.EGO_GANAR
+            jugador.carisma += parametros.CARISMA_GANAR
+            jugador.frustracion -= parametros.FRUSTRACION_GANAR
+            jugador.dinero += apuesta * 2
+        else:
+            jugador.frustracion += parametros.FRUSTRACION_PERDER
+            jugador.confianza -= parametros.CONFIANZA_PERDER
+            jugador.dinero -= apuesta
 
-    def probabilidad_de_ganar(self, jugador):
-        pass
+    def probabilidad_de_ganar(self, jugador: Jugador, apuesta: int):
+        prob = min(
+            1,
+            (jugador.probabilidad_ganar(self.nombre, apuesta) -
+             ((apuesta - (self.es_favorito(jugador) * 50
+               - (self.esperanza * 30))) / 10_000)))
 
-    def es_favorito(self, jugador):
-        pass
+        return prob
 
-    def menu_de_juego(self):
+    def es_favorito(self, jugador: Jugador) -> bool:
+        return self.nombre == jugador.juego_favorito
+
+    def menu_de_juego(self, jugador: Jugador):
 
         def print_menu() -> int:
             titulo = f"*** {self.nombre} ***"
             print(f"{titulo: ^37s}")
             print('-' * 37)
 
-        accion = print_menu()
+            monto = input("Ingrese monto de apuesta: $")
+
+            if monto.isnumeric():
+                monto = int(monto)
+                if self.apuesta_minima <= monto <= self.apuesta_maxima and monto <= jugador.dinero:
+                    return monto
+                else:
+                    return print_menu()
+            else:
+                return print_menu()
+
+        apuesta = print_menu()
+
+        gano = random.random() <= self.probabilidad_de_ganar(jugador, apuesta)
+
+        return (apuesta, gano)
 
 
 class Bebestible(ABC):
