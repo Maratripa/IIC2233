@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from re import M
 import parametros
 import random
 
@@ -114,8 +115,14 @@ class Jugador(ABC):
             self._confianza = value
 
     @abstractmethod
-    def comprar_bebestible(self, bebestible):
-        pass
+    def comprar_bebestible(self, bebestible, multiplicador: float = 1.0) -> int:
+        if self.dinero < bebestible.precio:
+            print("No tienes el dinero suficiente para comprar este bebestible!")
+            return -1
+        else:
+            bebestible.consumir(self, multiplicador)
+            self.dinero -= bebestible.precio
+            return 0
 
     @abstractmethod
     def apostar(self, juego):
@@ -134,7 +141,7 @@ class Jugador(ABC):
                        f"\nPersonalidad: {self.personalidad}" +
                        f"\nEnergía: {self.energia}" +
                        f"\nSuerte: {self.suerte}" +
-                       f"\nDinero: {self.dinero}" +
+                       f"\nDinero: ${self.dinero:,}" +
                        f"\nFrustración: {self.frustracion}" +
                        f"\nEgo: {self.ego}" +
                        f"\nCarisma: {self.carisma}" +
@@ -174,10 +181,15 @@ class JugadorBebedor(Jugador):
         super().__init__(*ar, **kw)
 
     def comprar_bebestible(self, bebestible):
-        return super().comprar_bebestible(bebestible)
+        mult = self.cliente_recurrente()
+        return super().comprar_bebestible(bebestible, mult)
 
     def apostar(self):
         return super().apostar()
+
+    def cliente_recurrente(self) -> float:
+        print("Por ser cliente recurrente los bebestibles tienen efectos aumentados...")
+        return parametros.MULTIPLICADOR_BONIFICACION_BEBEDOR
 
 
 class JugadorCasual(Jugador):
@@ -227,10 +239,11 @@ class Bebestible(ABC):
         self.precio = int(precio)
 
     @abstractmethod
-    def consumir(self, jugador: Jugador):
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
         recuperacion = random.randint(
             parametros.MIN_ENERGIA_BEBESTIBLE, parametros.MAX_ENERGIA_BEBESTIBLE)
 
+        recuperacion = round(recuperacion * multiplicador)
         jugador.energia += recuperacion
         print(
             f"El jugador {jugador.nombre} ha recuperado {recuperacion} energía!")
@@ -241,22 +254,28 @@ class Jugo(Bebestible):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def consumir(self, jugador: Jugador):
-        super().consumir(jugador)
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
+        super().consumir(jugador, multiplicador)
 
         if len(self.nombre) <= 4:
-            jugador.ego += 4
-            print(f"El ego del jugador {jugador.nombre} ha aumentado en 4!")
+            ego = round(4 * multiplicador)
+            jugador.ego += ego
+            print(
+                f"El ego del jugador {jugador.nombre} ha aumentado en {ego}!")
 
         elif 5 <= len(self.nombre) <= 7:
-            jugador.suerte += 7
-            print(f"La suerte del jugador {jugador.nombre} ha aumentado en 7!")
+            suerte = round(7 * multiplicador)
+            jugador.suerte += suerte
+            print(
+                f"La suerte del jugador {jugador.nombre} ha aumentado en {suerte}!")
 
         elif 8 <= len(self.nombre):
-            jugador.frustracion -= 10
-            jugador.ego += 11
-            print(f"La frustración del jugador {jugador.nombre} ha disminuído en 10,",
-                  "pero el ego ha aumentado en 11!")
+            frustracion = round(10 * multiplicador)
+            ego = round(11 * multiplicador)
+            jugador.frustracion -= frustracion
+            jugador.ego += ego
+            print(f"La frustración del jugador {jugador.nombre} ha disminuído " +
+                  f"en {frustracion}, pero el ego ha aumentado en {ego}!")
 
 
 class Gaseosa(Bebestible):
@@ -264,21 +283,24 @@ class Gaseosa(Bebestible):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def consumir(self, jugador: Jugador):
-        super().consumir(jugador)
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
+        super().consumir(jugador, multiplicador)
 
         if isinstance(jugador, JugadorTacano) or isinstance(jugador, JugadorLudopata):
-            jugador.frustracion -= 5
+            frustracion = round(5 * multiplicador)
+            jugador.frustracion -= frustracion
             print(
-                f"La frustración del jugador {jugador.nombre} ha disminuído en 5!")
+                f"La frustración del jugador {jugador.nombre} ha disminuído en {frustracion}!")
 
         elif isinstance(jugador, JugadorBebedor) or isinstance(jugador, JugadorCasual):
-            jugador.frustracion += 5
+            frustracion = round(5 * multiplicador)
+            jugador.frustracion += frustracion
             print(
-                f"La frustración del jugador {jugador.nombre} ha aumentado en 5!")
+                f"La frustración del jugador {jugador.nombre} ha aumentado en {frustracion}!")
 
-        jugador.ego += 6
-        print(f"El ego del jugador {jugador.nombre} ha aumentado en 6!")
+        ego = round(6 * multiplicador)
+        jugador.ego += ego
+        print(f"El ego del jugador {jugador.nombre} ha aumentado en {ego}!")
 
 
 class BrebajeMagico(Jugo, Gaseosa):
@@ -286,9 +308,11 @@ class BrebajeMagico(Jugo, Gaseosa):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def consumir(self, jugador: Jugador):
-        Jugo.consumir(self, jugador)
-        Gaseosa.consumir(self, jugador)
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
+        Jugo.consumir(self, jugador, multiplicador)
+        Gaseosa.consumir(self, jugador, multiplicador)
 
-        jugador.carisma += 5
-        print(f"El carisma del jugador {jugador.nombre} ha aumento en 5!")
+        carisma = round(5 * multiplicador)
+        jugador.carisma += carisma
+        print(
+            f"El carisma del jugador {jugador.nombre} ha aumento en {carisma}!")
