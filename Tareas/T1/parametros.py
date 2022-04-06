@@ -1,0 +1,8 @@
+DEUDA_TOTAL = 2_000
+PROBABILIDAD_EVENTO = None
+
+MIN_ENERGIA_BEBESTIBLE = 3
+MAX_ENERGIA_BEBESTIBLE = 10
+
+# Todo lo afectado por el multiplicador se redondea si es un int
+MULTIPLICADOR_BONIFICACION_BEBEDOR = 1.5
