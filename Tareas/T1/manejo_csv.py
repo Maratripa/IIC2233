@@ -9,9 +9,9 @@ def obtener_jugadores() -> list:
 
         headers = lectura[0].strip().split(',')
 
-        for line in lectura[2:]:
-            actual = {headers[i]: e for i,
-                      e in enumerate(line.strip().split(','))}
+        for line in lectura[1:]:
+            actual = {headers[i]: e for
+                      i, e in enumerate(line.strip().split(','))}
             entry = {
                 "nombre": actual["nombre"],
                 "personalidad": actual["personalidad"],
@@ -52,13 +52,13 @@ def obtener_bebestibles() -> list:
             actual = {headers[i]: e for i,
                       e in enumerate(line.strip().split(','))}
 
-            if actual[1] == "Jugo":
+            if actual["tipo"] == "Jugo":
                 bebestibles.append(entidades.Jugo(**actual))
 
-            elif actual[1] == "Gaseosa":
+            elif actual["tipo"] == "Gaseosa":
                 bebestibles.append(entidades.Gaseosa(**actual))
 
-            elif actual[1] == "Brebaje Mágico":
+            elif actual["tipo"] == "Brebaje Mágico":
                 bebestibles.append(entidades.BrebajeMagico(**actual))
 
     return bebestibles
