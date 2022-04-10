@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from re import M
+
 import parametros
 import random
 
@@ -117,7 +117,7 @@ class Jugador(ABC):
     @abstractmethod
     def comprar_bebestible(self, bebestible, multiplicador: float = 1.0) -> int:
         if self.dinero < bebestible.precio:
-            print("No tienes el dinero suficiente para comprar este bebestible!")
+            print("\nNo tienes el dinero suficiente para comprar este bebestible!")
             return -1
         else:
             bebestible.consumir(self, multiplicador)
@@ -125,18 +125,29 @@ class Jugador(ABC):
             return 0
 
     @abstractmethod
-    def apostar(self, juego) -> None:
-        apuesta, gane = juego.menu_de_juego(self)
+    def apostar(self, juego, apuesta) -> None:
+        prob = juego.probabilidad_de_ganar(self, apuesta)
 
-        juego.entregar_resultados(self, apuesta, gane)
+        print(prob)
+
+        if random.random() <= prob:
+            victoria = True
+        else:
+            victoria = False
+
+        juego.entregar_resultados(self, apuesta, victoria)
 
         self.juegos_jugados.append(juego.nombre)
 
     def probabilidad_ganar(self, nombre_juego, apuesta):
-        es_favorito = nombre_juego == self.juego_favorito
+        if nombre_juego == self.juego_favorito:
+            es_favorito = 1
+        else:
+            es_favorito = 0
 
         probabilidad = min(1, max(0, (self.suerte * 15 - apuesta * 0.4 +
-                                      self.confianza * 3 * es_favorito + self.carisma * 2) / 1_000))
+                                      self.confianza * 3 * es_favorito +
+                                      self.carisma * 2) / float(1_000)))
 
         return probabilidad
 
@@ -163,16 +174,22 @@ class JugadorLudopata(Jugador):
     def comprar_bebestible(self, bebestible):
         return super().comprar_bebestible(bebestible)
 
-    def apostar(self):
-        gane = None
-        apuesta = None
-        super().apostar()
+    def apostar(self, juego, apuesta):
+        victoria = None
+        super().apostar(juego, apuesta)
 
+        self.ludopatia(victoria)
+
+    def ludopatia(self, victoria):
         self.ego += 2
         self.suerte += 3
 
-        if not gane:
+        print(f"Por ser ludópata, el jugador {self.nombre}",
+              "recibe un aumento al ego en 2 y a la suerte 3 por apostar!")
+
+        if not victoria:
             self.frustracion += 5
+            print("Pero debido a la derrota, su frustración aumenta en 5...")
 
 
 class JugadorTacano(Jugador):
@@ -183,13 +200,17 @@ class JugadorTacano(Jugador):
     def comprar_bebestible(self, bebestible):
         return super().comprar_bebestible(bebestible)
 
-    def apostar(self):
-        gane = None
-        apuesta = None
-        super().apostar()
+    def apostar(self, juego, apuesta):
+        super().apostar(juego, apuesta)
 
+        self.tacano_extremo(apuesta)
+
+    def tacano_extremo(self, apuesta):
         if apuesta < (parametros.PORCENTAJE_APUESTA_TACANO * self.dinero):
-            self.dinero += parametros.BONIFICACION_TACANO
+            bon = parametros.BONIFICACION_TACANO
+            self.dinero += bon
+            print(
+                f"Por ser tacaño, el jugador {self.nombre} recibe ${bon} extra!")
 
 
 class JugadorBebedor(Jugador):
@@ -201,8 +222,8 @@ class JugadorBebedor(Jugador):
         mult = self.cliente_recurrente()
         return super().comprar_bebestible(bebestible, mult)
 
-    def apostar(self):
-        return super().apostar()
+    def apostar(self, juego, apuesta):
+        return super().apostar(juego, apuesta)
 
     def cliente_recurrente(self) -> float:
         print("Por ser cliente recurrente los bebestibles tienen efectos aumentados...")
@@ -217,13 +238,16 @@ class JugadorCasual(Jugador):
     def comprar_bebestible(self, bebestible):
         return super().comprar_bebestible(bebestible)
 
-    def apostar(self):
+    def apostar(self, juego, apuesta):
         self.suerte_principiante()
-        super().apostar()
+        super().apostar(juego, apuesta)
 
     def suerte_principiante(self):
         if not self.juegos_jugados:
-            self.suerte += parametros.BONIFICACION_SUERTE_CASUAL
+            bon = parametros.BONIFICACION_SUERTE_CASUAL
+            print(
+                f"\nPor suerte de principiante, el jugador {self.nombre} recibe {bon} de suerte!")
+            self.suerte += bon
 
 
 class Juego:
@@ -239,36 +263,52 @@ class Juego:
             jugador.ego += parametros.EGO_GANAR
             jugador.carisma += parametros.CARISMA_GANAR
             jugador.frustracion -= parametros.FRUSTRACION_GANAR
+
+            print(
+                f"Jugando {self.nombre}, el jugador {jugador.nombre} ha ganado ${apuesta * 2:,}")
             jugador.dinero += apuesta * 2
+
         else:
             jugador.frustracion += parametros.FRUSTRACION_PERDER
             jugador.confianza -= parametros.CONFIANZA_PERDER
+
+            print(
+                f"Jugando {self.nombre}, el jugador {jugador.nombre} ha perdido ${apuesta:,}")
             jugador.dinero -= apuesta
 
     def probabilidad_de_ganar(self, jugador: Jugador, apuesta: int):
         prob = min(
-            1,
-            (jugador.probabilidad_ganar(self.nombre, apuesta) -
-             ((apuesta - (self.es_favorito(jugador) * 50
-               - (self.esperanza * 30))) / 10_000)))
+            1, max(0, (jugador.probabilidad_ganar(self.nombre, apuesta) -
+                       ((apuesta - (self.es_favorito(jugador) * 50
+                        - (self.esperanza * 30))) / float(10_000)))))
 
         return prob
 
     def es_favorito(self, jugador: Jugador) -> bool:
-        return self.nombre == jugador.juego_favorito
+        if self.nombre == jugador.juego_favorito:
+            return 1
+        else:
+            return 0
 
     def menu_de_juego(self, jugador: Jugador):
 
         def print_menu() -> int:
             titulo = f"*** {self.nombre} ***"
-            print(f"{titulo: ^37s}")
+            print(f"\n\n{titulo: ^37s}")
             print('-' * 37)
+            print(
+                f"Apuesta mínima: ${self.apuesta_minima:,} |" +
+                f" Apuesta máxima: ${self.apuesta_maxima:,}\n"
+            )
+            print(f"Dinero jugador: ${jugador.dinero:,}")
 
-            monto = input("Ingrese monto de apuesta: $")
+            monto = input("\nIngrese monto de apuesta ($0 para volver): $")
 
             if monto.isnumeric():
                 monto = int(monto)
-                if self.apuesta_minima <= monto <= self.apuesta_maxima and monto <= jugador.dinero:
+                if monto == 0:
+                    return 0
+                elif self.apuesta_minima <= monto <= self.apuesta_maxima and monto <= jugador.dinero:
                     return monto
                 else:
                     return print_menu()
@@ -277,9 +317,10 @@ class Juego:
 
         apuesta = print_menu()
 
-        gano = random.random() <= self.probabilidad_de_ganar(jugador, apuesta)
+        if apuesta == 0:
+            return
 
-        return (apuesta, gano)
+        jugador.apostar(self, apuesta)
 
 
 class Bebestible(ABC):
@@ -297,7 +338,7 @@ class Bebestible(ABC):
         recuperacion = round(recuperacion * multiplicador)
         jugador.energia += recuperacion
         print(
-            f"El jugador {jugador.nombre} ha recuperado {recuperacion} energía!")
+            f"\nEl jugador {jugador.nombre} ha recuperado {recuperacion} energía!")
 
 
 class Jugo(Bebestible):
