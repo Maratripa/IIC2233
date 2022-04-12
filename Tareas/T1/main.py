@@ -69,7 +69,7 @@ def funcion(opciones, callback) -> int:
 def menu_inicio():
 
     def print_menu() -> int:
-        print("*** Menú de inicio ***")
+        print("\n*** Menú de inicio ***")
         print("----------------------")
         print("[1] Iniciar partida")
         print("[X] Salir")
@@ -104,6 +104,6 @@ def menu_inicio():
 
 
 if __name__ == "__main__":
-    print("\n¡BIENVENIDO A DCCASINO!\n")
+    print("\n¡BIENVENIDO A DCCASINO!")
     dccasino = casino.Casino()
     menu_inicio()
