@@ -40,10 +40,12 @@ class Casino:
 
         return
 
-    def evento_especial(self):
+    def evento_especial(self) -> None:
         if random.random() < parametros.PROBABILIDAD_EVENTO:
-            print("EVENTO ESPECIAL")
+            print(f"\n{'** EVENTO ESPECIAL **': ^37}\n")
             beb = random.choice(self.bebestibles)
+            print(
+                f"Al jugador {self.jugador.nombre} le han regalado un {beb.nombre}")
 
             if self.jugador.personalidad == "Bebedor":
                 mult = self.jugador.cliente_recurrente()
@@ -98,7 +100,7 @@ class Casino:
             print("[1] Opciones de juegos")
             print("[2] Comprar bebestible")
             print("[3] Estado jugador")
-            print("[4] Show #TODO")  # TODO
+            print("[4] Show")  # TODO
 
             if self.opcion_pagar:
                 print("[5] Pagar deuda")
@@ -129,7 +131,7 @@ class Casino:
             self.estado_jugador()
 
         elif accion == 4:
-            # TODO
+            self.show()
             return self.menu_principal()
 
         elif accion == 5 and self.opcion_pagar:
@@ -249,3 +251,21 @@ class Casino:
 
         elif accion == -1:
             sys.exit(0)
+
+    def show(self):
+        shows = ["circo", "concierto", "teatro", "premiere de cine"]
+
+        if self.jugador.dinero < parametros.DINERO_SHOW:
+            print("No tienes suficiente dinero para ver el show...")
+            return
+        else:
+            self.jugador.dinero -= parametros.DINERO_SHOW
+            self.jugador.energia += parametros.ENERGIA_SHOW
+            self.jugador.frustracion += parametros.FRUSTRACION_SHOW
+
+            print(f"\nEl jugador {self.jugador.nombre} ha pagado {parametros.DINERO_SHOW}",
+                  f"para ver el show de {random.choice(shows)}.")
+            print(f"Gracias a esto, ha recuperado {parametros.ENERGIA_SHOW} de energía",
+                  f"y ha disminuído en {parametros.FRUSTRACION_SHOW} su frustración.\n")
+
+            return
