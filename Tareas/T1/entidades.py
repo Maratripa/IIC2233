@@ -128,7 +128,7 @@ class Jugador(ABC):
     def apostar(self, juego, apuesta) -> None:
         prob = juego.probabilidad_de_ganar(self, apuesta)
 
-        print(prob)
+        # print(prob)
 
         if random.random() <= prob:
             victoria = True
@@ -226,7 +226,7 @@ class JugadorBebedor(Jugador):
         return super().apostar(juego, apuesta)
 
     def cliente_recurrente(self) -> float:
-        print("Por ser cliente recurrente los bebestibles tienen efectos aumentados...")
+        print("\nPor ser cliente recurrente los bebestibles tienen efectos aumentados...")
         return parametros.MULTIPLICADOR_BONIFICACION_BEBEDOR
 
 
@@ -265,7 +265,7 @@ class Juego:
             jugador.frustracion -= parametros.FRUSTRACION_GANAR
 
             print(
-                f"Jugando {self.nombre}, el jugador {jugador.nombre} ha ganado ${apuesta * 2:,}")
+                f"\nJugando {self.nombre}, el jugador {jugador.nombre} ha ganado ${apuesta * 2:,}")
             jugador.dinero += apuesta * 2
 
         else:
@@ -273,7 +273,7 @@ class Juego:
             jugador.confianza -= parametros.CONFIANZA_PERDER
 
             print(
-                f"Jugando {self.nombre}, el jugador {jugador.nombre} ha perdido ${apuesta:,}")
+                f"\nJugando {self.nombre}, el jugador {jugador.nombre} ha perdido ${apuesta:,}")
             jugador.dinero -= apuesta
 
     def probabilidad_de_ganar(self, jugador: Jugador, apuesta: int):
