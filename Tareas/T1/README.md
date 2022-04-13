@@ -2,36 +2,35 @@
 
 ## Consideraciones generales :octocat:
 
-<Descripción de lo que hace y que **_no_** hace la tarea que entregaron junto
-con detalles de último minuto y consideraciones como por ejemplo cambiar algo
-en cierta línea del código o comentar una función>
+El DCCasino simula un casino con varias opciones de jugadores. Al elegir un jugador, comienza la partida y te encuentras ante el menú principal, de ahí hay varias opciones: menú de juegos, menú de bebestibles, ver el estado del jugador y ver un show, además de volver al menú de inicio y jugar con otro jugador y de salir del juego.
+Los jugadores existen aparte del casino, por lo que si juegas con un personaje, y vuelves al menú de inicio, el progreso del jugador queda guardado. De la misma manera, si un jugador queda en quiebra, ya no estará disponible para ser utilizado. Al tener el dinero suficiente para pagar la deuda, se dará la opción al usuario de pagarla y salir o de seguir jugando, en caso de que pierda dinero, se quitará la opción.
 
 ### Cosas implementadas y no implementadas :white_check_mark: :x:
 
 #### Programación Orientada a Objetos: 38 pts (28%)
 ##### ✅  Diagrama <Se encuentra en un archivo llamado diagrama.jpeg>
-##### ✅ Definición de clases, atributos, métodos y properties <explicacion\>
+##### ✅ Definición de clases, atributos, métodos y properties <Las clases se encuentran repartidas entre tres archivos, las sub-clases se encuentran todas en el mismo archivo que la clase padre>
 ##### ✅ Relaciones entre clases <Todas las subclases heredan correctamente los métodos y atributos>
 #### Simulaciones: 10 pts (7%)
-##### ✅ Crear partida <explicacion\>
+##### ✅ Crear partida <Al crear una partida se crea una lista con todos los jugadores disponibles y una instancia del DCCasino. Se puede volver y jugar con distintos personajes en una misma "partida">
 #### Acciones: 35 pts (26%)
-##### ✅ Jugador <explicacion\>
-##### ✅ Juego <explicacion\>
-##### ✅ Bebestible <explicacion\>
-##### ✅ Casino <explicacion\>
+##### ✅ Jugador <Se encuentran implementadas las aciones de comprar_bebestible y apostar, además de las habilidades de cada personalidad>
+##### ✅ Juego <Los juegos tienen implementados todos sus respectivos métodos>
+##### ✅ Bebestible <Los bebestibles tienen implementados el método de consumir, además de las modificaciones de las sub-clases>
+##### ✅ Casino <El casino tiene implementados todos los métodos de los menúes>
 #### Consola: 41 pts (30%)
-##### ✅ Menú de Inicio <explicacion\>
-##### ✅ Opciones de jugador <explicacion\>
-##### ✅ Menú principal <explicacion\>
-##### ✅ Opciones de juegos <explicacion\>
-##### ✅ Carta de bebestibles <explicacion\>
-##### ✅ Ver estado del Jugador <explicacion\>
-##### ✅ Robustez <explicacion\>
+##### ✅ Menú de Inicio <El menú de inicio es la entrada al jugador, donde este puede entrar al casino eligiendo un personaje o salir de el juego>
+##### ✅ Opciones de jugador <En las opciones de jugador se muestra cada personaje con su personalidad. Se muestran solo los personajes que no están en quiebra>
+##### ✅ Menú principal <En el menú principal se muestran las opciones para ir al menú de juegos, menú de bebestibles, ver el show, y en caso de estar disponible la opción, pagar la deuda>
+##### ✅ Opciones de juegos <En el menú de juegos se enumeran todos los juegos y se pueden seleccionar solo aquellos en los que se puede apostar (cuando se tiene más dinero que la apuesta mínima)>
+##### ✅ Carta de bebestibles <En la carta de bebestibles se muestran todos los bebestibles con su tipo y precio, también se muestra el dinero disponible del jugador>
+##### ✅ Ver estado del Jugador <En el estado del jugador se imprimen todos los atributos acutales del jugador>
+##### ✅ Robustez <En cada menú están las opciones para volver al menú anterior o salir del juego (cuando se está apostando en un juego no se puede salir, pero si volver). Todos los inputs cuentan con validación de string, para que no se pueda ingrasar un valor no válido>
 #### Manejo de archivos: 13 pts (9%)
-##### ✅ Archivos CSV  <El manejo de csv se encuentra en manejo_csv.py, está diseñado para que funcione concualquier orden de headers.>
+##### ✅ Archivos CSV  <El manejo de csv se encuentra en manejo_csv.py, está diseñado para que funcione concualquier orden de headers>
 ##### ✅ parametros.py <Todos los valores están declarados en parametros.py y no hay valores hardcodeados>
 #### Bonus: 3 décimas máximo
-##### ✅ Ver Show <explicacion\>
+##### ✅ Ver Show <Se elige un show al azar y se modifican los atributos del jugador actual.>
 
 
 ## Ejecución :computer:
@@ -53,9 +52,10 @@ La lista de librerías externas que utilicé fue la siguiente:
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
 1. ```casino```: Contiene a ```Casino```.
-2. ```entidades```: Contiene a ```Jugador```, ```Juego```, ```Bebestible``` y sus respectivas clases hijas.
-3. ```manejo_csv```: Hecha para trabajar con los archivos csv en un solo lugar.
-4. ```parametros```: Hecha para contener todos los valores usados a lo largo del código.
+2. ```entidades```: Contiene a ```Juego```, ```Bebestible``` y sus respectivas sub-clases.
+3. ```jugador```: Contiene a ```Jugador``` y sus respecticas sub-clases
+4. ```manejo_csv```: Hecha para trabajar con los archivos csv en un solo lugar.
+5. ```parametros```: Hecha para contener todos los valores usados a lo largo del código.
 
 ## Supuestos y consideraciones adicionales :thinking:
 Los supuestos que realicé durante la tarea son los siguientes:
