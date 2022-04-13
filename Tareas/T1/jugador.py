@@ -48,9 +48,11 @@ class Jugador(ABC):
 
         elif value > 100:
             self._energia = 100
+            self.agotado = False
 
         else:
             self._energia = value
+            self.agotado = False
 
     @property
     def suerte(self):
@@ -79,6 +81,7 @@ class Jugador(ABC):
 
         else:
             self._dinero = value
+            self.quiebra = False
 
     @property
     def frustracion(self):
