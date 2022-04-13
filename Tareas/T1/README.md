@@ -64,11 +64,11 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 1. Para el bonus de Show, considero que no es necesario crear una clase dedicada, ya que se puede implementar el show a través de un método de la clase ```Casino```.
 2. En el menú de juegos, si se apuesta $0 se cancela la apuesta y se vuelve al menú anterior, ya que no tiene sentido poder apostar $0 y tener la posibilidad de activar un evento especial o alguna habilidad de jugador.
-3. Las cantidades que se suman o restan al jugador con la habilidad ludopatia deberían estar en parametros.py, ya que no se deberían hardcodear estos valores.
+3. Las cantidades que se suman o restan al jugador con la habilidad ludopatia deberían estar en ```parametros.py```, ya que no se deberían hardcodear estos valores.
 4. Si el jugador se queda sin energía, no podrá seguir apostando, pero podrá realizar otras acciones para poder recuperar energía.
 5. Si el jugadro se queda sin dinero, se vuelve al menú de inicio, y se puede empezar de nuevo con otro jugador, pero el que se quedó sin dinero ya no estará disponible.
 6. Si el jugador recolecta el dinero suficiente para terminar, tendrá la opción de seguir jugando y en el menú principal aparecerá la opción para terminar el juego.
-7. Para que no hayan probabilidades de apuesta negativas, se hace uso se la funcion max(0, probabilidad) para que devuelva 0 en este caso.
+7. Para que no hayan probabilidades de apuesta negativas, se hace uso se la funcion ```max(0, probabilidad)``` para que devuelva 0 en este caso.
 
 -------
 
