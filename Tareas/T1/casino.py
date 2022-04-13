@@ -1,5 +1,6 @@
 import sys
 import random
+
 import parametros
 import manejo_csv
 
@@ -128,11 +129,10 @@ class Casino:
             return self.menu_bebestibles()
 
         elif accion == 3:
-            self.estado_jugador()
+            return self.estado_jugador()
 
         elif accion == 4:
-            self.show()
-            return self.menu_principal()
+            return self.show()
 
         elif accion == 5 and self.opcion_pagar:
             print(f"\n\n{'*** FELICIDADES ***': ^37}\n")
@@ -257,7 +257,7 @@ class Casino:
 
         if self.jugador.dinero < parametros.DINERO_SHOW:
             print("No tienes suficiente dinero para ver el show...")
-            return
+            return self.menu_principal()
         else:
             self.jugador.dinero -= parametros.DINERO_SHOW
             self.jugador.energia += parametros.ENERGIA_SHOW
@@ -268,4 +268,4 @@ class Casino:
             print(f"Gracias a esto, ha recuperado {parametros.ENERGIA_SHOW} de energía",
                   f"y ha disminuído en {parametros.FRUSTRACION_SHOW} su frustración.\n")
 
-            return
+            return self.menu_principal()
