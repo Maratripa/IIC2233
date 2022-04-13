@@ -64,7 +64,7 @@ def obtener_bebestibles() -> list:
             elif actual["tipo"] == "Gaseosa":
                 bebestibles.append(entidades.Gaseosa(**actual))
 
-            elif actual["tipo"] == "Brebaje Mágico":
+            elif actual["tipo"] == "Brebaje mágico":
                 bebestibles.append(entidades.BrebajeMagico(**actual))
 
     return bebestibles
