@@ -55,6 +55,12 @@ class Casino:
                 beb.consumir(self.jugador)
 
     def jugar(self, juego) -> str:
+        if self.jugador.agotado:
+            m = (f"\nEl jugador {self.jugador.nombre}",
+                 "no tiene la energía suficiente para seguir jugando...")
+
+            return m
+
         if self.jugador.dinero >= juego.apuesta_minima:
             juego.menu_de_juego(self.jugador)
             return ""
@@ -65,6 +71,10 @@ class Casino:
             return m
 
     def menu_principal(self, mensaje_error=""):
+        if self.jugador.quiebra:
+            print(
+                "\n\nTe quedaste sin dinero y BigCat ha mandado a sus matones a por ti...")
+            return
 
         if self.jugador.dinero >= self.dinero_faltante and not self.opcion_pagar:
             def print_menu() -> int:
@@ -101,7 +111,7 @@ class Casino:
             print("[1] Opciones de juegos")
             print("[2] Comprar bebestible")
             print("[3] Estado jugador")
-            print("[4] Show")  # TODO
+            print("[4] Show")
 
             if self.opcion_pagar:
                 print("[5] Pagar deuda")

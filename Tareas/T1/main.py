@@ -5,8 +5,6 @@ import casino
 
 
 def elegir_jugador():
-    # funcion externa que devuelve una lista con jugadores
-    jugadores = manejo_csv.obtener_jugadores()
 
     if not jugadores:
         print("Error leyendo jugadores.csv, lista vacía")
@@ -69,6 +67,10 @@ def funcion(opciones, callback) -> int:
 
 def menu_inicio():
 
+    for i, j in enumerate(jugadores):
+        if j.quiebra:
+            jugadores.remove(j)
+
     def print_menu() -> int:
         print("\n*** Menú de inicio ***")
         print("----------------------")
@@ -107,4 +109,5 @@ def menu_inicio():
 if __name__ == "__main__":
     print("\n¡BIENVENIDO A DCCASINO!")
     dccasino = casino.Casino()
+    jugadores = manejo_csv.obtener_jugadores()
     menu_inicio()

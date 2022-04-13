@@ -23,7 +23,8 @@ class Jugador(ABC):
 
         self.juegos_jugados = []
 
-        # super().__init__(*ar, **kw)
+        self.quiebra = False
+        self.agotado = False
 
     @property
     def energia(self):
@@ -33,6 +34,7 @@ class Jugador(ABC):
     def energia(self, value):
         if value < 0:
             self._energia = 0
+            self.agotado = True
         elif value > 100:
             self._energia = 100
         else:
@@ -57,8 +59,9 @@ class Jugador(ABC):
 
     @dinero.setter
     def dinero(self, value):
-        if value < 0:
+        if value <= 0:
             self._dinero = 0
+            self.quiebra = True
         else:
             self._dinero = value
 
@@ -136,6 +139,8 @@ class Jugador(ABC):
             victoria = False
 
         juego.entregar_resultados(self, apuesta, victoria)
+
+        self.energia -= round((self.ego + self.frustracion) * 0.15)
 
         self.juegos_jugados.append(juego.nombre)
 
