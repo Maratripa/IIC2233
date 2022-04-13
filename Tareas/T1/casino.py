@@ -76,6 +76,9 @@ class Casino:
                 "\n\nTe quedaste sin dinero y BigCat ha mandado a sus matones a por ti...")
             return
 
+        if self.jugador.dinero < self.dinero_faltante:
+            self.opcion_pagar = False
+
         if self.jugador.dinero >= self.dinero_faltante and not self.opcion_pagar:
             def print_menu() -> int:
                 print("\n\nTienes suficiente dinero como para")
