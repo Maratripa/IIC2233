@@ -8,29 +8,31 @@ Los jugadores existen aparte del casino, por lo que si juegas con un personaje, 
 ### Cosas implementadas y no implementadas :white_check_mark: :x:
 
 #### Programación Orientada a Objetos: 38 pts (28%)
-##### ✅  Diagrama <Se encuentra en un archivo llamado diagrama.jpeg>
-##### ✅ Definición de clases, atributos, métodos y properties <Las clases se encuentran repartidas entre tres archivos, las sub-clases se encuentran todas en el mismo archivo que la clase padre>
-##### ✅ Relaciones entre clases <Todas las subclases heredan correctamente los métodos y atributos>
+##### ✅  Diagrama <Se encuentra en un archivo llamado diagrama.jpeg\>
+##### ✅ Definición de clases, atributos, métodos y properties <Las clases se encuentran repartidas entre tres archivos, las sub-clases se encuentran todas en el mismo archivo que la clase padre\>
+##### ✅ Relaciones entre clases <Todas las subclases heredan correctamente los métodos y atributos\>
 #### Simulaciones: 10 pts (7%)
-##### ✅ Crear partida <Al crear una partida se crea una lista con todos los jugadores disponibles y una instancia del DCCasino. Se puede volver y jugar con distintos personajes en una misma "partida">
+##### ✅ Crear partida <Al crear una partida se crea una lista con todos los jugadores disponibles y una instancia del DCCasino. Se puede volver y jugar con distintos personajes en una misma "partida"\>
 #### Acciones: 35 pts (26%)
-##### ✅ Jugador <Se encuentran implementadas las aciones de comprar_bebestible y apostar, además de las habilidades de cada personalidad>
-##### ✅ Juego <Los juegos tienen implementados todos sus respectivos métodos>
-##### ✅ Bebestible <Los bebestibles tienen implementados el método de consumir, además de las modificaciones de las sub-clases>
-##### ✅ Casino <El casino tiene implementados todos los métodos de los menúes>
+##### ✅ Jugador <Se encuentran implementadas las aciones de comprar_bebestible y apostar, además de las habilidades de cada personalidad\>
+##### ✅ Juego <Los juegos tienen implementados todos sus respectivos métodos\>
+##### ✅ Bebestible <Los bebestibles tienen implementados el método de consumir, además de las modificaciones de las sub-clases\>
+##### ✅ Casino <El casino tiene implementados todos los métodos de los menúes\>
 #### Consola: 41 pts (30%)
-##### ✅ Menú de Inicio <El menú de inicio es la entrada al jugador, donde este puede entrar al casino eligiendo un personaje o salir de el juego>
-##### ✅ Opciones de jugador <En las opciones de jugador se muestra cada personaje con su personalidad. Se muestran solo los personajes que no están en quiebra>
-##### ✅ Menú principal <En el menú principal se muestran las opciones para ir al menú de juegos, menú de bebestibles, ver el show, y en caso de estar disponible la opción, pagar la deuda>
-##### ✅ Opciones de juegos <En el menú de juegos se enumeran todos los juegos y se pueden seleccionar solo aquellos en los que se puede apostar (cuando se tiene más dinero que la apuesta mínima)>
-##### ✅ Carta de bebestibles <En la carta de bebestibles se muestran todos los bebestibles con su tipo y precio, también se muestra el dinero disponible del jugador>
-##### ✅ Ver estado del Jugador <En el estado del jugador se imprimen todos los atributos acutales del jugador>
-##### ✅ Robustez <En cada menú están las opciones para volver al menú anterior o salir del juego (cuando se está apostando en un juego no se puede salir, pero si volver). Todos los inputs cuentan con validación de string, para que no se pueda ingrasar un valor no válido>
+##### ✅ Menú de Inicio <El menú de inicio es la entrada al jugador, donde este puede entrar al casino eligiendo un personaje o salir de el juego\>
+##### ✅ Opciones de jugador <En las opciones de jugador se muestra cada personaje con su personalidad. Se muestran solo los personajes que no están en quiebra\>
+##### ✅ Menú principal <En el menú principal se muestran las opciones para ir al menú de juegos, menú de bebestibles, ver el show, y en caso de estar disponible la opción, pagar la deuda\>
+##### ✅ Opciones de juegos <En el menú de juegos se enumeran todos los juegos y se pueden seleccionar solo aquellos en los que se puede apostar (cuando se tiene más dinero que la apuesta mínima)\>
+##### ✅ Carta de bebestibles <En la carta de bebestibles se muestran todos los bebestibles con su tipo y precio, también se muestra el dinero disponible del jugador\>
+##### ✅ Ver estado del Jugador <En el estado del jugador se imprimen todos los atributos acutales del jugador\>
+##### ✅ Robustez <En cada menú están las opciones para volver al menú anterior o salir del juego (cuando se está apostando en un juego no se puede salir, pero si volver). Todos los inputs cuentan con validación de string, para que no se pueda ingrasar un valor no válido\>
 #### Manejo de archivos: 13 pts (9%)
-##### ✅ Archivos CSV  <El manejo de csv se encuentra en manejo_csv.py, está diseñado para que funcione concualquier orden de headers>
-##### ✅ parametros.py <Todos los valores están declarados en parametros.py y no hay valores hardcodeados>
+##### ✅ Archivos CSV  <El manejo de csv se encuentra en manejo_csv.py, está diseñado para que funcione concualquier orden de headers\>
+##### ✅ parametros.py <Todos los valores están declarados en parametros.py y no hay valores hardcodeados\>
 #### Bonus: 3 décimas máximo
-##### ✅ Ver Show <Se elige un show al azar y se modifican los atributos del jugador actual.>
+
+
+##### ✅ Ver Show <Se elige un show al azar y se modifican los atributos del jugador actual\>
 
 
 ## Ejecución :computer:
