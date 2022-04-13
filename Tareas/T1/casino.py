@@ -181,6 +181,7 @@ class Casino:
 
         def print_menu() -> int:
             print(f"\n\n{'*** Bebestibles ***': ^37s}\n")
+            print(f"Dinero jugador: ${self.jugador.dinero:,}\n")
             print(
                 f"{'N°': ^4s} | {'Nombre': <14s} | {'Tipo': <14s} | {'Precio': ^5s}")
             print('~' * 47)
