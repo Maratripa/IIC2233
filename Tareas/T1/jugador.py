@@ -151,7 +151,7 @@ class Jugador(ABC):
             return -1
 
         else:
-            # multiplicador del borracho
+            # multiplicador del bebedor
             bebestible.consumir(self, multiplicador)
             self.dinero -= bebestible.precio
             return 0
