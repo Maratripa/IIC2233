@@ -4,12 +4,34 @@ import manejo_csv
 import casino
 
 
+# Funcion para validar input y llamar a una funcion de callback en caso de que la opcion elegida
+# no este dentro de las opciones
+def funcion(opciones, callback) -> int:
+    eleccion = input("\nIngrese opción: ")
+
+    if eleccion.isnumeric():
+        # revisar si el numero esta en las opciones
+        if int(eleccion) in opciones:
+            return int(eleccion)
+
+        else:
+            return callback()
+
+    else:
+        if eleccion in opciones:  # 'x'
+            return -1
+
+        else:
+            return callback()
+
+
 def elegir_jugador():
 
     if not jugadores:
-        print("Error leyendo jugadores.csv, lista vacía")
+        print("Error leyendo jugadores.csv, lista vacía")  # debug
         return
 
+    # imprimir menu y validar input
     def print_menu() -> int:
         print(f"\n\n{'*** Opciones de Jugador ***': ^37s}")
         print('-' * 37)
@@ -47,30 +69,13 @@ def elegir_jugador():
         sys.exit(1)
 
 
-def funcion(opciones, callback) -> int:
-    eleccion = input("\nIngrese opción: ")
-
-    if eleccion.isnumeric():
-        if int(eleccion) in opciones:
-            return int(eleccion)
-
-        else:
-            return callback()
-
-    else:
-        if eleccion in opciones:
-            return -1
-
-        else:
-            return callback()
-
-
 def menu_inicio():
 
     for i, j in enumerate(jugadores):
         if j.quiebra:
             jugadores.remove(j)
 
+    # funcion para imprimir el menu y asegurar input correcto
     def print_menu() -> int:
         print("\n*** Menú de inicio ***")
         print("----------------------")
@@ -95,6 +100,8 @@ def menu_inicio():
             dccasino.jugador = jugador
             dccasino.menu_principal()
 
+        # volver al menu de inicio si hay algun problema con la eleccion de jugador o si elige la
+        # opcion de volver
         return menu_inicio()
 
     elif eleccion == -1:  # -1 siempre será eleccion 'x'
@@ -108,6 +115,11 @@ def menu_inicio():
 
 if __name__ == "__main__":
     print("\n¡BIENVENIDO A DCCASINO!")
+
+    # Casino
     dccasino = casino.Casino()
+
+    # Lista que contiene a lso jugadores no en quiebra
     jugadores = manejo_csv.obtener_jugadores()
+
     menu_inicio()

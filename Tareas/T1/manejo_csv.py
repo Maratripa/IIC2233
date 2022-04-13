@@ -1,9 +1,11 @@
 import os
 
 import entidades
+from jugador import JugadorTacano, JugadorBebedor, JugadorLudopata, JugadorCasual
 
 
 def obtener_jugadores() -> list:
+    # path de este archivo y de aqui ir a los csv
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     jugadores = []  # lista con instancias de jugadores
@@ -11,12 +13,13 @@ def obtener_jugadores() -> list:
     with open(os.path.join(dir_path, "jugadores.csv"), 'r', encoding="utf-8") as file:
         lectura = file.readlines()
 
-        headers = lectura[0].strip().split(',')
+        headers = lectura[0].strip().split(',')  # llaves del diccionario
 
         for line in lectura[1:]:
             actual = {headers[i]: e for
-                      i, e in enumerate(line.strip().split(','))}
-            entry = {
+                      i, e in enumerate(line.strip().split(','))}  # comprension de diccionarios
+
+            entry = {  # diccionario de kwargs para los jugadores
                 "nombre": actual["nombre"],
                 "personalidad": actual["personalidad"],
                 "energia": actual["energia"],
@@ -30,21 +33,22 @@ def obtener_jugadores() -> list:
             }
 
             if actual["personalidad"] == "Ludopata":
-                jugadores.append(entidades.JugadorLudopata(**entry))
+                jugadores.append(JugadorLudopata(**entry))
 
             elif actual["personalidad"] == "Tacano":
-                jugadores.append(entidades.JugadorTacano(**entry))
+                jugadores.append(JugadorTacano(**entry))
 
             elif actual["personalidad"] == "Bebedor":
-                jugadores.append(entidades.JugadorBebedor(**entry))
+                jugadores.append(JugadorBebedor(**entry))
 
             elif actual["personalidad"] == "Casual":
-                jugadores.append(entidades.JugadorCasual(**entry))
+                jugadores.append(JugadorCasual(**entry))
 
-    return jugadores
+    return jugadores  # lista de jugadores
 
 
 def obtener_bebestibles() -> list:
+    # path de este archivo y de aqui ir a los csv
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     bebestibles = []
@@ -52,11 +56,11 @@ def obtener_bebestibles() -> list:
     with open(os.path.join(dir_path, "bebestibles.csv"), 'r', encoding="utf-8") as file:
         lectura = file.readlines()
 
-        headers = lectura[0].strip().split(',')
+        headers = lectura[0].strip().split(',')  # llaves del diccionario
 
         for line in lectura[1:]:
             actual = {headers[i]: e for i,
-                      e in enumerate(line.strip().split(','))}
+                      e in enumerate(line.strip().split(','))}  # comprension de diccionario
 
             if actual["tipo"] == "Jugo":
                 bebestibles.append(entidades.Jugo(**actual))
@@ -67,10 +71,11 @@ def obtener_bebestibles() -> list:
             elif actual["tipo"] == "Brebaje mágico":
                 bebestibles.append(entidades.BrebajeMagico(**actual))
 
-    return bebestibles
+    return bebestibles  # lista de bebestibles
 
 
 def obtener_juegos() -> list:
+    # path de este archivo y de aqui ir a los csv
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     juegos = []
@@ -78,12 +83,13 @@ def obtener_juegos() -> list:
     with open(os.path.join(dir_path, "juegos.csv"), 'r', encoding="utf-8") as file:
         lectura = file.readlines()
 
-        headers = lectura[0].strip().split(',')
+        headers = lectura[0].strip().split(',')  # llaves del diccionario
 
         for line in lectura[1:]:
             actual = {headers[i]: e for i,
-                      e in enumerate(line.strip().split(','))}
+                      e in enumerate(line.strip().split(','))}  # comprension de diccionario
 
+            # kwargs de juegos
             entry = {
                 "nombre": actual["nombre"],
                 "esperanza": actual["esperanza"],
@@ -93,4 +99,4 @@ def obtener_juegos() -> list:
 
             juegos.append(entidades.Juego(**entry))
 
-    return juegos
+    return juegos  # lista de juegos
