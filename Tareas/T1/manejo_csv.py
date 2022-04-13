@@ -1,10 +1,14 @@
+import os
+
 import entidades
 
 
 def obtener_jugadores() -> list:
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
     jugadores = []  # lista con instancias de jugadores
 
-    with open("jugadores.csv", 'r', encoding="utf-8") as file:
+    with open(os.path.join(dir_path, "jugadores.csv"), 'r', encoding="utf-8") as file:
         lectura = file.readlines()
 
         headers = lectura[0].strip().split(',')
@@ -41,9 +45,11 @@ def obtener_jugadores() -> list:
 
 
 def obtener_bebestibles() -> list:
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
     bebestibles = []
 
-    with open("bebestibles.csv", 'r', encoding="utf-8") as file:
+    with open(os.path.join(dir_path, "bebestibles.csv"), 'r', encoding="utf-8") as file:
         lectura = file.readlines()
 
         headers = lectura[0].strip().split(',')
@@ -65,9 +71,11 @@ def obtener_bebestibles() -> list:
 
 
 def obtener_juegos() -> list:
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
     juegos = []
 
-    with open("juegos.csv", 'r', encoding="utf-8") as file:
+    with open(os.path.join(dir_path, "juegos.csv"), 'r', encoding="utf-8") as file:
         lectura = file.readlines()
 
         headers = lectura[0].strip().split(',')
