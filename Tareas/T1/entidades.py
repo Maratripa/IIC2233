@@ -403,8 +403,6 @@ class BrebajeMagico(Jugo, Gaseosa):
         super().__init__(*ar, **kw)
 
     def consumir(self, jugador: Jugador, multiplicador: float = 1.0) -> None:
-        #Jugo.consumir(self, jugador, multiplicador)
-        #Gaseosa.consumir(self, jugador, multiplicador)
         super().consumir(jugador, multiplicador)
 
         carisma = round(5 * multiplicador)
