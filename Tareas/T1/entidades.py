@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
+import random
 
 import parametros
-import random
 
 
 class Jugador(ABC):
@@ -139,7 +139,7 @@ class Jugador(ABC):
 
         self.juegos_jugados.append(juego.nombre)
 
-    def probabilidad_ganar(self, nombre_juego, apuesta):
+    def probabilidad_ganar(self, nombre_juego, apuesta) -> float:
         if nombre_juego == self.juego_favorito:
             es_favorito = 1
         else:
@@ -171,25 +171,27 @@ class JugadorLudopata(Jugador):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def comprar_bebestible(self, bebestible):
+    def comprar_bebestible(self, bebestible) -> int:
         return super().comprar_bebestible(bebestible)
 
-    def apostar(self, juego, apuesta):
+    def apostar(self, juego, apuesta) -> None:
         victoria = None
         super().apostar(juego, apuesta)
 
         self.ludopatia(victoria)
 
-    def ludopatia(self, victoria):
-        self.ego += 2
-        self.suerte += 3
+    def ludopatia(self, victoria) -> None:
+        self.ego += parametros.EGO_LUDOPATIA
+        self.suerte += parametros.SUERTE_LUDOPATIA
 
         print(f"Por ser ludópata, el jugador {self.nombre}",
-              "recibe un aumento al ego en 2 y a la suerte 3 por apostar!")
+              f"recibe un aumento al ego en {parametros.EGO_LUDOPATIA}",
+              f"y a la suerte {parametros.SUERTE_LUDOPATIA} por apostar!")
 
         if not victoria:
-            self.frustracion += 5
-            print("Pero debido a la derrota, su frustración aumenta en 5...")
+            self.frustracion += parametros.FRUSTRACION_LUDOPATIA
+            print("Pero debido a la derrota, su frustración",
+                  f"aumenta en {parametros.FRUSTRACION_LUDOPATIA}...")
 
 
 class JugadorTacano(Jugador):
@@ -197,15 +199,15 @@ class JugadorTacano(Jugador):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def comprar_bebestible(self, bebestible):
+    def comprar_bebestible(self, bebestible) -> int:
         return super().comprar_bebestible(bebestible)
 
-    def apostar(self, juego, apuesta):
+    def apostar(self, juego, apuesta) -> None:
         super().apostar(juego, apuesta)
 
         self.tacano_extremo(apuesta)
 
-    def tacano_extremo(self, apuesta):
+    def tacano_extremo(self, apuesta) -> None:
         if apuesta < (parametros.PORCENTAJE_APUESTA_TACANO * self.dinero):
             bon = parametros.BONIFICACION_TACANO
             self.dinero += bon
@@ -218,11 +220,11 @@ class JugadorBebedor(Jugador):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def comprar_bebestible(self, bebestible):
+    def comprar_bebestible(self, bebestible) -> int:
         mult = self.cliente_recurrente()
         return super().comprar_bebestible(bebestible, mult)
 
-    def apostar(self, juego, apuesta):
+    def apostar(self, juego, apuesta) -> None:
         return super().apostar(juego, apuesta)
 
     def cliente_recurrente(self) -> float:
@@ -235,14 +237,14 @@ class JugadorCasual(Jugador):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def comprar_bebestible(self, bebestible):
+    def comprar_bebestible(self, bebestible) -> int:
         return super().comprar_bebestible(bebestible)
 
-    def apostar(self, juego, apuesta):
+    def apostar(self, juego, apuesta) -> None:
         self.suerte_principiante()
         super().apostar(juego, apuesta)
 
-    def suerte_principiante(self):
+    def suerte_principiante(self) -> None:
         if not self.juegos_jugados:
             bon = parametros.BONIFICACION_SUERTE_CASUAL
             print(
@@ -276,7 +278,7 @@ class Juego:
                 f"\nJugando {self.nombre}, el jugador {jugador.nombre} ha perdido ${apuesta:,}")
             jugador.dinero -= apuesta
 
-    def probabilidad_de_ganar(self, jugador: Jugador, apuesta: int):
+    def probabilidad_de_ganar(self, jugador: Jugador, apuesta: int) -> float:
         prob = min(
             1, max(0, (jugador.probabilidad_ganar(self.nombre, apuesta) -
                        ((apuesta - (self.es_favorito(jugador) * 50
@@ -331,7 +333,7 @@ class Bebestible(ABC):
         self.precio = int(precio)
 
     @abstractmethod
-    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0) -> None:
         recuperacion = random.randint(
             parametros.MIN_ENERGIA_BEBESTIBLE, parametros.MAX_ENERGIA_BEBESTIBLE)
 
@@ -346,7 +348,7 @@ class Jugo(Bebestible):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0) -> None:
         super().consumir(jugador, multiplicador)
 
         if len(self.nombre) <= 4:
@@ -375,7 +377,7 @@ class Gaseosa(Bebestible):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0) -> None:
         super().consumir(jugador, multiplicador)
 
         if isinstance(jugador, JugadorTacano) or isinstance(jugador, JugadorLudopata):
@@ -400,7 +402,7 @@ class BrebajeMagico(Jugo, Gaseosa):
     def __init__(self, *ar, **kw):
         super().__init__(*ar, **kw)
 
-    def consumir(self, jugador: Jugador, multiplicador: float = 1.0):
+    def consumir(self, jugador: Jugador, multiplicador: float = 1.0) -> None:
         Jugo.consumir(self, jugador, multiplicador)
         Gaseosa.consumir(self, jugador, multiplicador)
 
