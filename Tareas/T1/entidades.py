@@ -340,7 +340,7 @@ class Bebestible(ABC):
         recuperacion = round(recuperacion * multiplicador)
         jugador.energia += recuperacion
         print(
-            f"\nEl jugador {jugador.nombre} ha recuperado {recuperacion} energía!")
+            f"\nEl jugador {jugador.nombre} ha recuperado {recuperacion} energía!\n")
 
 
 class Jugo(Bebestible):
@@ -403,10 +403,11 @@ class BrebajeMagico(Jugo, Gaseosa):
         super().__init__(*ar, **kw)
 
     def consumir(self, jugador: Jugador, multiplicador: float = 1.0) -> None:
-        Jugo.consumir(self, jugador, multiplicador)
-        Gaseosa.consumir(self, jugador, multiplicador)
+        #Jugo.consumir(self, jugador, multiplicador)
+        #Gaseosa.consumir(self, jugador, multiplicador)
+        super().consumir(jugador, multiplicador)
 
         carisma = round(5 * multiplicador)
         jugador.carisma += carisma
         print(
-            f"El carisma del jugador {jugador.nombre} ha aumento en {carisma}!")
+            f"\nEl carisma del jugador {jugador.nombre} ha aumento en {carisma}!")
