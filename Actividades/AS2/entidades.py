@@ -38,11 +38,13 @@ class Cocinero(Persona):
 
             tiempo_espera = randint(1, 3)
             sleep(tiempo_espera)
+
             self.cocinar()
 
     def cocinar(self):
         # Completar
         self.disponible = False
+
         plato = self.sacar_plato()
         print(f"El cocinero {self.nombre} esta cocinando {plato[1]}")
 
@@ -58,9 +60,12 @@ class Cocinero(Persona):
 
         self.disponible = True
 
+        return
+
     def sacar_plato(self) -> tuple:
         # Completar
         with self.lock_cola_pedidos:
+            #print(f"{self.nombre} esta sacando plato")
             plato = self.lugar_trabajo.cola_pedidos.popleft()
 
             return plato
@@ -79,7 +84,7 @@ class Cocinero(Persona):
         # }
 
         # Completar
-        nombre_plato = plato[0]
+        nombre_plato = plato[1]
 
         print(f"Buscando ingredientes para el plato {nombre_plato}...")
 
@@ -90,13 +95,14 @@ class Cocinero(Persona):
                 nombre_ing = i[0]
                 cantidad = int(i[1])
 
-                print(f"Sacando {cantidad} de {nombre_ing}...")
+                #print(f"Sacando {cantidad} de {nombre_ing}...")
 
                 bodega[nombre_ing] -= cantidad
 
     def agregar_plato(self, plato):
         # Completar
         with self.lock_cola_pedidos_listos:
+            #print("plato listo")
             self.lugar_trabajo.cola_pedidos_listos.append(plato)
 
 
@@ -122,7 +128,7 @@ class Mesero(Persona):
 
         with self.lock_cola_pedidos:
             cocina.cola_pedidos.append(pedido)
-
+            #print("pedido anadido")
             self.evento_manejar_pedido.set()
 
     def entregar_pedido(self, cocina):
