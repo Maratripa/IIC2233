@@ -38,26 +38,30 @@ class Cocina:
                         encontrado = True
                         self.cocineros[counter].evento_plato_asignado.set()
                     else:
-                        counter += 1
-
-            '''
-            for cocinero in self.cocineros:
-                if len(self.cola_pedidos) > 0 and cocinero.disponible:
-                    cocinero.evento_plato_asignado.set()
-
-                    while cocinero.evento_plato_asignado.is_set():
-                        pass
-            '''
+                        if counter == len(self.cocineros) - 1:
+                            counter = 0
+                        else:
+                            counter += 1
 
     def asignar_mesero(self):
         # Completar
         while self.abierta:
             sleep(1)
 
-            for mesero in self.meseros:
-                if len(self.cola_pedidos_listos) > 0 and mesero.disponible:
-                    mesero.evento_manejar_pedido.set()
-                    mesero.entregar_pedido(self)
+            if len(self.cola_pedidos_listos) > 0:
+                encontrado = False
+                counter = 0
+
+                while not encontrado:
+                    if self.meseros[counter].disponible:
+                        encontrado = True
+                        self.meseros[counter].evento_manejar_pedido.set()
+                        self.meseros[counter].entregar_pedido(self)
+                    else:
+                        if counter == len(self.meseros) - 1:
+                            counter = 0
+                        else:
+                            counter += 1
 
         self.finalizar_jornada_laboral()
 
