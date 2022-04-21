@@ -96,7 +96,8 @@ class Cocinero(Persona):
 
     def agregar_plato(self, plato):
         # Completar
-        pass
+        with self.lock_cola_pedidos:
+            self.lugar_trabajo.cola_pedidos.append(plato)
 
 
 class Mesero(Persona):
