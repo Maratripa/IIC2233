@@ -29,12 +29,25 @@ class Cocina:
         while self.abierta:
             sleep(1)
 
+            if len(self.cola_pedidos) > 0:
+                encontrado = False
+                counter = 0
+
+                while not encontrado:
+                    if self.cocineros[counter].disponible:
+                        encontrado = True
+                        self.cocineros[counter].evento_plato_asignado.set()
+                    else:
+                        counter += 1
+
+            '''
             for cocinero in self.cocineros:
                 if len(self.cola_pedidos) > 0 and cocinero.disponible:
                     cocinero.evento_plato_asignado.set()
 
                     while cocinero.evento_plato_asignado.is_set():
                         pass
+            '''
 
     def asignar_mesero(self):
         # Completar
