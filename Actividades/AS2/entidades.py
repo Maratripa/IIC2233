@@ -96,8 +96,8 @@ class Cocinero(Persona):
 
     def agregar_plato(self, plato):
         # Completar
-        with self.lock_cola_pedidos:
-            self.lugar_trabajo.cola_pedidos.append(plato)
+        with self.lock_cola_pedidos_listos:
+            self.lugar_trabajo.cola_pedidos_listos.append(plato)
 
 
 class Mesero(Persona):
@@ -105,19 +105,39 @@ class Mesero(Persona):
     def __init__(self, nombre):
         super().__init__(nombre)
         # Completar
+        self.evento_manejar_pedido = Event()
 
     def run(self):
         # Completar
-        pass
+        while self.trabajando:
+            if self.disponible:
+                self.evento_manejar_pedido.set()
 
-    def agregar_pedido(self, pedido, cocina):
+    def agregar_pedido(self, pedido: tuple, cocina):
         # Completar
-        pass
+        self.evento_manejar_pedido.clear()
+
+        tiempo_espera = randint(1, 2)
+        sleep(tiempo_espera)
+
+        with self.lock_cola_pedidos:
+            cocina.cola_pedidos.append(pedido)
+
+            self.evento_manejar_pedido.set()
 
     def entregar_pedido(self, cocina):
         # Completar
-        pass
+        self.evento_manejar_pedido.clear()
+
+        tiempo_espera = randint(1, 3)
+        sleep(tiempo_espera)
+
+        with self.lock_cola_pedidos_listos:
+            pedido = cocina.cola_pedidos_listos.popleft()
+            self.pedido_entregado(pedido)
 
     def pedido_entregado(self, pedido):
         # Completar
-        pass
+        print(f"Entregando {pedido[1]} a la mesa {pedido[0]}")
+
+        self.evento_manejar_pedido.set()
