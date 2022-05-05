@@ -34,7 +34,15 @@ class Topo(QObject):
 
     def instanciar_timer(self):
         # COMPLETAR
-        pass
+        self.timer_salir = QTimer(self)
+        self.timer_salir.setSingleShot(True)
+        self.timer_salir.setInterval(self.tiempo_salir)
+        self.timer_salir.timeout.connect(self.toggle_hide)
+
+        self.timer_afuera = QTimer(self)
+        self.timer_afuera.setSingleShot(True)
+        self.timer_afuera.setInterval(self.tiempo_afuera)
+        self.timer_afuera.timeout.connect(self.toggle_hide)
 
     def start_timer(self):
         self.timer_salir.start()
@@ -66,9 +74,16 @@ class Martillo(QObject):
         self.martillo_label.resize(p.WIDTH_MARTILLO, p.HEIGHT_MARTILLO)
         self.martillo_label.move(self.pos_martillo.x(), self.pos_martillo.y())
 
-    def mover(self, dir):
+    def mover(self, dir: str):
         # COMPLETAR
-        pass
+        if dir == "L":
+            self.pos_martillo.moveTo(p.MARTILLO_L_X, p.MARTILLO_L_Y)
+        elif dir == "R":
+            self.pos_martillo.moveTo(p.MARTILLO_R_X, p.MARTILLO_R_Y)
+        elif dir == "U":
+            self.pos_martillo.moveTo(p.MARTILLO_U_X, p.MARTILLO_U_Y)
+        elif dir == "D":
+            self.pos_martillo.moveTo(p.MARTILLO_D_X, p.MARTILLO_D_Y)
 
     def reset(self):
         self.pos_martillo.moveTo(p.POS_INICIO_MARTILLO[0],
@@ -106,7 +121,22 @@ class LogicaJuego(QObject):
 
     def instanciar_timer(self):
         # COMPLETAR
-        pass
+        self.timer_juego = QTimer(self)
+        self.timer_juego.setSingleShot(True)
+        self.timer_juego.setInterval(p.TIEMPO_JUEGO)
+        self.timer_juego.timeout.connect(self.terminar_juego)
+
+        self.timer_actualizar = QTimer(self)
+        self.timer_actualizar.setInterval(p.ACTUALIZAR_JUEGO)
+        self.timer_actualizar.timeout.connect(self.actualizar_juego)
+
+        self.timer_martillo = QTimer(self)
+        self.timer_martillo.setInterval(p.RESET_MARTILLO)
+        self.timer_martillo.timeout.connect(self.reset_martillo)
+
+        self.timers.append(self.timer_juego)
+        self.timers.append(self.timer_actualizar)
+        self.timers.append(self.timer_martillo)
 
     def iniciar_juego(self):
         self.puntaje = 0
@@ -114,6 +144,8 @@ class LogicaJuego(QObject):
         for topo in self.topos:
             topo.start_timer()
         # COMPLETAR
+        for timer in self.timers:
+            timer.start()
 
     def generar_topos(self):
         pos_topo_l = QRect(p.TOPO_L_X, p.TOPO_L_Y, p.WIDTH_TOPO, p.HEIGHT_TOPO)

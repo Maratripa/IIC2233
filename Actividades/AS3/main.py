@@ -28,6 +28,23 @@ if __name__ == '__main__':
 
     # ~~ Conexiones de señales ~~
     # COMPLETAR
+    ventana_inicio.senal_enviar_login.connect(logica_inicio.comprobar_usuario)
+
+    logica_inicio.senal_respuesta_validacion.connect(
+        ventana_inicio.recibir_validacion)
+    logica_inicio.senal_abrir_juego.connect(ventana_juego.mostrar_ventana)
+
+    ventana_juego.senal_iniciar_juego.connect(logica_juego.iniciar_juego)
+    ventana_juego.senal_tecla.connect(logica_juego.mover_martillo)
+
+    logica_juego.senal_martillo.connect(ventana_juego.mover_martillo)
+    logica_juego.senal_actualizar.connect(ventana_juego.actualizar_datos)
+    logica_juego.senal_topos.connect(ventana_juego.actualizar_topos)
+    logica_juego.senal_termino_juego.connect(ventana_postjuego.abrir)
+    logica_juego.senal_cerrar_ventana_juego.connect(ventana_juego.salir)
+
+    ventana_postjuego.senal_abrir_inicio.connect(ventana_inicio.show)
+    ventana_postjuego.senal_cerrar_juego.connect(app.exit)
 
     ventana_inicio.show()
     app.exec()
