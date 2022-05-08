@@ -3,7 +3,16 @@ Para el correcto funcionamiento, la capeta 'Sprites' debe
 ser colocada dentro de frontend/assets.
 
 Muchos de los valores estan hardcodeados a proposito, ya que el manejo de
-anchos y altos de sprites los manejare de menor manera despues
+anchos y altos de sprites los manejare de menor manera despues.
+
+En vez de tener un valor para cada componente de las velocidades, decidi
+utilizar un solo valor de rapidez para que la mira se mueva en todas direcciones
+uniformemente y tambien para que el alien tenga una velocidad random cuando parta.
+
+Utilize un timer para simular 'framerate' y asi poder detectar mas de una tecla presionada.
+
+El manejo de teclas presionadas y el uso del timer fueron inspirados por:
+https://gist.github.com/rogerallen/f06ba704ce3befb5459239e3fdf842c7
 """
 
 
