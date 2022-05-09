@@ -21,8 +21,7 @@ import math
 import sys
 from PyQt5.QtCore import pyqtSignal, QObject, QTimer
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QWidget, QApplication, QLabel,
-                             QVBoxLayout, QHBoxLayout, QPushButton)
+from PyQt5.QtWidgets import (QWidget, QApplication, QLabel)
 import parametros as p
 
 
@@ -98,7 +97,7 @@ class Alien(QObject):
         self._x = randint(0, 728 - self.width)
         self._y = randint(0, 410 - self.height)
 
-        angle = uniform(-math.pi, math.pi)
+        angle = uniform(-math.pi, math.pi)  # Angulo random
         self.vx = math.cos(angle) * p.RAPIDEZ_ALIEN
         self.vy = math.sin(angle) * p.RAPIDEZ_ALIEN
 
@@ -226,6 +225,7 @@ class Ventana(QWidget):
 
     def keyPressEvent(self, event):
         self.keys_pressed.add(event.text())
+        print(event.key())
         self.senal_teclas.emit(self.keys_pressed)
 
     def keyReleaseEvent(self, event):
