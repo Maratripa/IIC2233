@@ -14,9 +14,9 @@ RUTA_GALAXIA = ["frontend", "assets", "Sprites", "Fondos", "Galaxia.png"]
 RUTA_JUPITER = ["frontend", "assets", "Sprites", "Fondos", "Jupiter.png"]
 RUTA_LUNA = ["frontend", "assets", "Sprites", "Fondos", "Luna.png"]
 
-VENTANA_POS_X = 600
+VENTANA_POS_X = 200
 VENTANA_POS_Y = 200
-VENTANA_ANCHO = 600
+VENTANA_ANCHO = 960
 VENTANA_ALTO = 600
 
 MIRA_ANCHO = None

@@ -10,9 +10,13 @@ class VentanaJuego(QWidget):
 
     senal_boton_salir = pyqtSignal()
     senal_boton_pausa = pyqtSignal()
+    senal_actualizar_teclas = pyqtSignal(set)
 
-    def __init__(self, ruta_fondo: str, nivel: int, tiempo: int, cantidad_balas: int):
+    def __init__(self):
         super().__init__()
+
+        # Teclas apretadas
+        self.teclas = set()
 
         # Geometria
         self.setGeometry(200, 200, 960, 700)
@@ -24,23 +28,19 @@ class VentanaJuego(QWidget):
 
         # Fondo
         self.bg = QLabel(self)
-        pixmap_bg = QPixmap(ruta_fondo)
+        pixmap_bg = QPixmap()
         self.bg.setPixmap(pixmap_bg.scaled(960, 600, 2, 1))
         self.bg.setGeometry(0, 0, 960, 600)
 
         # Alien pixmaps
-        self.pixmap_alien = QPixmap(
-            f"frontend/assets/Sprites/Aliens/Alien{nivel}.png")
-        self.pixmap_alien_muerto = QPixmap(
-            f"frontend/assets/Sprites/Aliens/Alien{nivel}_dead.png")
+        self.pixmap_alien = QPixmap()
+        self.pixmap_alien_muerto = QPixmap()
 
         # Barra inferior
         # VBox tiempo
         self.label_tiempo = QLabel("Tiempo", self)
         self.barra_timepo = QProgressBar(self)
-        self.barra_timepo.setRange(0, tiempo)
         self.barra_timepo.setTextVisible(False)
-        self.barra_timepo.setValue(10)
 
         vbox1 = QVBoxLayout()
         vbox1.addWidget(self.label_tiempo)
@@ -54,7 +54,7 @@ class VentanaJuego(QWidget):
             "frontend/assets/Sprites/Elementos juego/Bala.png")
         self.icono_bala.setPixmap(self.pixmap_bala.scaled(10, 20))
 
-        self.cuenta_balas = QLabel(f"X {cantidad_balas}", self)
+        self.cuenta_balas = QLabel(f"X 0", self)
 
         hbox0_1 = QHBoxLayout()
         hbox0_1.addWidget(self.icono_bala)
@@ -74,7 +74,7 @@ class VentanaJuego(QWidget):
 
         # Vbox nivel
         self.label_nivel = QLabel("Nivel", self)
-        self.cuenta_nivel = QLabel(f"{nivel}", self)
+        self.cuenta_nivel = QLabel(f"0", self)
 
         vbox4 = QVBoxLayout()
         vbox4.addWidget(self.label_nivel)
@@ -116,6 +116,17 @@ class VentanaJuego(QWidget):
 
         # Setear Layout
         self.setLayout(vbox6)
+
+    def iniciar_juego(self):
+        pass
+
+    def keyPressEvent(self, event):
+        self.teclas.add(event.key())
+        self.senal_actualizar_teclas.emit(self.teclas)
+
+    def keyReleaseEvent(self, event):
+        self.teclas.remove(event.key())
+        self.senal_actualizar_teclas.emit(self.teclas)
 
     def salir_juego(self):
         self.senal_boton_salir.emit()

@@ -9,6 +9,7 @@ from frontend.ventana_principal import VentanaPrincipal
 from frontend.ventana_ranking import VentanaRanking
 
 from backend.logica_principal import LogicaPrincipal
+from backend.logica_juego import Juego
 
 import parametros as p
 
@@ -24,9 +25,11 @@ if __name__ == '__main__':
     ventana_inicio = VentanaInicio()
     ventana_ranking = VentanaRanking()
     ventana_principal = VentanaPrincipal()
-    ventana_juego = VentanaJuego(path.join(*p.RUTA_GALAXIA), 3, 60, 100)
+    ventana_juego = VentanaJuego()
 
     logica_principal = LogicaPrincipal()
+
+    logica_juego = Juego()
 
     # Señales
     ventana_inicio.senal_ranking.connect(ventana_ranking.show)
@@ -35,8 +38,11 @@ if __name__ == '__main__':
     ventana_ranking.senal_volver.connect(ventana_inicio.show)
 
     ventana_principal.senal_enviar_login.connect(logica_principal.comprobar_usuario)
+    ventana_principal.senal_abrir_juego.connect(logica_juego.iniciar_nivel)
 
     logica_principal.senal_respuesta_validacion.connect(ventana_principal.recibir_validacion)
+
+    logica_juego.senal_iniciar_juego.connect(ventana_juego.iniciar_juego)
 
     ventana_inicio.show()
     app.exec()

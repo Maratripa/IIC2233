@@ -67,7 +67,7 @@ class Mira():
             self._y = value
         self.senal_posicion.emit(self.x, self.y)
 
-    def mover(self, teclas: str) -> None:
+    def mover(self, teclas: set) -> None:
         dx = 0
         dy = 0
 
@@ -225,7 +225,6 @@ class Ventana(QWidget):
 
     def keyPressEvent(self, event):
         self.keys_pressed.add(event.text())
-        print(event.key())
         self.senal_teclas.emit(self.keys_pressed)
 
     def keyReleaseEvent(self, event):
