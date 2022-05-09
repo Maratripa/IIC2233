@@ -10,6 +10,10 @@ PONDERADOR_TUTORIAL = None
 PONDERADOR_ENTRENAMIENTO = None
 PONDERADOR_INVASION = None
 
+RUTA_GALAXIA = ["frontend", "assets", "Sprites", "Fondos", "Galaxia.png"]
+RUTA_JUPITER = ["frontend", "assets", "Sprites", "Fondos", "Jupiter.png"]
+RUTA_LUNA = ["frontend", "assets", "Sprites", "Fondos", "Luna.png"]
+
 VENTANA_POS_X = 600
 VENTANA_POS_Y = 200
 VENTANA_ANCHO = 600

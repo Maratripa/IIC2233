@@ -17,21 +17,17 @@ class VentanaInicio(QWidget):
         # Geometria
         self.setGeometry(600, 200, 600, 600)
         self.setWindowTitle("A cazar aliens!")
-        self.setStyleSheet("background-color: #1A1826;")
         self.crear_elementos()
 
     def crear_elementos(self):
         self.logo = QLabel(self)
-        pixmap = QPixmap(
-            "assets/Sprites/Logo/Logo.png").scaled(400, 300, 1, 1)  # TODO
+        pixmap = QPixmap("frontend/assets/Sprites/Logo/Logo.png").scaled(400, 300, 1, 1)  # TODO
         self.logo.setPixmap(pixmap)
 
         self.boton_jugar = QPushButton("Jugar", self)
-        self.boton_jugar.setStyleSheet("background-color: #575268;")
         self.boton_jugar.clicked.connect(self.jugar)
 
         self.boton_ranking = QPushButton("Ranking", self)
-        self.boton_ranking.setStyleSheet("background-color: #575268;")
         self.boton_ranking.clicked.connect(self.ranking)
 
         vbox1 = QVBoxLayout()
@@ -46,7 +42,7 @@ class VentanaInicio(QWidget):
         vbox2 = QVBoxLayout()
         vbox2.addStretch(1)
         vbox2.addWidget(self.logo)
-        vbox2.addStretch(1)
+        vbox2.addStretch(2)
         vbox2.addLayout(hbox1)
         vbox2.addStretch(1)
 
@@ -59,21 +55,15 @@ class VentanaInicio(QWidget):
 
     def jugar(self):
         self.senal_jugar.emit()
-        self.esconder()
+        self.hide()
 
     def ranking(self):
         self.senal_ranking.emit()
-        self.esconder()
-
-    def mostrar(self):
-        self.show()
-
-    def esconder(self):
         self.hide()
 
 
 if __name__ == "__main__":
     app = QApplication([])
     ventana = VentanaInicio()
-    ventana.mostrar()
+    ventana.show()
     sys.exit(app.exec_())

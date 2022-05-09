@@ -10,13 +10,14 @@ from manejo_archivos import cargar_puntajes
 
 class VentanaRanking(QWidget):
 
+    senal_volver = pyqtSignal()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Geometria
         self.setGeometry(600, 200, 600, 600)
         self.setWindowTitle("A cazar aliens!")
-        self.setStyleSheet("background-color: #1A1826;")
         self.crear_elementos()
 
     def crear_elementos(self):
@@ -33,7 +34,6 @@ class VentanaRanking(QWidget):
         self.scroll_area.setFixedHeight(300)
 
         self.titulo = QLabel("Ranking", self)
-        self.titulo.setStyleSheet("color: white;")
 
         hbox1 = QHBoxLayout()
         hbox1.addStretch(1)
@@ -41,7 +41,7 @@ class VentanaRanking(QWidget):
         hbox1.addStretch(1)
 
         self.boton_volver = QPushButton("Volver", self)
-        self.boton_volver.setStyleSheet("background-color: #575268;")
+        self.boton_volver.clicked.connect(self.volver)
 
         hbox2 = QHBoxLayout()
         hbox2.addStretch(1)
@@ -63,18 +63,19 @@ class VentanaRanking(QWidget):
         hbox3.addStretch(1)
 
         self.setLayout(hbox3)
-        self.show()
 
     def cargar_ranking(self):
         puntajes = cargar_puntajes()
 
         for linea in puntajes:
             usuario = QLabel(linea[0], self)
-            usuario.setStyleSheet("color: white;")
             score = QLabel(f"{linea[1]} ptos", self)
-            score.setStyleSheet("color: white;")
 
             self.ranking.addRow(usuario, score)
+
+    def volver(self):
+        self.hide()
+        self.senal_volver.emit()
 
 
 if __name__ == "__main__":
