@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QWidget, QApplication, QLabel, QLineEdit,
+from PyQt5.QtWidgets import (QWidget, QApplication, QLabel,
                              QVBoxLayout, QHBoxLayout, QPushButton)
 # import parametros as p #TODO
 
