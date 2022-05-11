@@ -1,5 +1,3 @@
-import os
-
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer
 from backend.entidades import Mira, Alien
 
@@ -9,7 +7,7 @@ import parametros as p
 class Juego(QObject):
     #                               (pos_mira)
     senal_iniciar_juego = pyqtSignal(tuple)
-    #                             (id , x  , y  , w  , h  )
+    #                             (id , x  , y  , w  , h  , senales)
     senal_crear_alien = pyqtSignal(int, int, int, int, int, list)
 
     def __init__(self):
@@ -33,6 +31,8 @@ class Juego(QObject):
         # Aliens
         self.aliens = {}
 
+        self.aliens_por_eliminar = []
+
     def actualizar_teclas(self, key: int) -> None:
         if key == 78:           # tecla: n
             self.crear_alien()
@@ -49,7 +49,7 @@ class Juego(QObject):
 
             if chocados:
                 for id in chocados:
-                    print(f"Alien {id} disparado!")
+                    self.aliens[id].morir()
 
     def chequear_colision_aliens(self) -> list:
         chocados = []
@@ -70,7 +70,12 @@ class Juego(QObject):
         alien = Alien()
         self.aliens[alien.id] = alien
         self.senal_crear_alien.emit(
-            alien.id, alien.x, alien.y, alien.width, alien.height, [alien.senal_posicion])
+            alien.id, alien.x, alien.y, alien.width, alien.height,
+            [alien.senal_posicion, alien.senal_morir, alien.senal_eliminar])
+        alien.senal_eliminar.connect(self.eliminar_alien)
+
+    def eliminar_alien(self, id: int):
+        self.aliens_por_eliminar.append(id)
 
     def iniciar_nivel(self, nivel: int, usuario: str) -> None:
         self.senal_iniciar_juego.emit((self.mira.x, self.mira.y))
@@ -79,5 +84,11 @@ class Juego(QObject):
     def actualizar_juego(self):
         if not self.pausa:
             self.mira.actualizar(self.teclas)
+            if self.aliens_por_eliminar:
+                del self.aliens[self.aliens_por_eliminar.pop(0)]
+
             for id in self.aliens:
-                self.aliens[id].mover()
+                if not self.aliens[id].muerto:
+                    self.aliens[id].mover()
+                else:
+                    self.aliens[id].mover_abajo()

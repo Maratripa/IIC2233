@@ -1,10 +1,11 @@
 import sys
+from os import path
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QWidget, QApplication, QLabel,
                              QVBoxLayout, QHBoxLayout, QPushButton,
                              QRadioButton, QLineEdit)
-
+import parametros as p
 import utils
 
 
@@ -17,39 +18,40 @@ class VentanaPrincipal(QWidget):
         super().__init__()
 
         # Geometria
-        self.setGeometry(600, 200, 600, 400)
+        self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO)
         self.setWindowTitle("A cazar aliens!")
         self.crear_elementos()
 
     def crear_elementos(self) -> None:
         # Etiquetas
         self.titulo = QLabel("Elige el ambiente de caza espacial", self)
+        self.titulo.setObjectName("titulo")
 
         # Escenarios
         self.escenario_1 = QLabel(self)
-        pixmap_e1 = QPixmap("frontend/assets/Sprites/Fondos/Luna.png")
-        self.escenario_1.setPixmap(pixmap_e1.scaled(160, 100))
+        pixmap_e1 = QPixmap(path.join(*p.RUTA_FONDO, "Luna.png"))
+        self.escenario_1.setPixmap(pixmap_e1.scaled(p.ANCHO_PREVIEW, p.ALTO_PREVIEW))
 
         self.escenario_2 = QLabel(self)
-        pixmap_e2 = QPixmap("frontend/assets/Sprites/Fondos/Jupiter.png")
-        self.escenario_2.setPixmap(pixmap_e2.scaled(160, 100))
+        pixmap_e2 = QPixmap(path.join(*p.RUTA_FONDO, "Jupiter.png"))
+        self.escenario_2.setPixmap(pixmap_e2.scaled(p.ANCHO_PREVIEW, p.ALTO_PREVIEW))
 
         self.escenario_3 = QLabel(self)
-        pixmap_e3 = QPixmap("frontend/assets/Sprites/Fondos/Galaxia.png")
-        self.escenario_3.setPixmap(pixmap_e3.scaled(160, 100))
+        pixmap_e3 = QPixmap(path.join(*p.RUTA_FONDO, "Galaxia.png"))
+        self.escenario_3.setPixmap(pixmap_e3.scaled(p.ANCHO_PREVIEW, p.ALTO_PREVIEW))
 
         # Iconos
         self.icono_1 = QLabel(self)
-        pixmap_i1 = QPixmap("frontend/assets/Sprites/Aliens/Alien1.png")
-        self.icono_1.setPixmap(pixmap_i1.scaled(30, 30, 1, 1))
+        pixmap_i1 = QPixmap(path.join(*p.RUTA_ALIEN, "Alien1.png"))
+        self.icono_1.setPixmap(pixmap_i1.scaled(p.ANCHO_ICONOS[0], p.ALTO_ICONOS[0], 1, 1))
 
         self.icono_2 = QLabel(self)
-        pixmap_i2 = QPixmap("frontend/assets/Sprites/Aliens/Alien2.png")
-        self.icono_2.setPixmap(pixmap_i2.scaled(30, 30, 1, 1))
+        pixmap_i2 = QPixmap(path.join(*p.RUTA_ALIEN, "Alien2.png"))
+        self.icono_2.setPixmap(pixmap_i2.scaled(p.ANCHO_ICONOS[1], p.ALTO_ICONOS[1], 1, 1))
 
         self.icono_3 = QLabel(self)
-        pixmap_i3 = QPixmap("frontend/assets/Sprites/Aliens/Alien3.png")
-        self.icono_3.setPixmap(pixmap_i3.scaled(30, 30, 1, 1))
+        pixmap_i3 = QPixmap(path.join(*p.RUTA_ALIEN, "Alien3.png"))
+        self.icono_3.setPixmap(pixmap_i3.scaled(p.ANCHO_ICONOS[2], p.ALTO_ICONOS[2], 1, 1))
 
         # Botones
         self.boton_1 = QRadioButton("Tutorial lunar", self)
@@ -61,8 +63,11 @@ class VentanaPrincipal(QWidget):
         self.boton_submit.clicked.connect(self.enviar_login)
 
         # Input usuario
-        self.label_1 = QLabel("Nombre de astronauta", self)
+        self.label_1 = QLabel("Nombre de astronauta:", self)
+        self.label_1.sizeHint()
         self.input_1 = QLineEdit(self)
+        self.label_error = QLabel(self)
+        self.label_error.setObjectName("error")
 
         # HLayout 1
         hbox1 = QHBoxLayout()
@@ -103,6 +108,7 @@ class VentanaPrincipal(QWidget):
         vbox4 = QVBoxLayout()
         vbox4.addWidget(self.label_1)
         vbox4.addWidget(self.input_1)
+        vbox4.addWidget(self.label_error)
 
         hbox5 = QHBoxLayout()
         hbox5.addStretch(1)
@@ -123,7 +129,6 @@ class VentanaPrincipal(QWidget):
         vbox5.addLayout(hbox2)
         vbox5.addStretch(2)
         vbox5.addLayout(hbox5)
-        vbox5.addStretch(1)
         vbox5.addLayout(hbox6)
         vbox5.addStretch(1)
 
@@ -148,9 +153,9 @@ class VentanaPrincipal(QWidget):
         else:
             if "alnum" in errores:
                 self.input_1.setText("")
-                self.input_1.setPlaceholderText("Use alpha-numeric characters for username")
+                self.label_error.setText(" Usa carácteres alfanuméricos")
             if "null" in errores:
-                self.input_1.setPlaceholderText("Enter a username")
+                self.label_error.setText(" Ingresa un usuario")
 
 
 if __name__ == "__main__":

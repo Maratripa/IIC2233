@@ -1,8 +1,9 @@
 import sys
 from os import path
+
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QWidget, QApplication, QLabel,
+from PyQt5.QtWidgets import (QWidget, QLabel,
                              QVBoxLayout, QHBoxLayout, QPushButton,
                              QProgressBar)
 import parametros as p
@@ -26,9 +27,6 @@ class VentanaJuego(QWidget):
         # Geometria
         self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO + 100)
         self.setWindowTitle("A cazar aliens!")
-        self.setStyleSheet(
-            "font-size: 16px;",
-        )
         self.setFixedSize(p.VENTANA_ANCHO, p.VENTANA_ALTO + 100)
 
         # Fondo
@@ -37,19 +35,22 @@ class VentanaJuego(QWidget):
         self.bg.setPixmap(pixmap_bg.scaled(p.VENTANA_ANCHO, p.VENTANA_POS_Y, 2, 1))
         self.bg.setGeometry(0, 0, 960, 600)
 
+        self.barra_inferior = QLabel(self)
+        self.barra_inferior.setGeometry(0, 600, p.VENTANA_ANCHO, 100)
+
         # Alien pixmaps
         self.pixmap_alien = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{self.nivel}.png"))
         self.pixmap_alien_muerto = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{self.nivel}_dead.png"))
 
         # Mira
         self.label_mira = QLabel(self)
-        self.pixmap_mira = QPixmap(
-            path.join(*p.RUTA_MIRA, "Disparador_negro.png"))
-        self.pixmap_mira_roja = QPixmap(
-            path.join(*p.RUTA_MIRA, "Disparador_rojo.png"))
+        self.label_mira.setObjectName("sprite")
+        self.pixmap_mira = QPixmap(path.join(*p.RUTA_ELEMENTOS, "Disparador_negro.png"))
+        self.pixmap_mira_roja = QPixmap(path.join(*p.RUTA_ELEMENTOS, "Disparador_rojo.png"))
         self.label_mira.setPixmap(self.pixmap_mira)
         self.label_mira.setGeometry(0, 0, p.ANCHO_MIRA, p.ALTO_MIRA)
         self.label_mira.setScaledContents(True)
+        self.label_mira.stackUnder(self.barra_inferior)
 
         # Barra inferior
         # VBox tiempo
@@ -65,8 +66,8 @@ class VentanaJuego(QWidget):
         self.label_balas = QLabel("Balas", self)
 
         self.icono_bala = QLabel(self)
-        self.pixmap_bala = QPixmap("frontend/assets/Sprites/Elementos juego/Bala.png")
-        self.icono_bala.setPixmap(self.pixmap_bala.scaled(10, 20))
+        self.pixmap_bala = QPixmap(path.join(*p.RUTA_ELEMENTOS, "Bala.png"))
+        self.icono_bala.setPixmap(self.pixmap_bala.scaled(20, 40, 1, 1))
 
         self.cuenta_balas = QLabel(f"X 0", self)
 
@@ -95,10 +96,10 @@ class VentanaJuego(QWidget):
         vbox4.addWidget(self.cuenta_nivel)
 
         # VBox botones
-        self.boton_pausa = QPushButton("&Pausa", self)
+        self.boton_pausa = QPushButton("Pausa", self)
         self.boton_pausa.clicked.connect(self.pausar_juego)
         self.boton_pausa.setFocusPolicy(4)
-        self.boton_salir = QPushButton("&Salir", self)
+        self.boton_salir = QPushButton("Salir", self)
         self.boton_salir.clicked.connect(self.salir_juego)
         self.boton_salir.setFocusPolicy(4)
 
@@ -122,6 +123,7 @@ class VentanaJuego(QWidget):
 
         # VBox global
         label_vacio = QLabel(self)
+        label_vacio.setObjectName("vacio")
         label_vacio.setGeometry(0, 0, 960, 600)
 
         vbox6 = QVBoxLayout()
@@ -138,24 +140,35 @@ class VentanaJuego(QWidget):
         self.show()
 
     def keyPressEvent(self, event):
-        #print(event.key(), event.text())
+        # print(event.key(), event.text())
         self.senal_actualizar_teclas.emit(event.key())
 
     def keyReleaseEvent(self, event):
         self.senal_actualizar_teclas.emit(-event.key())
 
-    def agregar_label_alien(self, id, x, y, ancho, alto, senal_posicion):
+    def agregar_label_alien(self, id, x, y, ancho, alto, senales):
         label = QLabel(self)
+        label.setObjectName("sprite")
         label.setPixmap(self.pixmap_alien)
         label.setGeometry(x, y, ancho, alto)
         label.setScaledContents(True)
+        label.stackUnder(self.label_mira)
         self.aliens[id] = label
         label.show()
 
-        senal_posicion[0].connect(self.mover_alien)
+        senales[0].connect(self.mover_alien)
+        senales[1].connect(self.matar_alien)
+        senales[2].connect(self.eliminar_alien)
 
     def mover_alien(self, id: int, pos: tuple):
         self.aliens[id].move(*pos)
+
+    def matar_alien(self, id: int):
+        self.aliens[id].setPixmap(self.pixmap_alien_muerto)
+
+    def eliminar_alien(self, id: int):
+        self.aliens[id].hide()
+        del self.aliens[id]
 
     def mover_mira(self, pos: tuple):
         self.label_mira.move(*pos)
@@ -171,9 +184,3 @@ class VentanaJuego(QWidget):
 
     def pausar_juego(self):
         self.senal_boton_pausa.emit()
-
-
-if __name__ == "__main__":
-    app = QApplication([])
-    ventana = VentanaJuego("assets/Sprites/Fondos/Galaxia.png", 1, 60, 100)
-    sys.exit(app.exec_())

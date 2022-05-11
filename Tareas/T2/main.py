@@ -1,8 +1,7 @@
 import sys
-
 from os import path
-from PyQt5.QtWidgets import QApplication
 
+from PyQt5.QtWidgets import QApplication
 from frontend.ventana_inicio import VentanaInicio
 from frontend.ventana_juego import VentanaJuego
 from frontend.ventana_principal import VentanaPrincipal
@@ -21,6 +20,9 @@ if __name__ == '__main__':
     sys.__excepthook__ = hook
 
     app = QApplication([])
+    # Importar archivo css
+    with open(path.join("frontend", "style.css"), 'r') as file:
+        stylesheet = app.setStyleSheet(file.read())
 
     ventana_inicio = VentanaInicio()
     ventana_ranking = VentanaRanking()

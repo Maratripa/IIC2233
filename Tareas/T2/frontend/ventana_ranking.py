@@ -34,6 +34,7 @@ class VentanaRanking(QWidget):
         self.scroll_area.setFixedHeight(300)
 
         self.titulo = QLabel("Ranking", self)
+        self.titulo.setObjectName("titulo")
 
         hbox1 = QHBoxLayout()
         hbox1.addStretch(1)

@@ -1,9 +1,10 @@
 import sys
+from os import path
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QWidget, QApplication, QLabel,
                              QVBoxLayout, QHBoxLayout, QPushButton)
-# import parametros as p #TODO
+import parametros as p
 
 
 class VentanaInicio(QWidget):
@@ -15,14 +16,14 @@ class VentanaInicio(QWidget):
         super().__init__(*args, **kwargs)
 
         # Geometria
-        self.setGeometry(600, 200, 600, 600)
+        self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO)
         self.setWindowTitle("A cazar aliens!")
         self.crear_elementos()
 
     def crear_elementos(self):
         self.logo = QLabel(self)
-        pixmap = QPixmap("frontend/assets/Sprites/Logo/Logo.png").scaled(400, 300, 1, 1)  # TODO
-        self.logo.setPixmap(pixmap)
+        pixmap = QPixmap(path.join(*p.RUTA_LOGO, "Logo.png"))
+        self.logo.setPixmap(pixmap.scaled(p.ANCHO_LOGO, p.ALTO_LOGO, 1, 1))
 
         self.boton_jugar = QPushButton("Jugar", self)
         self.boton_jugar.clicked.connect(self.jugar)
