@@ -109,6 +109,9 @@ class Juego(QObject):
                     self.aliens[id].mover()
                 else:
                     self.aliens[id].mover_abajo()
+    
+    def pausar_juego(self):
+        self.pausa = not self.pausa
 
 
 class Explosion(QThread):

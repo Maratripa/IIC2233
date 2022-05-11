@@ -205,6 +205,7 @@ class VentanaJuego(QWidget):
 
     def salir_juego(self):
         self.senal_boton_salir.emit()
+        self.close()
 
     def pausar_juego(self):
         self.senal_boton_pausa.emit()
