@@ -1,0 +1,74 @@
+QWidget {
+    background-color: #1E1E2E;
+    color: #D9E0EE;
+
+    font-family: "DejaVu Sans Mono", "JetBrains Mono", "Roboto Mono", "Ubuntu Mono";
+    font-weight: normal;
+    font-size: 16px;
+}
+
+QLabel#titulo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+QLabel#vacio {
+    background-color: #00000000;
+}
+
+QLabel#sprite {
+    background-color: #00000000;
+}
+
+QLabel#error {
+    color: #F28FAD;
+}
+
+QPushButton {
+    background-color: #C3BAC6;
+    color: #161320;
+    border: 2px solid #C3BAC6;
+    border-radius: 10px;
+
+    padding: 2px 7px;
+}
+
+QPushButton:hover {
+    background-color: #988BA2;
+    color: #1A1826;
+
+    border: 2px solid #988BA2;
+}
+
+QPushButton:pressed {
+    background-color: #6E6C7E;
+    color: #302D41;
+
+    border: 2px solid #6E6C7E;
+}
+
+QLineEdit {
+    border: 2px solid #C3BAC6;
+    border-radius: 10px;
+
+    padding: 3px 7px;
+}
+
+QRadioButton::indicator {
+    width: 12px;
+    height: 12px;
+
+    border: 2px solid #D9E0EE;
+    border-radius: 6px;
+
+    background-color: initial;
+    color: initial;
+}
+
+QRadioButton::indicator:hover {
+    background-color: #988BA280;
+}
+
+QRadioButton::indicator:checked {
+    background-color: #C9CBFF;
+} 
