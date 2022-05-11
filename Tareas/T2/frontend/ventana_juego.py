@@ -52,6 +52,19 @@ class VentanaJuego(QWidget):
         self.label_mira.setScaledContents(True)
         self.label_mira.stackUnder(self.barra_inferior)
 
+        # Explosion
+        self.label_explosion = QLabel(self)
+        self.label_explosion.setObjectName("sprite")
+        self.label_explosion.stackUnder(self.label_mira)
+        self.label_explosion.setScaledContents(True)
+        self.label_explosion.hide()
+
+        self.pixmap_explosiones = []
+        for i in range(3):
+            self.pixmap_explosiones.append(
+                QPixmap(path.join(*p.RUTA_ELEMENTOS, f"Disparo_f{i + 1}.png")))
+        
+
         # Barra inferior
         # VBox tiempo
         self.label_tiempo = QLabel("Tiempo", self)
@@ -152,7 +165,7 @@ class VentanaJuego(QWidget):
         label.setPixmap(self.pixmap_alien)
         label.setGeometry(x, y, ancho, alto)
         label.setScaledContents(True)
-        label.stackUnder(self.label_mira)
+        label.stackUnder(self.label_explosion)
         self.aliens[id] = label
         label.show()
 
@@ -178,6 +191,17 @@ class VentanaJuego(QWidget):
             self.label_mira.setPixmap(self.pixmap_mira_roja)
         else:
             self.label_mira.setPixmap(self.pixmap_mira)
+    
+    def explosion(self, x, y, fase):
+        self.label_explosion.setPixmap(self.pixmap_explosiones[fase])
+        self.label_explosion.setGeometry(x - p.ANCHO_EXPLOSION[fase] / 2, 
+                                         y - p.ALTO_EXPLOSION[fase] / 2, 
+                                         p.ANCHO_EXPLOSION[fase], p.ALTO_EXPLOSION[fase])
+
+        if fase == 0:
+            self.label_explosion.show()
+        elif fase == -1:
+            self.label_explosion.hide()
 
     def salir_juego(self):
         self.senal_boton_salir.emit()

@@ -43,15 +43,16 @@ if __name__ == '__main__':
     logica_principal.senal_respuesta_validacion.connect(ventana_principal.recibir_validacion)
     ventana_principal.senal_abrir_juego.connect(logica_juego.iniciar_nivel)
 
-    logica_juego.senal_iniciar_juego.connect(ventana_juego.iniciar_nivel)
-
     ventana_juego.senal_actualizar_teclas.connect(logica_juego.actualizar_teclas)
 
     logica_juego.senal_crear_alien.connect(ventana_juego.agregar_label_alien)
+    logica_juego.senal_iniciar_juego.connect(ventana_juego.iniciar_nivel)
+    logica_juego.senal_crear_explosion.connect(ventana_juego.explosion)
 
     logica_juego.mira.senal_posicion.connect(ventana_juego.mover_mira)
     logica_juego.mira.senal_disparando.connect(ventana_juego.cambiar_mira)
     logica_juego.mira.senal_disparando.connect(logica_juego.disparar)
+    
 
     ventana_inicio.show()
     app.exec()

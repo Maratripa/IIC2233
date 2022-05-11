@@ -1,4 +1,7 @@
-from PyQt5.QtCore import QObject, pyqtSignal, QTimer
+from os import path
+from time import sleep
+from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
+from PyQt5.QtMultimedia import QSound, QSoundEffect
 from backend.entidades import Mira, Alien
 
 import parametros as p
@@ -9,6 +12,8 @@ class Juego(QObject):
     senal_iniciar_juego = pyqtSignal(tuple)
     #                             (id , x  , y  , w  , h  , senales)
     senal_crear_alien = pyqtSignal(int, int, int, int, int, list)
+    #                                 (x  , y  , fase)
+    senal_crear_explosion = pyqtSignal(int, int, int)
 
     def __init__(self):
         super().__init__()
@@ -28,6 +33,10 @@ class Juego(QObject):
         self.mira = Mira(p.ANCHO_MIRA, p.ALTO_MIRA, (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
                                                      p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2))
 
+        self.sonido_disparo = QSoundEffect(self)
+        self.sonido_disparo.setSource(QUrl.fromLocalFile(path.join(*p.RUTA_SONIDOS, "disparo.wav")))
+        self.sonido_disparo.setVolume(0.3)
+
         # Aliens
         self.aliens = {}
 
@@ -45,9 +54,12 @@ class Juego(QObject):
 
     def disparar(self, disparando: bool):
         if disparando:
+            self.sonido_disparo.play()
             chocados = self.chequear_colision_aliens()
 
             if chocados:
+                self.crear_explosion(self.mira.x + self.mira.off_w, 
+                                     self.mira.y + self.mira.off_h)
                 for id in chocados:
                     self.aliens[id].morir()
 
@@ -77,6 +89,11 @@ class Juego(QObject):
     def eliminar_alien(self, id: int):
         self.aliens_por_eliminar.append(id)
 
+    def crear_explosion(self, x, y):
+        explosion = Explosion(x, y, self)
+        explosion.senal_explosion.connect(
+            lambda x, y, fase: self.senal_crear_explosion.emit(x, y, fase))
+
     def iniciar_nivel(self, nivel: int, usuario: str) -> None:
         self.senal_iniciar_juego.emit((self.mira.x, self.mira.y))
         self.timer.start()
@@ -92,3 +109,30 @@ class Juego(QObject):
                     self.aliens[id].mover()
                 else:
                     self.aliens[id].mover_abajo()
+
+
+class Explosion(QThread):
+    #                           (x  , y  , fase)
+    senal_explosion = pyqtSignal(int, int, int)
+
+    def __init__(self, x, y, parent):
+        super().__init__(parent)
+
+        self.x = x
+        self.y = y
+
+        self.time_off = 75
+
+        self.start()
+
+    def run(self):
+        """
+
+        """
+        self.senal_explosion.emit(self.x, self.y, 0)
+        self.msleep(self.time_off)
+        self.senal_explosion.emit(self.x, self.y, 1)
+        self.msleep(self.time_off)
+        self.senal_explosion.emit(self.x, self.y, 2)
+        self.msleep(self.time_off)
+        self.senal_explosion.emit(self.x, self.y, -1)

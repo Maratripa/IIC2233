@@ -26,6 +26,9 @@ RAPIDEZ_MIRA = 10
 ANCHO_MIRA = 180
 ALTO_MIRA = 120
 
+ANCHO_EXPLOSION = [44, 56, 77]
+ALTO_EXPLOSION = [80, 80, 80]
+
 
 """
     ALIEN
@@ -44,6 +47,8 @@ ALTO_ALIEN = 70
 RUTA_ELEMENTOS = ["frontend", "assets", "Sprites", "Elementos juego"]
 
 RUTA_FONDO = ["frontend", "assets", "Sprites", "Fondos"]
+
+RUTA_SONIDOS = ["frontend", "assets", "Sonidos"]
 
 FRAME_TIME_MS = 33
 
