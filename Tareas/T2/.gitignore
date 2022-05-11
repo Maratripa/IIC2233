@@ -1,4 +1,4 @@
 *.pdf
 *.txt
 frontend/assets/
-__pycache__/
+*/__pycache__/

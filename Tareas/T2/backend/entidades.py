@@ -1,14 +1,15 @@
 import math
 import random
 
-from PyQt5.QtCore import QThread, QObject, pyqtSignal
+from PyQt5.QtCore import QTimer, QObject, pyqtSignal
 
 import parametros as p
 
 
 class Mira(QObject):
-    #                          (x  , y  )
-    senal_posicion = pyqtSignal(int, int)
+    #                          (pos_m)
+    senal_posicion = pyqtSignal(tuple)
+    senal_disparando = pyqtSignal(bool)
 
     def __init__(self, width: int, height: int, pos: tuple) -> None:
         super().__init__()
@@ -20,6 +21,13 @@ class Mira(QObject):
         self.off_h = int(self.height / 2)
 
         self._x, self._y = pos
+
+        self.recargando = False
+
+        self.timer_disparo = QTimer(self)
+        self.timer_disparo.setInterval(1000)
+        self.timer_disparo.setSingleShot(True)
+        self.timer_disparo.timeout.connect(self.reset_disparo)
 
     @property
     def x(self) -> int:
@@ -47,17 +55,28 @@ class Mira(QObject):
         else:
             self._y = value
 
+    def actualizar(self, teclas: set) -> None:
+        self.mover(teclas)
+        self.disparar(teclas)
+
+    def disparar(self, teclas: set) -> None:
+        if 32 in teclas:
+            if not self.recargando:
+                self.recargando = True
+                self.timer_disparo.start()
+                self.senal_disparando.emit(True)
+
     def mover(self, teclas: set) -> None:
         dx = 0
         dy = 0
 
-        if 'w' in teclas:
+        if 87 in teclas:
             dy -= 1
-        if 's' in teclas:
+        if 83 in teclas:
             dy += 1
-        if 'a' in teclas:
+        if 65 in teclas:
             dx -= 1
-        if 'd' in teclas:
+        if 68 in teclas:
             dx += 1
 
         norma = math.sqrt(dx ** 2 + dy ** 2)
@@ -65,27 +84,33 @@ class Mira(QObject):
             self.x += int(p.RAPIDEZ_MIRA * dx / norma)
             self.y += int(p.RAPIDEZ_MIRA * dy / norma)
 
-            self.senal_posicion.emit(self.x, self.y)
+            self.senal_posicion.emit((self.x, self.y))
+
+    def reset_disparo(self):
+        self.recargando = False
+        self.senal_disparando.emit(False)
 
 
 class Alien(QObject):
 
     id = 0
-    #                          (x  , y  )
-    senal_posicion = pyqtSignal(int, int)
+    #                          (id , pos_a)
+    senal_posicion = pyqtSignal(int, tuple)
 
-    def __init__(self, width: int, height: int, rapidez: int):
+    def __init__(self):
         super().__init__()
 
         self.id += 1
         Alien.id += 1
 
-        self.width = width
-        self.height = height
+        self.width = p.ANCHO_ALIEN
+        self.height = p.ALTO_ALIEN
+
+        self.rapidez = p.RAPIDEZ_ALIEN
 
         angulo = random.uniform(-math.pi, math.pi)
-        self.vx = math.cos(angulo) * rapidez
-        self.vy = math.sin(angulo) * rapidez
+        self.vx = math.cos(angulo) * self.rapidez
+        self.vy = math.sin(angulo) * self.rapidez
 
         self._x = random.randint(0, p.VENTANA_ANCHO - self.width)
         self._y = random.randint(0, p.VENTANA_ALTO - self.height)
@@ -100,7 +125,7 @@ class Alien(QObject):
             self._x = 0
             self.vx *= -1
         elif value > p.VENTANA_ANCHO - self.width:
-            self._x = p.VENTANA_ALTO - self.width
+            self._x = p.VENTANA_ANCHO - self.width
             self.vx *= -1
         else:
             self._x = value
@@ -124,4 +149,4 @@ class Alien(QObject):
         self.x += int(self.vx)
         self.y += int(self.vy)
 
-        self.senal_posicion.emit(self.x, self.y)
+        self.senal_posicion.emit(self.id, (self.x, self.y))

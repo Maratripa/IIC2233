@@ -7,8 +7,10 @@ import parametros as p
 
 
 class Juego(QObject):
-
-    senal_iniciar_juego = pyqtSignal()
+    #                               (pos_mira)
+    senal_iniciar_juego = pyqtSignal(tuple)
+    #                             (id , x  , y  , w  , h  )
+    senal_crear_alien = pyqtSignal(int, int, int, int, int, list)
 
     def __init__(self):
         super().__init__()
@@ -25,17 +27,57 @@ class Juego(QObject):
         self.pausa = False
 
         # Mira
-        self.mira = None
+        self.mira = Mira(p.ANCHO_MIRA, p.ALTO_MIRA, (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
+                                                     p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2))
 
         # Aliens
-        self.aliens = {}  # id: instancia
+        self.aliens = {}
 
-    def actualizar_teclas(self, teclas: set) -> None:
-        self.teclas = teclas
+    def actualizar_teclas(self, key: int) -> None:
+        if key == 78:           # tecla: n
+            self.crear_alien()
+
+        elif key > 0:           # keyPressEvent
+            self.teclas.add(key)
+
+        else:                   # keyReleaseEvent
+            self.teclas.discard(-key)
+
+    def disparar(self, disparando: bool):
+        if disparando:
+            chocados = self.chequear_colision_aliens()
+
+            if chocados:
+                for id in chocados:
+                    print(f"Alien {id} disparado!")
+
+    def chequear_colision_aliens(self) -> list:
+        chocados = []
+        for id in self.aliens:
+            alien = self.aliens[id]
+            xm = self.mira.x + self.mira.off_w
+            ym = self.mira.y + self.mira.off_h
+
+            colision_x = xm > alien.x and xm < alien.x + alien.width
+            colision_y = ym > alien.y and ym < alien.y + alien.height
+
+            if colision_x and colision_y:
+                chocados.append(id)
+
+        return chocados
+
+    def crear_alien(self):
+        alien = Alien()
+        self.aliens[alien.id] = alien
+        self.senal_crear_alien.emit(
+            alien.id, alien.x, alien.y, alien.width, alien.height, [alien.senal_posicion])
 
     def iniciar_nivel(self, nivel: int, usuario: str) -> None:
-        pass
+        self.senal_iniciar_juego.emit((self.mira.x, self.mira.y))
+        self.timer.start()
 
     def actualizar_juego(self):
         if not self.pausa:
-            pass
+            self.mira.actualizar(self.teclas)
+            for id in self.aliens:
+                self.aliens[id].mover()
