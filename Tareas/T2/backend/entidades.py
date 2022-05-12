@@ -152,8 +152,11 @@ class Alien(QObject):
             self._y = value
 
     def mover(self) -> None:
-        self.x += int(self.vx)
-        self.y += int(self.vy)
+        if not self.muerto:
+            self.x += int(self.vx)
+            self.y += int(self.vy)
+        else:
+            self.mover_abajo()
 
         self.senal_posicion.emit(self.id, (self.x, self.y))
 

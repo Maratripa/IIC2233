@@ -104,10 +104,7 @@ class Juego(QObject):
                 del self.aliens[self.aliens_por_eliminar.pop(0)]
 
             for id in self.aliens:
-                if not self.aliens[id].muerto:
-                    self.aliens[id].mover()
-                else:
-                    self.aliens[id].mover_abajo()
+                self.aliens[id].mover()
     
     def pausar_juego(self):
         self.pausa = not self.pausa
