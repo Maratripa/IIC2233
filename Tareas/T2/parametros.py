@@ -35,7 +35,7 @@ ALTO_EXPLOSION = [80, 80, 80]
 """
 RUTA_ALIEN = ["frontend", "assets", "Sprites", "Aliens"]
 
-VELOCIDAD_ALIEN = (2, 2)
+VELOCIDAD_ALIEN = (1, 1)
 
 ANCHO_ALIEN = [64, 63, 116]
 ALTO_ALIEN = 70

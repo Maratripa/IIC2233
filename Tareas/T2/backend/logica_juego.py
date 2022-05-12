@@ -74,17 +74,30 @@ class Juego(QObject):
     def iniciar_nivel(self, nivel: int) -> None:
         self.nivel = nivel
 
-        self.mira.x, self.mira.y = (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
-                                    p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2)
+        if self.escenario == 1:
+            self.tiempo *= p.PONDERADOR_TUTORIAL
+            self.rapidez_aliens /= p.PONDERADOR_TUTORIAL
+        elif self.escenario == 2:
+            self.tiempo *= p.PONDERADOR_ENTRENAMIENTO
+            self.rapidez_aliens /= p.PONDERADOR_ENTRENAMIENTO
+        elif self.escenario == 3:
+            self.tiempo *= p.PONDERADOR_INVASION
+            self.rapidez_aliens /= p.PONDERADOR_INVASION
 
         self.timer_tiempo.setInterval(self.tiempo)
         self.cantidad_aliens = nivel * 2
         self.balas = self.cantidad_aliens * 2
+        # Resetear sets
         self.aliens_muertos = set()
         self.aliens_vivos = set()
         self.teclas = set()
+
+        self.mira.x, self.mira.y = (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
+                                    p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2)
+
         self.senal_iniciar_juego.emit(nivel, self.escenario, self.balas,
                                       self.tiempo, (self.mira.x, self.mira.y))
+
         self.timer.start()
         self.timer_tiempo.start()
 
@@ -162,6 +175,7 @@ class Juego(QObject):
                     self.aliens_muertos.add(id)
                     self.ultimo_disparado = id
 
+            # No quedan balas
             if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
                 self.terminar_nivel(False)
                 self.timer_tiempo.stop()
