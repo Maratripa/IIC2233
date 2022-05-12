@@ -4,7 +4,8 @@ def cargar_puntajes() -> list:
         lineas = file.readlines()
 
         for linea in lineas:
-            lista.append(linea.strip('\n').split(','))
+            if linea.strip():
+                lista.append(linea.strip('\n').split(','))
 
     lista.sort(key=lambda ls: int(ls[1]), reverse=True)
 
