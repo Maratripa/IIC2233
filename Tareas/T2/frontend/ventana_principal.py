@@ -13,7 +13,7 @@ class VentanaPrincipal(QWidget):
 
     senal_enviar_login = pyqtSignal(str)
     #
-    senal_abrir_juego = pyqtSignal(int, int, str)
+    senal_abrir_juego = pyqtSignal(int, str)
 
     def __init__(self) -> None:
         super().__init__()
@@ -149,7 +149,7 @@ class VentanaPrincipal(QWidget):
             elif self.boton_3.isChecked():
                 escenario = 3
 
-            self.senal_abrir_juego.emit(1, escenario, self.input_1.text())
+            self.senal_abrir_juego.emit(escenario, self.input_1.text())
         else:
             if "alnum" in errores:
                 self.input_1.setText("")

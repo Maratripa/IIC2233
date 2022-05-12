@@ -8,9 +8,10 @@ from PyQt5.QtWidgets import (QWidget, QFormLayout, QLabel,
 import parametros as p
 import utils
 
-class VentanaPost(QWidget):
 
-    senal_siguiente_nivel = pyqtSignal()
+class VentanaPost(QWidget):
+    #                                 (nivel)
+    senal_siguiente_nivel = pyqtSignal(int)
 
     def __init__(self):
         super().__init__()
@@ -57,7 +58,6 @@ class VentanaPost(QWidget):
         self.boton_salir = QPushButton("Salir", self)
         self.boton_salir.clicked.connect(self.salir)
 
-
         # HBox 1
         hbox1 = QHBoxLayout()
         hbox1.addStretch(1)
@@ -97,8 +97,9 @@ class VentanaPost(QWidget):
         vbox1.addStretch(1)
 
         self.setLayout(vbox1)
-    
+
     def mostrar(self, nivel, escenario, balas, tiempo, puntaje, puntaje_nivel, siguiente):
+        self.escenario = escenario
         self.icono_titulo.setPixmap(
             self.pixmaps[escenario - 1].scaled(
                 p.ANCHO_ICONOS[escenario - 1], p.ALTO_ICONOS[escenario - 1]))
@@ -124,11 +125,12 @@ class VentanaPost(QWidget):
                 padding: 5px 5px;
             """)
             self.boton_siguiente.setEnabled(False)
-        
+
         self.show()
-    
+
     def siguiente_nivel(self):
-        pass
+        self.senal_siguiente_nivel.emit(int(self.nivel.text()) + 1)
+        self.hide()
 
     def salir(self):
         self.close()

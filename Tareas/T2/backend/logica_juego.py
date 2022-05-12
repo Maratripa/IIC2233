@@ -112,13 +112,19 @@ class Juego(QObject):
         self.explotador.mover_explosion(x, y)
         self.explotador.start()
 
-    def iniciar_nivel(self, nivel: int, escenario: int, usuario: str) -> None:
-        self.nivel = nivel
+    def iniciar_juego(self, escenario, usuario):
         self.escenario = escenario
         self.usuario = usuario
+        self.iniciar_nivel(1)
+
+    def iniciar_nivel(self, nivel: int) -> None:
+        self.nivel = nivel
+
         self.cantidad_aliens = nivel * 2
         self.balas = self.cantidad_aliens * 2
-        self.senal_iniciar_juego.emit(nivel, escenario, (self.mira.x, self.mira.y))
+        self.aliens_muertos = set()
+        self.aliens_vivos = set()
+        self.senal_iniciar_juego.emit(nivel, self.escenario, (self.mira.x, self.mira.y))
         self.timer.start()
 
     def actualizar_juego(self):

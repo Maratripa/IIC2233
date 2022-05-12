@@ -53,7 +53,6 @@ class VentanaJuego(QWidget):
         for i in range(3):
             self.pixmap_explosiones.append(
                 QPixmap(path.join(*p.RUTA_ELEMENTOS, f"Disparo_f{i + 1}.png")))
-        
 
         # Barra inferior
         # VBox tiempo
@@ -204,22 +203,22 @@ class VentanaJuego(QWidget):
             self.label_mira.setPixmap(self.pixmap_mira_roja)
         else:
             self.label_mira.setPixmap(self.pixmap_mira)
-    
+
     def mover_explosion(self, x, y):
         self.label_explosion.posicion = (x, y)
-    
+
     def explosion(self, fase):
         self.label_explosion.setPixmap(self.pixmap_explosiones[fase])
 
         x, y = self.label_explosion.posicion
-        self.label_explosion.setGeometry(x - p.ANCHO_EXPLOSION[fase] / 2, 
-                                         y - p.ALTO_EXPLOSION[fase] / 2, 
+        self.label_explosion.setGeometry(x - p.ANCHO_EXPLOSION[fase] / 2,
+                                         y - p.ALTO_EXPLOSION[fase] / 2,
                                          p.ANCHO_EXPLOSION[fase], p.ALTO_EXPLOSION[fase])
         if fase == 0:
             self.label_explosion.show()
         elif fase == -1:
             self.label_explosion.hide()
-            
+
     def salir_juego(self):
         self.senal_boton_salir.emit()
         self.close()

@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     ventana_principal.senal_enviar_login.connect(logica_principal.comprobar_usuario)
     logica_principal.senal_respuesta_validacion.connect(ventana_principal.recibir_validacion)
-    ventana_principal.senal_abrir_juego.connect(logica_juego.iniciar_nivel)
+    ventana_principal.senal_abrir_juego.connect(logica_juego.iniciar_juego)
 
     ventana_juego.senal_actualizar_teclas.connect(logica_juego.actualizar_teclas)
     ventana_juego.senal_boton_pausa.connect(logica_juego.pausar_juego)
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     logica_juego.senal_iniciar_juego.connect(ventana_juego.iniciar_nivel)
     logica_juego.senal_terminar_nivel.connect(ventana_post.mostrar)
     logica_juego.senal_esconder_ventana_juego.connect(ventana_juego.hide)
-    
+
     logica_juego.explotador.senal_explosion.connect(ventana_juego.explosion)
     logica_juego.explotador.senal_mover.connect(ventana_juego.mover_explosion)
 
@@ -59,8 +59,7 @@ if __name__ == '__main__':
     logica_juego.mira.senal_disparando.connect(ventana_juego.cambiar_mira)
     logica_juego.mira.senal_disparando.connect(logica_juego.disparar)
 
-
-    
+    ventana_post.senal_siguiente_nivel.connect(logica_juego.iniciar_nivel)
 
     ventana_inicio.show()
     app.exec()
