@@ -12,8 +12,6 @@ class Juego(QObject):
     senal_iniciar_juego = pyqtSignal(tuple)
     #                             (id , x  , y  , w  , h  , senales)
     senal_crear_alien = pyqtSignal(int, int, int, int, int, list)
-    #                                 (x  , y  , fase)
-    senal_crear_explosion = pyqtSignal(int, int, int)
 
     def __init__(self):
         super().__init__()
@@ -36,6 +34,8 @@ class Juego(QObject):
         self.sonido_disparo = QSoundEffect(self)
         self.sonido_disparo.setSource(QUrl.fromLocalFile(path.join(*p.RUTA_SONIDOS, "disparo.wav")))
         self.sonido_disparo.setVolume(0.3)
+
+        self.explotador = Explosion(self)
 
         # Aliens
         self.aliens = {}
@@ -90,9 +90,8 @@ class Juego(QObject):
         self.aliens_por_eliminar.append(id)
 
     def crear_explosion(self, x, y):
-        explosion = Explosion(x, y, self)
-        explosion.senal_explosion.connect(
-            lambda x, y, fase: self.senal_crear_explosion.emit(x, y, fase))
+        self.explotador.mover_explosion(x, y)
+        self.explotador.start()
 
     def iniciar_nivel(self, nivel: int, usuario: str) -> None:
         self.senal_iniciar_juego.emit((self.mira.x, self.mira.y))
@@ -115,27 +114,27 @@ class Juego(QObject):
 
 
 class Explosion(QThread):
-    #                           (x  , y  , fase)
-    senal_explosion = pyqtSignal(int, int, int)
+    #                           (fase)
+    senal_explosion = pyqtSignal(int)
+    #                       (x  , y  )
+    senal_mover = pyqtSignal(int, int)
 
-    def __init__(self, x, y, parent):
+    def __init__(self, parent):
         super().__init__(parent)
 
-        self.x = x
-        self.y = y
-
         self.time_off = 75
-
-        self.start()
+    
+    def mover_explosion(self, x, y):
+        self.senal_mover.emit(x, y)
 
     def run(self):
         """
 
         """
-        self.senal_explosion.emit(self.x, self.y, 0)
+        self.senal_explosion.emit(0)
         self.msleep(self.time_off)
-        self.senal_explosion.emit(self.x, self.y, 1)
+        self.senal_explosion.emit(1)
         self.msleep(self.time_off)
-        self.senal_explosion.emit(self.x, self.y, 2)
+        self.senal_explosion.emit(2)
         self.msleep(self.time_off)
-        self.senal_explosion.emit(self.x, self.y, -1)
+        self.senal_explosion.emit(-1)
