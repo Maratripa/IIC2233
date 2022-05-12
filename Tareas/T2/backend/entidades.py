@@ -56,15 +56,15 @@ class Mira(QObject):
             self._y = value
 
     def actualizar(self, teclas: set) -> None:
-        self.mover(teclas)
-        self.disparar(teclas)
-
-    def disparar(self, teclas: set) -> None:
         if 32 in teclas:
-            if not self.recargando:
-                self.recargando = True
-                self.timer_disparo.start()
-                self.senal_disparando.emit(True)
+            self.disparar()
+        self.mover(teclas)
+
+    def disparar(self) -> None:
+        if not self.recargando:
+            self.recargando = True
+            self.timer_disparo.start()
+            self.senal_disparando.emit(True)
 
     def mover(self, teclas: set) -> None:
         dx = 0
