@@ -74,6 +74,7 @@ class Juego(QObject):
                     self.aliens[id].morir()
                     self.aliens_vivos.remove(id)
                     self.aliens_muertos.add(id)
+                    self.ultimo_disparado = id
 
     def chequear_colision_aliens(self) -> list:
         chocados = []
@@ -104,7 +105,7 @@ class Juego(QObject):
         self.aliens_por_eliminar.append(id)
 
         # Terminar juego cuando el ultimo alien salga de la pantalla
-        if len(self.aliens_muertos) == self.cantidad_aliens:
+        if len(self.aliens_muertos) == self.cantidad_aliens and self.ultimo_disparado == id:
             self.terminar_nivel(True)
             self.timer.stop()
 
