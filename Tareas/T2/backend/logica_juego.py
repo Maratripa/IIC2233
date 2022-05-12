@@ -1,5 +1,5 @@
 from os import path
-from time import sleep
+from collections import deque
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
 from PyQt5.QtMultimedia import QSound, QSoundEffect
 from backend.entidades import Mira, Alien
@@ -12,6 +12,10 @@ class Juego(QObject):
     senal_iniciar_juego = pyqtSignal(tuple)
     #                             (id , x  , y  , w  , h  , senales)
     senal_crear_alien = pyqtSignal(int, int, int, int, int, list)
+
+    senal_terminar_nivel = pyqtSignal(int, int, int, int, int, bool)
+
+    senal_esconder_ventana_juego = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -39,8 +43,11 @@ class Juego(QObject):
 
         # Aliens
         self.aliens = {}
-
         self.aliens_por_eliminar = []
+
+        # Juego
+        self.aliens_por_matar = 10
+        self.tiempo = 60
 
     def actualizar_teclas(self, key: int) -> None:
         if key == 78:           # tecla: n
@@ -95,16 +102,25 @@ class Juego(QObject):
 
     def iniciar_nivel(self, nivel: int, usuario: str) -> None:
         self.senal_iniciar_juego.emit((self.mira.x, self.mira.y))
+        self.nivel = nivel
+        self.balas = 30
         self.timer.start()
 
     def actualizar_juego(self):
+        if self.aliens_por_matar == 0:
+            self.terminar_nivel(True)
         if not self.pausa:
             self.mira.actualizar(self.teclas)
             if self.aliens_por_eliminar:
                 del self.aliens[self.aliens_por_eliminar.pop(0)]
+                self.aliens_por_matar -= 1
 
             for id in self.aliens:
                 self.aliens[id].mover()
+    
+    def terminar_nivel(self, paso_nivel: bool):
+        self.senal_esconder_ventana_juego.emit()
+        self.senal_terminar_nivel.emit(self.nivel, self.balas, self.tiempo, 100, 100, paso_nivel)
     
     def pausar_juego(self):
         self.pausa = not self.pausa

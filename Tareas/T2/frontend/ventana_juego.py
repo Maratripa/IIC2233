@@ -208,6 +208,7 @@ class VentanaJuego(QWidget):
             self.label_explosion.show()
         elif fase == -1:
             self.label_explosion.hide()
+            
     def salir_juego(self):
         self.senal_boton_salir.emit()
         self.close()

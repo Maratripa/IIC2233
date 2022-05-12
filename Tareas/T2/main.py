@@ -6,6 +6,7 @@ from frontend.ventana_inicio import VentanaInicio
 from frontend.ventana_juego import VentanaJuego
 from frontend.ventana_principal import VentanaPrincipal
 from frontend.ventana_ranking import VentanaRanking
+from frontend.ventana_post import VentanaPost
 
 from backend.logica_principal import LogicaPrincipal
 from backend.logica_juego import Juego
@@ -28,9 +29,9 @@ if __name__ == '__main__':
     ventana_ranking = VentanaRanking()
     ventana_principal = VentanaPrincipal()
     ventana_juego = VentanaJuego()
+    ventana_post = VentanaPost()
 
     logica_principal = LogicaPrincipal()
-
     logica_juego = Juego()
 
     # Señales
@@ -48,6 +49,8 @@ if __name__ == '__main__':
 
     logica_juego.senal_crear_alien.connect(ventana_juego.agregar_label_alien)
     logica_juego.senal_iniciar_juego.connect(ventana_juego.iniciar_nivel)
+    logica_juego.senal_terminar_nivel.connect(ventana_post.mostrar)
+    logica_juego.senal_esconder_ventana_juego.connect(ventana_juego.hide)
     
     logica_juego.explotador.senal_explosion.connect(ventana_juego.explosion)
     logica_juego.explotador.senal_mover.connect(ventana_juego.mover_explosion)
@@ -55,6 +58,8 @@ if __name__ == '__main__':
     logica_juego.mira.senal_posicion.connect(ventana_juego.mover_mira)
     logica_juego.mira.senal_disparando.connect(ventana_juego.cambiar_mira)
     logica_juego.mira.senal_disparando.connect(logica_juego.disparar)
+
+
     
 
     ventana_inicio.show()
