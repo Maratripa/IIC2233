@@ -125,9 +125,9 @@ class Juego(QObject):
         if len(self.aliens_muertos) == self.cantidad_aliens and self.ultimo_disparado == id:
             self.terminar_nivel(True)
             self.timer_tiempo.stop()
-            self.timer.stop()
 
     def terminar_nivel(self, paso_nivel: bool):
+        self.timer.stop()
         self.senal_esconder_ventana_juego.emit()
         self.senal_terminar_nivel.emit(self.nivel, self.escenario,
                                        self.balas, int(self.timer_tiempo.remainingTime() / 1000),
@@ -161,6 +161,10 @@ class Juego(QObject):
                     self.aliens_vivos.remove(id)
                     self.aliens_muertos.add(id)
                     self.ultimo_disparado = id
+
+            if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
+                self.terminar_nivel(False)
+                self.timer_tiempo.stop()
 
     def chequear_colision_aliens(self) -> list:
         chocados = []
