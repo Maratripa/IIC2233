@@ -52,4 +52,6 @@ RUTA_SONIDOS = ["frontend", "assets", "Sonidos"]
 
 FRAME_TIME_MS = 33
 
+DURACION_NIVEL_INICIAL = 120000
+
 GRAVEDAD = 0.3

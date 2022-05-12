@@ -138,10 +138,14 @@ class VentanaJuego(QWidget):
         # Setear Layout
         self.setLayout(vbox6)
 
-    def iniciar_nivel(self, nivel, escenario, pos_mira: tuple):
+    def iniciar_nivel(self, nivel, escenario, balas, tiempo, pos_mira: tuple):
         self.nivel = nivel
 
         self.cuenta_nivel.setText(f"{nivel}")
+        self.cuenta_balas.setText(f"X {balas}")
+
+        self.barra_timepo.setRange(0, int(tiempo / 1000))
+        self.barra_timepo.setValue(int(tiempo / 1000))
 
         if escenario == 1:
             pixmap_bg = QPixmap(path.join(*p.RUTA_FONDO, "Luna.png"))
@@ -218,6 +222,12 @@ class VentanaJuego(QWidget):
             self.label_explosion.show()
         elif fase == -1:
             self.label_explosion.hide()
+
+    def actualizar_balas(self, balas):
+        self.cuenta_balas.setText(f"X {balas}")
+
+    def actualizar_tiempo(self, tiempo):
+        self.barra_timepo.setValue(int(tiempo / 1000))
 
     def salir_juego(self):
         self.senal_boton_salir.emit()

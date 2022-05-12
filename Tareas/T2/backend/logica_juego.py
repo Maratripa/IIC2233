@@ -8,10 +8,16 @@ import parametros as p
 
 
 class Juego(QObject):
-    #                               (niv, esc, pos_mira)
-    senal_iniciar_juego = pyqtSignal(int, int, tuple)
+    #                               (niv, esc, bal, tiemp, pos_mira)
+    senal_iniciar_juego = pyqtSignal(int, int, int, float, tuple)
     #                             (id , x  , y  , w  , h  , senales)
     senal_crear_alien = pyqtSignal(int, int, int, int, int, list)
+
+    senal_actualizar_tiempo = pyqtSignal(int)
+
+    senal_actualizar_balas = pyqtSignal(int)
+
+    senal_actualizar_puntaje = pyqtSignal(int)
 
     senal_terminar_nivel = pyqtSignal(int, int, int, int, int, int, bool)
 
@@ -49,7 +55,14 @@ class Juego(QObject):
 
         # Juego
         self.cantidad_aliens = 2
-        self.tiempo = 60
+
+        self.tiempo = p.DURACION_NIVEL_INICIAL  # msecs
+
+        self.timer_tiempo = QTimer(self)
+        self.timer_tiempo.setSingleShot(True)
+        self.timer_tiempo.timeout.connect(
+            lambda: self.terminar_nivel(False)
+        )
 
     def actualizar_teclas(self, key: int) -> None:
         if key == 78:           # tecla: n
@@ -64,6 +77,7 @@ class Juego(QObject):
     def disparar(self, disparando: bool):
         if disparando:
             self.balas -= 1
+            self.senal_actualizar_balas.emit(self.balas)
             self.sonido_disparo.play()
             chocados = self.chequear_colision_aliens()
 
@@ -107,6 +121,7 @@ class Juego(QObject):
         # Terminar juego cuando el ultimo alien salga de la pantalla
         if len(self.aliens_muertos) == self.cantidad_aliens and self.ultimo_disparado == id:
             self.terminar_nivel(True)
+            self.timer_tiempo.stop()
             self.timer.stop()
 
     def crear_explosion(self, x, y):
@@ -116,22 +131,28 @@ class Juego(QObject):
     def iniciar_juego(self, escenario, usuario):
         self.escenario = escenario
         self.usuario = usuario
+
         self.iniciar_nivel(1)
 
     def iniciar_nivel(self, nivel: int) -> None:
         self.nivel = nivel
 
+        self.timer_tiempo.setInterval(self.tiempo)
         self.cantidad_aliens = nivel * 2
         self.balas = self.cantidad_aliens * 2
         self.aliens_muertos = set()
         self.aliens_vivos = set()
-        self.senal_iniciar_juego.emit(nivel, self.escenario, (self.mira.x, self.mira.y))
+        self.senal_iniciar_juego.emit(nivel, self.escenario, self.balas,
+                                      self.tiempo, (self.mira.x, self.mira.y))
         self.timer.start()
+        self.timer_tiempo.start()
 
     def actualizar_juego(self):
         if not self.pausa:
             self.mira.actualizar(self.teclas)
             self.manejar_aliens()
+
+            self.senal_actualizar_tiempo.emit(self.timer_tiempo.remainingTime())
 
     def manejar_aliens(self):
         # Crear mientras falten aliens por matar
@@ -149,7 +170,7 @@ class Juego(QObject):
     def terminar_nivel(self, paso_nivel: bool):
         self.senal_esconder_ventana_juego.emit()
         self.senal_terminar_nivel.emit(self.nivel, self.escenario,
-                                       self.balas, self.tiempo, 100, 100, paso_nivel)
+                                       self.balas, int(self.timer_tiempo.remainingTime() / 1000), 100, 100, paso_nivel)
 
     def pausar_juego(self):
         self.pausa = not self.pausa
