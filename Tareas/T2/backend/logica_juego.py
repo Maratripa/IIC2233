@@ -11,7 +11,7 @@ class Juego(QObject):
     #                               (niv, esc, bal, tiemp, pos_mira)
     senal_iniciar_juego = pyqtSignal(int, int, int, float, tuple)
     #                             (id , x  , y  , w  , h  , senales)
-    senal_crear_alien = pyqtSignal(int, int, int, int, int, list)
+    senal_crear_aliens = pyqtSignal(int, int, int, int, int, list)
 
     senal_actualizar_tiempo = pyqtSignal(int)
 
@@ -49,6 +49,7 @@ class Juego(QObject):
 
         # Aliens
         self.aliens = {}
+        self.rapidez_aliens = p.VELOCIDAD_ALIEN[0] + p.VELOCIDAD_ALIEN[1]
         self.aliens_vivos = set()
         self.aliens_muertos = set()
         self.aliens_por_eliminar = []
@@ -58,15 +59,86 @@ class Juego(QObject):
 
         self.tiempo = p.DURACION_NIVEL_INICIAL  # msecs
 
-        self.timer_tiempo = QTimer(self)
+        self.timer_tiempo = Tiempo(self)
         self.timer_tiempo.setSingleShot(True)
         self.timer_tiempo.timeout.connect(
             lambda: self.terminar_nivel(False)
         )
 
+    def iniciar_juego(self, escenario, usuario):
+        self.escenario = escenario
+        self.usuario = usuario
+
+        self.iniciar_nivel(1)
+
+    def iniciar_nivel(self, nivel: int) -> None:
+        self.nivel = nivel
+
+        self.mira.x, self.mira.y = (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
+                                    p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2)
+
+        self.timer_tiempo.setInterval(self.tiempo)
+        self.cantidad_aliens = nivel * 2
+        self.balas = self.cantidad_aliens * 2
+        self.aliens_muertos = set()
+        self.aliens_vivos = set()
+        self.teclas = set()
+        self.senal_iniciar_juego.emit(nivel, self.escenario, self.balas,
+                                      self.tiempo, (self.mira.x, self.mira.y))
+        self.timer.start()
+        self.timer_tiempo.start()
+
+    def actualizar_juego(self):
+        if not self.pausa:
+            self.mira.actualizar(self.teclas)
+            self.manejar_aliens()
+
+            self.senal_actualizar_tiempo.emit(self.timer_tiempo.remainingTime())
+
+    def manejar_aliens(self):
+        # Crear mientras falten aliens por matar
+        if len(self.aliens_vivos) == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
+            self.crear_aliens()
+
+        # Eliminar todos los aliens en la lista
+        for i in range(len(self.aliens_por_eliminar) - 1, -1, -1):
+            del self.aliens[self.aliens_por_eliminar.pop(i)]
+
+        # Mover aliens
+        for id in self.aliens:
+            self.aliens[id].mover()
+
+    def crear_aliens(self):
+        for _ in range(2):
+            alien = Alien(self.escenario, self.rapidez_aliens)
+            self.aliens[alien.id] = alien
+            self.aliens_vivos.add(alien.id)
+            self.senal_crear_aliens.emit(
+                alien.id, alien.x, alien.y, alien.width, alien.height,
+                [alien.senal_posicion, alien.senal_morir, alien.senal_eliminar])
+            alien.senal_eliminar.connect(self.eliminar_alien)
+
+    def eliminar_alien(self, id: int):
+        self.aliens_por_eliminar.append(id)
+
+        # Terminar juego cuando el ultimo alien salga de la pantalla
+        if len(self.aliens_muertos) == self.cantidad_aliens and self.ultimo_disparado == id:
+            self.terminar_nivel(True)
+            self.timer_tiempo.stop()
+            self.timer.stop()
+
+    def terminar_nivel(self, paso_nivel: bool):
+        self.senal_esconder_ventana_juego.emit()
+        self.senal_terminar_nivel.emit(self.nivel, self.escenario,
+                                       self.balas, int(self.timer_tiempo.remainingTime() / 1000),
+                                       100, 100, paso_nivel)
+
     def actualizar_teclas(self, key: int) -> None:
         if key == 78:           # tecla: n
-            self.crear_alien()
+            self.crear_aliens()
+
+        elif key == 80:
+            self.pausar_juego()  # tecla: p
 
         elif key > 0:           # keyPressEvent
             self.teclas.add(key)
@@ -105,75 +177,16 @@ class Juego(QObject):
 
         return chocados
 
-    def crear_alien(self):
-        for _ in range(2):
-            alien = Alien(self.escenario)
-            self.aliens[alien.id] = alien
-            self.aliens_vivos.add(alien.id)
-            self.senal_crear_alien.emit(
-                alien.id, alien.x, alien.y, alien.width, alien.height,
-                [alien.senal_posicion, alien.senal_morir, alien.senal_eliminar])
-            alien.senal_eliminar.connect(self.eliminar_alien)
-
-    def eliminar_alien(self, id: int):
-        self.aliens_por_eliminar.append(id)
-
-        # Terminar juego cuando el ultimo alien salga de la pantalla
-        if len(self.aliens_muertos) == self.cantidad_aliens and self.ultimo_disparado == id:
-            self.terminar_nivel(True)
-            self.timer_tiempo.stop()
-            self.timer.stop()
-
     def crear_explosion(self, x, y):
         self.explotador.mover_explosion(x, y)
         self.explotador.start()
 
-    def iniciar_juego(self, escenario, usuario):
-        self.escenario = escenario
-        self.usuario = usuario
-
-        self.iniciar_nivel(1)
-
-    def iniciar_nivel(self, nivel: int) -> None:
-        self.nivel = nivel
-
-        self.timer_tiempo.setInterval(self.tiempo)
-        self.cantidad_aliens = nivel * 2
-        self.balas = self.cantidad_aliens * 2
-        self.aliens_muertos = set()
-        self.aliens_vivos = set()
-        self.senal_iniciar_juego.emit(nivel, self.escenario, self.balas,
-                                      self.tiempo, (self.mira.x, self.mira.y))
-        self.timer.start()
-        self.timer_tiempo.start()
-
-    def actualizar_juego(self):
-        if not self.pausa:
-            self.mira.actualizar(self.teclas)
-            self.manejar_aliens()
-
-            self.senal_actualizar_tiempo.emit(self.timer_tiempo.remainingTime())
-
-    def manejar_aliens(self):
-        # Crear mientras falten aliens por matar
-        if len(self.aliens_vivos) == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
-            self.crear_alien()
-
-        # Eliminar todos los aliens en la lista
-        for i in range(len(self.aliens_por_eliminar) - 1, -1, -1):
-            del self.aliens[self.aliens_por_eliminar.pop(i)]
-
-        # Mover aliens
-        for id in self.aliens:
-            self.aliens[id].mover()
-
-    def terminar_nivel(self, paso_nivel: bool):
-        self.senal_esconder_ventana_juego.emit()
-        self.senal_terminar_nivel.emit(self.nivel, self.escenario,
-                                       self.balas, int(self.timer_tiempo.remainingTime() / 1000), 100, 100, paso_nivel)
-
     def pausar_juego(self):
         self.pausa = not self.pausa
+        if self.pausa:
+            self.timer_tiempo.pausa()
+        else:
+            self.timer_tiempo.reanudar()
 
 
 class Explosion(QThread):
@@ -202,3 +215,16 @@ class Explosion(QThread):
         self.senal_explosion.emit(2)
         self.msleep(self.time_off)
         self.senal_explosion.emit(-1)
+
+
+class Tiempo(QTimer):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+    def pausa(self):
+        self.restante = self.remainingTime()
+        self.stop()
+
+    def reanudar(self):
+        self.setInterval(self.restante)
+        self.start()
