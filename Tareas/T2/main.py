@@ -62,6 +62,7 @@ if __name__ == '__main__':
     logica_juego.mira.senal_disparando.connect(logica_juego.disparar)
 
     ventana_post.senal_siguiente_nivel.connect(logica_juego.iniciar_nivel)
+    ventana_post.senal_menu_principal.connect(ventana_principal.show)
 
     ventana_inicio.show()
     app.exec()
