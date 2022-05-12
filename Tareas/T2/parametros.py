@@ -37,7 +37,7 @@ RUTA_ALIEN = ["frontend", "assets", "Sprites", "Aliens"]
 
 RAPIDEZ_ALIEN = 5
 
-ANCHO_ALIEN = 70
+ANCHO_ALIEN = [64, 63, 116]
 ALTO_ALIEN = 70
 
 

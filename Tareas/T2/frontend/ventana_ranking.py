@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (QWidget, QApplication, QLabel, QScrollArea,
                              QFormLayout, QFrame)
 
 from manejo_archivos import cargar_puntajes
+import parametros as p
 
 
 class VentanaRanking(QWidget):
@@ -16,7 +17,7 @@ class VentanaRanking(QWidget):
         super().__init__(*args, **kwargs)
 
         # Geometria
-        self.setGeometry(600, 200, 600, 600)
+        self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO)
         self.setWindowTitle("A cazar aliens!")
         self.crear_elementos()
 

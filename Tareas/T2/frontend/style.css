@@ -24,6 +24,16 @@ QLabel#error {
     color: #F28FAD;
 }
 
+QLabel#paso-nivel {
+    background-color: #ABE9B3;
+    color: #1A1826;
+}
+
+QLabel#no-paso-nivel {
+    background-color: #F28FAD;
+    color: white;
+}
+
 QPushButton {
     background-color: #C3BAC6;
     color: #161320;

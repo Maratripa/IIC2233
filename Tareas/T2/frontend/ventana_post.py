@@ -9,18 +9,24 @@ import parametros as p
 import utils
 
 class VentanaPost(QWidget):
+
+    senal_siguiente_nivel = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
         # Geometria
-        self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO)
+        self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO / 2, p.VENTANA_ALTO)
         self.setWindowTitle("A cazar aliens!")
-        self.setGeometry()
 
         # Titulo
-        self.label_titulo = QLabel("RESUMEN DEL NIVEL", self)
+        self.label_titulo = QLabel("RESUMEN DEL NIVEL ", self)
         self.label_titulo.setObjectName("titulo")
         self.icono_titulo = QLabel(self)
+
+        self.pixmaps = []
+        for i in range(3):
+            self.pixmaps.append(QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{i + 1}_dead.png")))
 
         # Nivel
         self.label_nivel = QLabel("Nivel actual", self)
@@ -92,7 +98,10 @@ class VentanaPost(QWidget):
 
         self.setLayout(vbox1)
     
-    def mostrar(self, nivel, balas, tiempo, puntaje, puntaje_nivel, siguiente):
+    def mostrar(self, nivel, escenario, balas, tiempo, puntaje, puntaje_nivel, siguiente):
+        self.icono_titulo.setPixmap(
+            self.pixmaps[escenario - 1].scaled(
+                p.ANCHO_ICONOS[escenario - 1], p.ALTO_ICONOS[escenario - 1]))
         self.nivel.setText(f"{nivel}")
         self.balas.setText(f"{balas}")
         self.tiempo.setText(f"{tiempo} seg")
@@ -101,11 +110,19 @@ class VentanaPost(QWidget):
 
         if siguiente:
             self.label_mensaje.setText("¡Puedes dominar el siguiente nivel!")
-            self.label_mensaje.setObjectName("paso-nivel")
+            self.label_mensaje.setStyleSheet("""
+                background-color: #ABE9B3;
+                color: #1A1826;
+                padding: 5px 5px;
+            """)
             self.boton_siguiente.setEnabled(True)
         else:
             self.label_mensaje.setText("¡Perdiste! No puedes seguir jugando :(")
-            self.label_mensaje.setObjectName("no-paso-nivel")
+            self.label_mensaje.setStyleSheet("""
+                background-color: #F28FAD;
+                color: white;
+                padding: 5px 5px;
+            """)
             self.boton_siguiente.setEnabled(False)
         
         self.show()

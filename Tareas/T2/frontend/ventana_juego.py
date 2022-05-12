@@ -15,11 +15,12 @@ class VentanaJuego(QWidget):
     senal_boton_pausa = pyqtSignal()
     senal_actualizar_teclas = pyqtSignal(int)
 
-    def __init__(self, nivel: int = 1):
+    def __init__(self):
         super().__init__()
         self.setFocus()
 
-        self.nivel = nivel
+        self.barra_inferior = QLabel(self)
+        self.barra_inferior.setGeometry(0, 600, p.VENTANA_ANCHO, 100)
 
         # Diccionario de aliens
         self.aliens = {}
@@ -28,19 +29,6 @@ class VentanaJuego(QWidget):
         self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO + 100)
         self.setWindowTitle("A cazar aliens!")
         self.setFixedSize(p.VENTANA_ANCHO, p.VENTANA_ALTO + 100)
-
-        # Fondo
-        self.bg = QLabel(self)
-        pixmap_bg = QPixmap(path.join(*p.RUTA_FONDO, "Luna.png"))
-        self.bg.setPixmap(pixmap_bg.scaled(p.VENTANA_ANCHO, p.VENTANA_POS_Y, 2, 1))
-        self.bg.setGeometry(0, 0, 960, 600)
-
-        self.barra_inferior = QLabel(self)
-        self.barra_inferior.setGeometry(0, 600, p.VENTANA_ANCHO, 100)
-
-        # Alien pixmaps
-        self.pixmap_alien = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{self.nivel}.png"))
-        self.pixmap_alien_muerto = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{self.nivel}_dead.png"))
 
         # Mira
         self.label_mira = QLabel(self)
@@ -137,12 +125,13 @@ class VentanaJuego(QWidget):
         hbox2.addStretch(1)
 
         # VBox global
-        label_vacio = QLabel(self)
-        label_vacio.setObjectName("vacio")
-        label_vacio.setGeometry(0, 0, 960, 600)
+        self.label_vacio = QLabel(self)
+        self.label_vacio.stackUnder(self.label_explosion)
+        self.label_vacio.setObjectName("vacio")
+        self.label_vacio.setGeometry(0, 0, 960, 600)
 
         vbox6 = QVBoxLayout()
-        vbox6.addWidget(label_vacio)
+        vbox6.addWidget(self.label_vacio)
         vbox6.addLayout(hbox2)
 
         vbox6.setContentsMargins(11, 11, 11, 20)
@@ -150,7 +139,29 @@ class VentanaJuego(QWidget):
         # Setear Layout
         self.setLayout(vbox6)
 
-    def iniciar_nivel(self, pos_mira: tuple):
+    def iniciar_nivel(self, nivel, escenario, pos_mira: tuple):
+        self.nivel = nivel
+
+        self.cuenta_nivel.setText(f"{nivel}")
+
+        if escenario == 1:
+            pixmap_bg = QPixmap(path.join(*p.RUTA_FONDO, "Luna.png"))
+        elif escenario == 2:
+            pixmap_bg = QPixmap(path.join(*p.RUTA_FONDO, "Jupiter.png"))
+        elif escenario == 3:
+            pixmap_bg = QPixmap(path.join(*p.RUTA_FONDO, "Galaxia.png"))
+
+        # Fondo
+        self.bg = QLabel(self)
+        self.bg.setPixmap(pixmap_bg.scaled(p.VENTANA_ANCHO, p.VENTANA_POS_Y, 2, 1))
+        self.bg.setGeometry(0, 0, 960, 600)
+        self.bg.setScaledContents(True)
+        self.bg.stackUnder(self.label_vacio)
+
+        # Alien pixmaps
+        self.pixmap_alien = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{escenario}.png"))
+        self.pixmap_alien_muerto = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{escenario}_dead.png"))
+
         self.label_mira.move(*pos_mira)
         self.show()
 

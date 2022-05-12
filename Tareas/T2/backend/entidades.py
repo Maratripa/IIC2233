@@ -101,20 +101,20 @@ class Alien(QObject):
     #                          (id )
     senal_eliminar = pyqtSignal(int)
 
-    def __init__(self):
+    def __init__(self, escenario: int):
         super().__init__()
 
         self.id += 1
         Alien.id += 1
 
-        self.width = p.ANCHO_ALIEN
+        self.width = p.ANCHO_ALIEN[escenario - 1]
         self.height = p.ALTO_ALIEN
 
         self.rapidez = p.RAPIDEZ_ALIEN
 
-        angulo = random.uniform(0.0, 2 * math.pi)
-        self.vx = math.cos(angulo) * self.rapidez
-        self.vy = math.sin(angulo) * self.rapidez
+        angulo = random.uniform(math.pi / 6, math.pi / 3)
+        self.vx = math.cos(angulo) * self.rapidez * random.choice([-1, 1])
+        self.vy = math.sin(angulo) * self.rapidez * random.choice([-1, 1])
 
         self._x = random.randint(0, p.VENTANA_ANCHO - self.width)
         self._y = random.randint(0, p.VENTANA_ALTO - self.height)
@@ -155,10 +155,9 @@ class Alien(QObject):
         if not self.muerto:
             self.x += int(self.vx)
             self.y += int(self.vy)
+            self.senal_posicion.emit(self.id, (self.x, self.y))
         else:
             self.mover_abajo()
-
-        self.senal_posicion.emit(self.id, (self.x, self.y))
 
     def morir(self):
         self.senal_morir.emit(self.id)
