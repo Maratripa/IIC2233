@@ -49,6 +49,8 @@ if __name__ == '__main__':
 
     logica_juego.senal_crear_alien.connect(ventana_juego.agregar_label_alien)
     logica_juego.senal_iniciar_juego.connect(ventana_juego.iniciar_nivel)
+    logica_juego.senal_actualizar_balas.connect(ventana_juego.actualizar_balas)
+    logica_juego.senal_actualizar_tiempo.connect(ventana_juego.actualizar_tiempo)
     logica_juego.senal_terminar_nivel.connect(ventana_post.mostrar)
     logica_juego.senal_esconder_ventana_juego.connect(ventana_juego.hide)
 
