@@ -68,7 +68,7 @@ class Juego(QObject):
             chocados = self.chequear_colision_aliens()
 
             if chocados:
-                self.crear_explosion(self.mira.x + self.mira.off_w, 
+                self.crear_explosion(self.mira.x + self.mira.off_w,
                                      self.mira.y + self.mira.off_h)
                 for id in chocados:
                     self.aliens[id].morir()
@@ -103,6 +103,11 @@ class Juego(QObject):
     def eliminar_alien(self, id: int):
         self.aliens_por_eliminar.append(id)
 
+        # Terminar juego cuando el ultimo alien salga de la pantalla
+        if len(self.aliens_muertos) == self.cantidad_aliens:
+            self.terminar_nivel(True)
+            self.timer.stop()
+
     def crear_explosion(self, x, y):
         self.explotador.mover_explosion(x, y)
         self.explotador.start()
@@ -120,26 +125,25 @@ class Juego(QObject):
         if not self.pausa:
             self.mira.actualizar(self.teclas)
             self.manejar_aliens()
-    
+
     def manejar_aliens(self):
-        if len(self.aliens_muertos) == self.cantidad_aliens:
-            self.terminar_nivel(True)
-            self.timer.stop()
-        elif len(self.aliens_vivos) == 0:
+        # Crear mientras falten aliens por matar
+        if len(self.aliens_vivos) == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
             self.crear_alien()
 
         # Eliminar todos los aliens en la lista
         for i in range(len(self.aliens_por_eliminar) - 1, -1, -1):
             del self.aliens[self.aliens_por_eliminar.pop(i)]
-        
+
         # Mover aliens
         for id in self.aliens:
             self.aliens[id].mover()
-    
+
     def terminar_nivel(self, paso_nivel: bool):
         self.senal_esconder_ventana_juego.emit()
-        self.senal_terminar_nivel.emit(self.nivel, self.escenario, self.balas, self.tiempo, 100, 100, paso_nivel)
-    
+        self.senal_terminar_nivel.emit(self.nivel, self.escenario,
+                                       self.balas, self.tiempo, 100, 100, paso_nivel)
+
     def pausar_juego(self):
         self.pausa = not self.pausa
 
@@ -154,7 +158,8 @@ class Explosion(QThread):
         super().__init__(parent)
 
         self.time_off = 75
-    
+
+    # Explosion en un nuevo lugar
     def mover_explosion(self, x, y):
         self.senal_mover.emit(x, y)
 
