@@ -67,22 +67,24 @@ class Juego(QObject):
 
     def iniciar_juego(self, escenario, usuario):
         self.escenario = escenario
+
+        if escenario == 1:
+            self.dificultad = p.PONDERADOR_TUTORIAL
+        elif escenario == 2:
+            self.dificultad = p.PONDERADOR_ENTRENAMIENTO
+        elif escenario == 3:
+            self.dificultad = p.PONDERADOR_INVASION
+
         self.usuario = usuario
+        self.puntaje = 0
 
         self.iniciar_nivel(1)
 
     def iniciar_nivel(self, nivel: int) -> None:
         self.nivel = nivel
 
-        if self.escenario == 1:
-            self.tiempo *= p.PONDERADOR_TUTORIAL
-            self.rapidez_aliens /= p.PONDERADOR_TUTORIAL
-        elif self.escenario == 2:
-            self.tiempo *= p.PONDERADOR_ENTRENAMIENTO
-            self.rapidez_aliens /= p.PONDERADOR_ENTRENAMIENTO
-        elif self.escenario == 3:
-            self.tiempo *= p.PONDERADOR_INVASION
-            self.rapidez_aliens /= p.PONDERADOR_INVASION
+        self.tiempo *= self.dificultad
+        self.rapidez_aliens /= self.dificultad
 
         self.timer_tiempo.setInterval(self.tiempo)
         self.cantidad_aliens = nivel * 2
@@ -140,11 +142,22 @@ class Juego(QObject):
             self.timer_tiempo.stop()
 
     def terminar_nivel(self, paso_nivel: bool):
+        tiempo_restante = int(self.timer_tiempo.remainingTime() / 1000)
         self.timer.stop()
         self.senal_esconder_ventana_juego.emit()
+        if paso_nivel:
+            puntos_nivel = self.calcular_puntaje_nivel(tiempo_restante)
+        else:
+            puntos_nivel = 0
+        self.puntaje += puntos_nivel
         self.senal_terminar_nivel.emit(self.nivel, self.escenario,
-                                       self.balas, int(self.timer_tiempo.remainingTime() / 1000),
-                                       100, 100, paso_nivel)
+                                       self.balas, tiempo_restante,
+                                       self.puntaje, puntos_nivel, paso_nivel)
+
+    def calcular_puntaje_nivel(self, tiempo_restante) -> int:
+        pts = int(self.cantidad_aliens * 100 +
+                  (tiempo_restante * 30 + self.balas * 70) * self.nivel / self.dificultad)
+        return pts
 
     def actualizar_teclas(self, key: int) -> None:
         if key == 78:           # tecla: n
