@@ -6,12 +6,15 @@ from PyQt5.QtWidgets import (QWidget, QFormLayout, QLabel,
                              QVBoxLayout, QHBoxLayout, QPushButton,
                              QApplication)
 import parametros as p
+from manejo_archivos import guardar_puntaje
 import utils
 
 
 class VentanaPost(QWidget):
     #                                 (nivel)
     senal_siguiente_nivel = pyqtSignal(int)
+
+    senal_menu_principal = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -57,6 +60,8 @@ class VentanaPost(QWidget):
         self.boton_siguiente.clicked.connect(self.siguiente_nivel)
         self.boton_salir = QPushButton("Salir", self)
         self.boton_salir.clicked.connect(self.salir)
+        self.boton_menu = QPushButton("Menú principal", self)
+        self.boton_menu.clicked.connect(self.menu_principal)
 
         # HBox 1
         hbox1 = QHBoxLayout()
@@ -79,9 +84,9 @@ class VentanaPost(QWidget):
         # HBox 3
         hbox3 = QHBoxLayout()
         hbox3.addStretch(1)
-        hbox3.addWidget(self.boton_siguiente)
+        hbox3.addWidget(self.boton_menu)
         hbox3.addStretch(1)
-        hbox3.addWidget(self.boton_salir)
+        hbox3.addWidget(self.boton_siguiente)
         hbox3.addStretch(1)
 
         # VBox 1
@@ -95,10 +100,12 @@ class VentanaPost(QWidget):
         vbox1.addStretch(1)
         vbox1.addLayout(hbox3)
         vbox1.addStretch(1)
+        vbox1.addLayout(utils.encapsular_h(self.boton_salir))
+        vbox1.addStretch(1)
 
         self.setLayout(vbox1)
 
-    def mostrar(self, nivel, escenario, balas, tiempo, puntaje, puntaje_nivel, siguiente):
+    def mostrar(self, nivel, escenario, balas, tiempo, puntaje, puntaje_nivel, siguiente, usuario):
         self.escenario = escenario
         self.icono_titulo.setPixmap(
             self.pixmaps[escenario - 1].scaled(
@@ -126,10 +133,18 @@ class VentanaPost(QWidget):
             """)
             self.boton_siguiente.setEnabled(False)
 
+        self.puntos = puntaje
+        self.usuario = usuario
+
         self.show()
 
     def siguiente_nivel(self):
         self.senal_siguiente_nivel.emit(int(self.nivel.text()) + 1)
+        self.hide()
+
+    def menu_principal(self):
+        guardar_puntaje(self.usuario, self.puntos)
+        self.senal_menu_principal.emit()
         self.hide()
 
     def salir(self):

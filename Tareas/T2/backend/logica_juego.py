@@ -19,7 +19,7 @@ class Juego(QObject):
 
     senal_actualizar_puntaje = pyqtSignal(int)
 
-    senal_terminar_nivel = pyqtSignal(int, int, int, int, int, int, bool)
+    senal_terminar_nivel = pyqtSignal(int, int, int, int, int, int, bool, str)
 
     senal_esconder_ventana_juego = pyqtSignal()
 
@@ -152,7 +152,8 @@ class Juego(QObject):
         self.puntaje += puntos_nivel
         self.senal_terminar_nivel.emit(self.nivel, self.escenario,
                                        self.balas, tiempo_restante,
-                                       self.puntaje, puntos_nivel, paso_nivel)
+                                       self.puntaje, puntos_nivel,
+                                       paso_nivel, self.usuario)
 
     def calcular_puntaje_nivel(self, tiempo_restante) -> int:
         pts = int(self.cantidad_aliens * 100 +
