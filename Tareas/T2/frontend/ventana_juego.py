@@ -1,4 +1,3 @@
-import sys
 from os import path
 
 from PyQt5.QtCore import pyqtSignal, QTimer
@@ -62,12 +61,12 @@ class VentanaJuego(QWidget):
         # Barra inferior
         # VBox tiempo
         self.label_tiempo = QLabel("Tiempo", self)
-        self.barra_timepo = QProgressBar(self)
-        self.barra_timepo.setTextVisible(False)
+        self.barra_tiempo = QProgressBar(self)
+        self.barra_tiempo.setTextVisible(False)
 
         vbox1 = QVBoxLayout()
         vbox1.addWidget(self.label_tiempo)
-        vbox1.addWidget(self.barra_timepo)
+        vbox1.addWidget(self.barra_tiempo)
 
         # VBox balas
         self.label_balas = QLabel("Balas", self)
@@ -149,8 +148,8 @@ class VentanaJuego(QWidget):
         self.cuenta_nivel.setText(f"{nivel}")
         self.cuenta_balas.setText(f"X {balas}")
 
-        self.barra_timepo.setRange(0, int(tiempo / 1000))
-        self.barra_timepo.setValue(int(tiempo / 1000))
+        self.barra_tiempo.setRange(0, int(tiempo / 1000))
+        self.barra_tiempo.setValue(int(tiempo / 1000))
 
         if escenario == 1:
             pixmap_bg = QPixmap(path.join(*p.RUTA_FONDO, "Luna.png"))
@@ -170,6 +169,7 @@ class VentanaJuego(QWidget):
         self.pixmap_alien = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{escenario}.png"))
         self.pixmap_alien_muerto = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{escenario}_dead.png"))
 
+        self.mira_normal()
         self.label_mira.move(*pos_mira)
         self.show()
 
@@ -209,6 +209,7 @@ class VentanaJuego(QWidget):
 
     def cambiar_mira(self):
         self.label_mira.setPixmap(self.pixmap_mira_roja)
+        self.timer_mira_roja.start()
 
     def mira_normal(self):
         self.label_mira.setPixmap(self.pixmap_mira)
@@ -232,7 +233,8 @@ class VentanaJuego(QWidget):
         self.cuenta_balas.setText(f"X {balas}")
 
     def actualizar_tiempo(self, tiempo):
-        self.barra_timepo.setValue(int(tiempo / 1000))
+        self.barra_tiempo.setValue(int(tiempo / 1000))
+        self.barra_tiempo.repaint()
 
     def salir_juego(self):
         self.senal_boton_salir.emit()
