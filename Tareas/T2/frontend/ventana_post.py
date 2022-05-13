@@ -14,7 +14,7 @@ class VentanaPost(QWidget):
     #                                 (nivel)
     senal_siguiente_nivel = pyqtSignal(int)
 
-    senal_menu_principal = pyqtSignal()
+    senal_menu_inicio = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -60,8 +60,8 @@ class VentanaPost(QWidget):
         self.boton_siguiente.clicked.connect(self.siguiente_nivel)
         self.boton_salir = QPushButton("Salir", self)
         self.boton_salir.clicked.connect(self.salir)
-        self.boton_menu = QPushButton("Menú principal", self)
-        self.boton_menu.clicked.connect(self.menu_principal)
+        self.boton_menu = QPushButton("Menú de inicio", self)
+        self.boton_menu.clicked.connect(self.menu_inicio)
 
         # HBox 1
         hbox1 = QHBoxLayout()
@@ -142,9 +142,9 @@ class VentanaPost(QWidget):
         self.senal_siguiente_nivel.emit(int(self.nivel.text()) + 1)
         self.hide()
 
-    def menu_principal(self):
+    def menu_inicio(self):
         guardar_puntaje(self.usuario, self.puntos)
-        self.senal_menu_principal.emit()
+        self.senal_menu_inicio.emit()
         self.hide()
 
     def salir(self):
