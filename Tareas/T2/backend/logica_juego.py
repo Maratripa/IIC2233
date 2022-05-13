@@ -161,17 +161,18 @@ class Juego(QObject):
         return pts
 
     def actualizar_teclas(self, key: int) -> None:
-        if key == 78:           # tecla: n
-            self.crear_aliens()
-
-        elif key == 80:
-            self.pausar_juego()  # tecla: p
+        if key == 80:           # tecla: p
+            self.pausar_juego()
 
         elif key > 0:           # keyPressEvent
             self.teclas.add(key)
 
         else:                   # keyReleaseEvent
             self.teclas.discard(-key)
+
+        if 67 in self.teclas and 73 in self.teclas and 65 in self.teclas:
+            self.terminar_nivel(True)
+            self.timer_tiempo.stop()
 
     def disparar(self, disparando: bool):
         if disparando:
