@@ -239,7 +239,7 @@ class Explosion(QThread):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.time_off = 75
+        self.time_off = 100
 
     # Explosion en un nuevo lugar
     def mover_explosion(self, x, y):
