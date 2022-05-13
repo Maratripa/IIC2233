@@ -21,8 +21,8 @@ def guardar_puntaje(usuario, puntaje) -> None:
 
     with open("puntajes.txt", 'a', encoding="utf-8") as file:
         if tiene_n:
-            linea = f"{usuario},{puntaje}\n"
+            linea = f"{usuario},{puntaje}"
         else:
-            linea = f"\n{usuario},{puntaje}\n"
+            linea = f"\n{usuario},{puntaje}"
 
         print(linea, file=file)
