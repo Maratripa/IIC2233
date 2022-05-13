@@ -103,7 +103,7 @@ class Alien(QObject):
     #                          (id )
     senal_eliminar = pyqtSignal(int)
 
-    def __init__(self, escenario: int, rapidez):
+    def __init__(self, escenario: int, rapidez, lado_pantalla):
         super().__init__()
 
         self.id += 1
@@ -118,7 +118,11 @@ class Alien(QObject):
         self.vx = math.cos(angulo) * self.rapidez * random.choice([-1, 1])
         self.vy = math.sin(angulo) * self.rapidez * random.choice([-1, 1])
 
-        self._x = random.randint(0, p.VENTANA_ANCHO - self.width)
+        if lado_pantalla == 0:
+            self._x = random.randint(0, p.VENTANA_ANCHO / 2 - self.width)
+        else:
+            self._x = random.randint(p.VENTANA_ANCHO / 2, p.VENTANA_ANCHO - self.width)
+
         self._y = random.randint(0, p.VENTANA_ALTO - self.height)
 
         self.muerto = False

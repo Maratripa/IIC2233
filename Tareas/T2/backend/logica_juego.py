@@ -126,8 +126,8 @@ class Juego(QObject):
             self.aliens[id].mover()
 
     def crear_aliens(self):
-        for _ in range(2):
-            alien = Alien(self.escenario, self.rapidez_aliens)
+        for i in range(2):  # Se usa 'i' para indicarle en que mitad de la pantalla aparecer
+            alien = Alien(self.escenario, self.rapidez_aliens, i)
             self.aliens[alien.id] = alien
             self.aliens_vivos.add(alien.id)
             self.senal_crear_aliens.emit(
