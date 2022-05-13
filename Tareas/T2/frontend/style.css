@@ -8,7 +8,7 @@ QWidget {
 }
 
 QLabel#titulo {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -32,6 +32,10 @@ QLabel#paso-nivel {
 QLabel#no-paso-nivel {
     background-color: #F28FAD;
     color: white;
+}
+
+QLabel#puntajes {
+    font-size: 20px;
 }
 
 QPushButton {
