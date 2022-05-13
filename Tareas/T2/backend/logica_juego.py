@@ -15,7 +15,7 @@ class Juego(QObject):
 
     senal_actualizar_tiempo = pyqtSignal(int)
 
-    senal_actualizar_balas = pyqtSignal(int)
+    senal_actualizar_balas = pyqtSignal(str)
 
     senal_actualizar_puntaje = pyqtSignal(int)
 
@@ -55,10 +55,6 @@ class Juego(QObject):
         self.aliens_por_eliminar = []
 
         # Juego
-        self.cantidad_aliens = 2
-
-        self.tiempo = p.DURACION_NIVEL_INICIAL  # msecs
-
         self.timer_tiempo = Tiempo(self)
         self.timer_tiempo.setSingleShot(True)
         self.timer_tiempo.timeout.connect(
@@ -78,6 +74,9 @@ class Juego(QObject):
         self.usuario = usuario
         self.puntaje = 0
 
+        self.cantidad_aliens = 2
+        self.tiempo = p.DURACION_NIVEL_INICIAL  # msecs
+
         self.iniciar_nivel(1)
 
     def iniciar_nivel(self, nivel: int) -> None:
@@ -89,11 +88,14 @@ class Juego(QObject):
         self.timer_tiempo.setInterval(self.tiempo)
         self.cantidad_aliens = nivel * 2
         self.balas = self.cantidad_aliens * 2
+        self.balas_infinitas = False
+
         # Resetear sets
         self.aliens_muertos = set()
         self.aliens_vivos = set()
         self.teclas = set()
 
+        self.mira.timer_disparo.setInterval(1000)
         self.mira.x, self.mira.y = (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
                                     p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2)
 
@@ -170,30 +172,36 @@ class Juego(QObject):
         else:                   # keyReleaseEvent
             self.teclas.discard(-key)
 
-        if 67 in self.teclas and 73 in self.teclas and 65 in self.teclas:
+        if {67, 73, 65}.issubset(self.teclas):  # Cheatcode CIA
             self.terminar_nivel(True)
             self.timer_tiempo.stop()
 
-    def disparar(self, disparando: bool):
-        if disparando:
+        elif {79, 86, 78, 73}.issubset(self.teclas):  # Cheatcode OVNI
+            self.balas_infinitas = True
+            self.mira.balas_infinitas()
+            self.senal_actualizar_balas.emit("INF")
+
+    def disparar(self):
+        if not self.balas_infinitas:
             self.balas -= 1
-            self.senal_actualizar_balas.emit(self.balas)
-            self.sonido_disparo.play()
-            chocados = self.chequear_colision_aliens()
+            self.senal_actualizar_balas.emit(str(self.balas))
 
-            if chocados:
-                self.crear_explosion(self.mira.x + self.mira.off_w,
-                                     self.mira.y + self.mira.off_h)
-                for id in chocados:
-                    self.aliens[id].morir()
-                    self.aliens_vivos.remove(id)
-                    self.aliens_muertos.add(id)
-                    self.ultimo_disparado = id
+        self.sonido_disparo.play()
+        chocados = self.chequear_colision_aliens()
 
-            # No quedan balas
-            if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
-                self.terminar_nivel(False)
-                self.timer_tiempo.stop()
+        if chocados:
+            self.crear_explosion(self.mira.x + self.mira.off_w,
+                                 self.mira.y + self.mira.off_h)
+            for id in chocados:
+                self.aliens[id].morir()
+                self.aliens_vivos.remove(id)
+                self.aliens_muertos.add(id)
+                self.ultimo_disparado = id
+
+        # No quedan balas
+        if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
+            self.terminar_nivel(False)
+            self.timer_tiempo.stop()
 
     def chequear_colision_aliens(self) -> list:
         chocados = []

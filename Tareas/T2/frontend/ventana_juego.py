@@ -1,7 +1,7 @@
 import sys
 from os import path
 
-from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtCore import pyqtSignal, QTimer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QWidget, QLabel,
                              QVBoxLayout, QHBoxLayout, QPushButton,
@@ -18,6 +18,11 @@ class VentanaJuego(QWidget):
     def __init__(self):
         super().__init__()
         self.setFocus()
+
+        self.timer_mira_roja = QTimer(self)
+        self.timer_mira_roja.setInterval(1000)
+        self.timer_mira_roja.setSingleShot(True)
+        self.timer_mira_roja.timeout.connect(self.mira_normal)
 
         self.barra_inferior = QLabel(self)
         self.barra_inferior.setGeometry(0, 600, p.VENTANA_ANCHO, 100)
@@ -202,11 +207,11 @@ class VentanaJuego(QWidget):
     def mover_mira(self, pos: tuple):
         self.label_mira.move(*pos)
 
-    def cambiar_mira(self, disparando: bool):
-        if disparando:
-            self.label_mira.setPixmap(self.pixmap_mira_roja)
-        else:
-            self.label_mira.setPixmap(self.pixmap_mira)
+    def cambiar_mira(self):
+        self.label_mira.setPixmap(self.pixmap_mira_roja)
+
+    def mira_normal(self):
+        self.label_mira.setPixmap(self.pixmap_mira)
 
     def mover_explosion(self, x, y):
         self.label_explosion.posicion = (x, y)

@@ -9,7 +9,7 @@ import parametros as p
 class Mira(QObject):
     #                          (pos_m)
     senal_posicion = pyqtSignal(tuple)
-    senal_disparando = pyqtSignal(bool)
+    senal_disparando = pyqtSignal()
 
     def __init__(self, width: int, height: int, pos: tuple) -> None:
         super().__init__()
@@ -64,7 +64,7 @@ class Mira(QObject):
         if not self.recargando:
             self.recargando = True
             self.timer_disparo.start()
-            self.senal_disparando.emit(True)
+            self.senal_disparando.emit()
 
     def mover(self, teclas: set) -> None:
         dx = 0
@@ -86,9 +86,11 @@ class Mira(QObject):
 
             self.senal_posicion.emit((self.x, self.y))
 
+    def balas_infinitas(self):
+        self.timer_disparo.setInterval(500)
+
     def reset_disparo(self):
         self.recargando = False
-        self.senal_disparando.emit(False)
 
 
 class Alien(QObject):
