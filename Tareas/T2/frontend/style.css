@@ -6,7 +6,11 @@ QWidget {
     font-weight: normal;
     font-size: 16px;
 }
-
+/*
+QLabel {
+    border: 2px solid #F28FAD;
+}
+*/
 QLabel#titulo {
     font-size: 30px;
     font-weight: bold;
@@ -85,4 +89,18 @@ QRadioButton::indicator:hover {
 
 QRadioButton::indicator:checked {
     background-color: #C9CBFF;
-} 
+}
+
+QProgressBar {
+    border: solid #D9E0EE;
+    height: 15px;
+}
+
+QProgressBar::chunk {
+    background-color: #C9CBFF;
+    border-radius: 8px;
+}
+
+QVBoxLayout {
+    border: 2px solid #F28FAD;
+}

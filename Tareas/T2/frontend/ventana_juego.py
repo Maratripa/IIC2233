@@ -1,8 +1,8 @@
 from os import path
 
-from PyQt5.QtCore import pyqtSignal, QTimer
+from PyQt5.QtCore import pyqtSignal, QTimer, Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QWidget, QLabel,
+from PyQt5.QtWidgets import (QWidget, QLabel, QFrame,
                              QVBoxLayout, QHBoxLayout, QPushButton,
                              QProgressBar)
 import parametros as p
@@ -61,15 +61,23 @@ class VentanaJuego(QWidget):
         # Barra inferior
         # VBox tiempo
         self.label_tiempo = QLabel("Tiempo", self)
+        self.label_tiempo.setAlignment(Qt.AlignmentFlag.AlignTop)
+
         self.barra_tiempo = QProgressBar(self)
         self.barra_tiempo.setTextVisible(False)
 
+        vboxtiempo = QVBoxLayout()
+        vboxtiempo.addStretch(1)
+        vboxtiempo.addWidget(self.barra_tiempo)
+        vboxtiempo.addStretch(1)
+
         vbox1 = QVBoxLayout()
         vbox1.addWidget(self.label_tiempo)
-        vbox1.addWidget(self.barra_tiempo)
+        vbox1.addLayout(vboxtiempo)
 
         # VBox balas
         self.label_balas = QLabel("Balas", self)
+        self.label_balas.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         self.icono_bala = QLabel(self)
         self.pixmap_bala = QPixmap(path.join(*p.RUTA_ELEMENTOS, "Bala.png"))
@@ -87,7 +95,9 @@ class VentanaJuego(QWidget):
 
         # VBox puntaje
         self.label_puntaje = QLabel("Puntaje", self)
+        self.label_puntaje.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.cuenta_puntaje = QLabel("0 ptos", self)
+        self.cuenta_puntaje.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         vbox3 = QVBoxLayout()
         vbox3.addWidget(self.label_puntaje)
@@ -95,7 +105,9 @@ class VentanaJuego(QWidget):
 
         # Vbox nivel
         self.label_nivel = QLabel("Nivel", self)
+        self.label_nivel.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.cuenta_nivel = QLabel(f"0", self)
+        self.cuenta_nivel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         vbox4 = QVBoxLayout()
         vbox4.addWidget(self.label_nivel)
@@ -131,13 +143,11 @@ class VentanaJuego(QWidget):
         self.label_vacio = QLabel(self)
         self.label_vacio.stackUnder(self.label_explosion)
         self.label_vacio.setObjectName("vacio")
-        self.label_vacio.setGeometry(0, 0, 960, 600)
+        self.label_vacio.setFixedSize(p.VENTANA_ANCHO, p.VENTANA_ALTO)
 
         vbox6 = QVBoxLayout()
         vbox6.addWidget(self.label_vacio)
         vbox6.addLayout(hbox2)
-
-        vbox6.setContentsMargins(11, 11, 11, 20)
 
         # Setear Layout
         self.setLayout(vbox6)
