@@ -24,16 +24,21 @@ class Servidor:
         Crea el socket, lo enlaza y comienza a escuchar
         """
         # TODO: Completado por estudiante
-        pass
-        
+        self.socket_servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket_servidor.bind((self.host, self.port))
+        self.socket_servidor.listen()
+        self.conectado = True
+
+        self.log(f"Host: {self.host}\nPort: {self.port}")
+        self.comenzar_a_aceptar()
 
     def comenzar_a_aceptar(self):
         """
         Crea y comienza el thread encargado de aceptar clientes
         """
         # TODO: Completado por estudiante
-        pass
-        
+        thread = threading.Thread(target=self.aceptar_clientes, daemon=True)
+        thread.start()
 
     def aceptar_clientes(self):
         """
@@ -43,12 +48,15 @@ class Servidor:
         el id_cliente.
         """
         while self.conectado:
-        # TODO: Completado por estudiante
+            # TODO: Completado por estudiante
             try:
-                pass
-            except:
-                pass
-
+                client_socket, _ = self.socket_servidor.accept()
+                thread_cliente = threading.Thread(
+                    target=self.escuchar_cliente, args=(self.id_cliente, client_socket))
+                self.id_cliente += 1
+            except ConnectionError as e:
+                print(e)
+                return
 
     def escuchar_cliente(self, id_cliente, socket_cliente):
         """
@@ -60,10 +68,18 @@ class Servidor:
         self.log(f"Comenzando a escuchar al cliente {id_cliente}...")
         # TODO: Completado por estudiante
         try:
-            pass
-        except:
-            pass
+            mensaje = self.recibir_mensaje(socket_cliente)
+            if mensaje == "":
+                raise ConnectionError()
 
+            dict_mensaje = self.logica.procesar_mensaje(mensaje, socket_cliente)
+            if not dict_mensaje:
+                raise ConnectionError()
+
+            self.enviar_mensaje(dict_mensaje, socket_cliente)
+
+        except ConnectionError as e:
+            self.eliminar_cliente(id_cliente, socket_cliente)
 
     def recibir_mensaje(self, socket_cliente):
         """
@@ -71,15 +87,30 @@ class Servidor:
         establecido y lo des-serializa retornando un diccionario.
         """
         # TODO: Completado por estudiante
-        pass
+        msg_bytes_len = socket_cliente.recv(4)
+        msg_len = int.from_bytes(msg_bytes_len, byteorder="little")
 
-    def enviar_mensaje(self, mensaje, socket_cliente):
+        mensaje = bytearray()
+
+        while len(mensaje) < msg_len:
+            read_len = min(64, msg_len - len(mensaje))
+            mensaje.extend(socket.cliente.recv(read_len))
+
+        mensaje_decoded = self.decodificar_mensaje(mensaje)
+
+        return mensaje_decoded
+
+    def enviar_mensaje(self, mensaje: dict, socket_cliente: socket.socket):
         """
         Recibe una instruccion,
         lo CODIFICA usando el protocolo establecido y lo envía al cliente
         """
         # TODO: Completado por estudiante
-        pass
+        mensaje_codificado = self.codificar_mensaje(mensaje)
+
+        msg_len = len(mensaje_codificado).to_bytes(4, byteorder="little")
+
+        socket_cliente.sendall(msg_len + mensaje_codificado)
 
     def enviar_archivo(self, socket_cliente, ruta):
         """
@@ -116,11 +147,18 @@ class Servidor:
             self.log(f"ERROR: {e}")
 
     def codificar_mensaje(self, mensaje):
-        pass
+        mensaje_json = json.dumps(mensaje)
 
+        mensaje_codificado = mensaje_json.encode("utf-8")
+
+        return mensaje_codificado
 
     def decodificar_mensaje(self, mensaje_bytes):
-        pass 
+        mensaje_json = mensaje_bytes.decode("utf-8")
+
+        mensaje = json.loads(mensaje_json)
+
+        return mensaje
 
     def log(self, mensaje: str):
         """
