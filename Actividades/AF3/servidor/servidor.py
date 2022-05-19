@@ -81,7 +81,7 @@ class Servidor:
 
                 self.enviar_mensaje(dict_mensaje, socket_cliente)
 
-            except (ConnectionError, OSError) as e:
+            except ConnectionError as e:
                 self.eliminar_cliente(id_cliente, socket_cliente)
                 return
 
