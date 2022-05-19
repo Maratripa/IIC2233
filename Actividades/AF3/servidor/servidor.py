@@ -53,6 +53,8 @@ class Servidor:
                 client_socket, _ = self.socket_servidor.accept()
                 thread_cliente = threading.Thread(
                     target=self.escuchar_cliente, args=(self.id_cliente, client_socket))
+
+                thread_cliente.start()
                 self.id_cliente += 1
             except ConnectionError as e:
                 print(e)
@@ -67,19 +69,21 @@ class Servidor:
         """
         self.log(f"Comenzando a escuchar al cliente {id_cliente}...")
         # TODO: Completado por estudiante
-        try:
-            mensaje = self.recibir_mensaje(socket_cliente)
-            if mensaje == "":
-                raise ConnectionError()
+        while True:
+            try:
+                mensaje = self.recibir_mensaje(socket_cliente)
+                if mensaje == "":
+                    raise ConnectionError()
 
-            dict_mensaje = self.logica.procesar_mensaje(mensaje, socket_cliente)
-            if not dict_mensaje:
-                raise ConnectionError()
+                dict_mensaje = self.logica.procesar_mensaje(mensaje, socket_cliente)
+                if not dict_mensaje:
+                    raise ConnectionError()
 
-            self.enviar_mensaje(dict_mensaje, socket_cliente)
+                self.enviar_mensaje(dict_mensaje, socket_cliente)
 
-        except ConnectionError as e:
-            self.eliminar_cliente(id_cliente, socket_cliente)
+            except (ConnectionError, OSError) as e:
+                self.eliminar_cliente(id_cliente, socket_cliente)
+                return
 
     def recibir_mensaje(self, socket_cliente):
         """
@@ -94,7 +98,10 @@ class Servidor:
 
         while len(mensaje) < msg_len:
             read_len = min(64, msg_len - len(mensaje))
-            mensaje.extend(socket.cliente.recv(read_len))
+            mensaje.extend(socket_cliente.recv(read_len))
+
+        if not mensaje:
+            raise ConnectionError()
 
         mensaje_decoded = self.decodificar_mensaje(mensaje)
 
