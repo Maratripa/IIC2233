@@ -3,7 +3,7 @@ from os import path
 import functools
 
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
-from PyQt5.QtMultimedia import QSoundEffect
+from PyQt5.QtMultimedia import QSoundEffect, QSound
 from backend.entidades import Mira, Alien
 
 from manejo_archivos import guardar_puntaje
@@ -60,6 +60,12 @@ class Juego(QObject):
         self.sonido_disparo = QSoundEffect(self)
         self.sonido_disparo.setSource(QUrl.fromLocalFile(path.join(*p.RUTA_SONIDOS, "disparo.wav")))
         self.sonido_disparo.setVolume(0.3)
+
+        # Sonido risa god
+        self.sonido_risa = QSoundEffect(self)
+        self.sonido_risa.setSource(QUrl.fromLocalFile(
+            path.join(*p.RUTA_SONIDOS, "risa_robotica.wav")))
+        self.sonido_risa.setVolume(0.3)
 
         # Case para manejar explosion
         self.explotador = Explosion(self)
@@ -169,6 +175,7 @@ class Juego(QObject):
     def terminar_nivel(self, paso_nivel: bool):
         tiempo_restante = int(self.timer_tiempo.remainingTime() / 1000)
         self.timer_tiempo.stop()
+        self.sonido_risa.play()
         self.senal_terminator_god.emit(paso_nivel)
 
         # Llamar a pasar_nivel pasado un tiempo con los argumentos respectivos
