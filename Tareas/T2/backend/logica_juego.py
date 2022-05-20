@@ -175,7 +175,8 @@ class Juego(QObject):
     def terminar_nivel(self, paso_nivel: bool):
         tiempo_restante = int(self.timer_tiempo.remainingTime() / 1000)
         self.timer_tiempo.stop()
-        self.sonido_risa.play()
+        if paso_nivel:
+            self.sonido_risa.play()
         self.senal_terminator_god.emit(paso_nivel)
 
         # Llamar a pasar_nivel pasado un tiempo con los argumentos respectivos
