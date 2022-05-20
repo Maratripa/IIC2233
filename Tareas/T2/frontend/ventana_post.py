@@ -3,8 +3,7 @@ from os import path
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QWidget, QFormLayout, QLabel,
-                             QVBoxLayout, QHBoxLayout, QPushButton,
-                             QApplication)
+                             QVBoxLayout, QHBoxLayout, QPushButton)
 import parametros as p
 from manejo_archivos import guardar_puntaje
 import utils
