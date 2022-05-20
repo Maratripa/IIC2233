@@ -180,6 +180,9 @@ class VentanaJuego(QWidget):
         self.nivel = nivel
         self.escenario = escenario
 
+        # Resetear aliens
+        self.aliens = {}
+
         self.cuenta_nivel.setText(f"{nivel}")
         self.cuenta_balas.setText(f"X {balas}")
 

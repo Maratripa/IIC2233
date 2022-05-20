@@ -91,6 +91,11 @@ class Juego(QObject):
         self.iniciar_nivel(1)
 
     def iniciar_nivel(self, nivel: int) -> None:
+        if self.timer_tiempo.remainingTime != -1:
+            self.timer_tiempo.stop()
+        if self.timer.remainingTime != -1:
+            self.timer.stop()
+
         self.nivel = nivel
 
         self.tiempo *= self.dificultad
@@ -101,7 +106,8 @@ class Juego(QObject):
         self.balas = self.cantidad_aliens * 2
         self.balas_infinitas = False
 
-        # Resetear sets
+        # Resetear sets y aliens
+        self.aliens = {}
         self.aliens_muertos = set()
         self.aliens_vivos = set()
         self.teclas = set()
