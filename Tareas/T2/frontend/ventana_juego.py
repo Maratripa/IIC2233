@@ -2,8 +2,8 @@ from os import path
 
 from PyQt5.QtCore import pyqtSignal, QTimer, Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QWidget, QLabel,
-                             QVBoxLayout, QHBoxLayout, QPushButton,
+from PyQt5.QtWidgets import (QWidget, QLabel, QVBoxLayout,
+                             QHBoxLayout, QPushButton,
                              QProgressBar)
 import parametros as p
 
@@ -12,6 +12,7 @@ class VentanaJuego(QWidget):
 
     senal_boton_volver = pyqtSignal()
     senal_boton_pausa = pyqtSignal()
+    #                                   (key)
     senal_actualizar_teclas = pyqtSignal(int)
 
     def __init__(self):
@@ -28,7 +29,7 @@ class VentanaJuego(QWidget):
         self.barra_inferior = QLabel(self)
         self.barra_inferior.setGeometry(0, 600, p.VENTANA_ANCHO, 100)
 
-        # Diccionario de aliens
+        # Diccionario labels aliens
         self.aliens = {}
 
         # Geometria
@@ -52,7 +53,7 @@ class VentanaJuego(QWidget):
         self.label_explosion.stackUnder(self.label_mira)
         self.label_explosion.setScaledContents(True)
         self.label_explosion.hide()
-        # Posicion inicial explosion
+        # Posicion explosion
         self.label_explosion.posicion = (0, 0)
         # Pixmaps explosiones
         self.pixmap_explosiones = [
@@ -99,6 +100,7 @@ class VentanaJuego(QWidget):
         # VBox puntaje
         self.label_puntaje = QLabel("Puntaje", self)
         self.label_puntaje.setAlignment(Qt.AlignmentFlag.AlignTop)
+
         self.cuenta_puntaje = QLabel("0 ptos", self)
         self.cuenta_puntaje.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -109,6 +111,7 @@ class VentanaJuego(QWidget):
         # Vbox nivel
         self.label_nivel = QLabel("Nivel", self)
         self.label_nivel.setAlignment(Qt.AlignmentFlag.AlignTop)
+
         self.cuenta_nivel = QLabel(f"0", self)
         self.cuenta_nivel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -120,6 +123,7 @@ class VentanaJuego(QWidget):
         self.boton_pausa = QPushButton("Pausa", self)
         self.boton_pausa.clicked.connect(self.pausar_juego)
         self.boton_pausa.setFocusPolicy(4)
+
         self.boton_volver = QPushButton("Volver", self)
         self.boton_volver.clicked.connect(self.volver)
         self.boton_volver.setFocusPolicy(4)
@@ -173,10 +177,8 @@ class VentanaJuego(QWidget):
             QPixmap(path.join(*p.RUTA_GOD, "Perro_y_alien3.png"))
         ]
 
+    # Esta funcion inicia todos los niveles y resetea labels a los valores iniciales
     def iniciar_nivel(self, nivel, escenario, balas, tiempo, pos_mira: tuple):
-        """
-        Esta funcion inicia todos los niveles y resetea labels a los valores iniciales
-        """
         self.nivel = nivel
         self.escenario = escenario
 
@@ -216,16 +218,16 @@ class VentanaJuego(QWidget):
         self.god.setPixmap(self.pixmap_god_1)
         self.show()
 
+    # Enviar numero de tecla apretada para añadirla al set
     def keyPressEvent(self, event):
-        # Enviar numero de tecla apretada para añadirla al set
         self.senal_actualizar_teclas.emit(event.key())
 
+    # Enviar negativo del numero de la tecla para sacarla del set
     def keyReleaseEvent(self, event):
-        # Enviar negativo del numero de la tecla para sacarla del set
         self.senal_actualizar_teclas.emit(-event.key())
 
+    # Crear label alien
     def agregar_label_alien(self, id, x, y, ancho, alto, senales):
-        # Crear label alien
         label = QLabel(self)
         label.setObjectName("sprite")
         label.setPixmap(self.pixmap_alien)
@@ -240,29 +242,38 @@ class VentanaJuego(QWidget):
         senales[1].connect(self.matar_alien)
         senales[2].connect(self.eliminar_alien)
 
+    # Mover alien
     def mover_alien(self, id: int, pos: tuple):
         self.aliens[id].move(*pos)
 
+    # Cambiar pixmap alien
     def matar_alien(self, id: int):
         self.aliens[id].setPixmap(self.pixmap_alien_muerto)
 
+    # Elimiar alien del diccionario
     def eliminar_alien(self, id: int):
         self.aliens[id].hide()
         del self.aliens[id]
 
+    # Mover mira
     def mover_mira(self, pos: tuple):
         self.label_mira.move(*pos)
 
+    # Cambiar mira a roja
     def cambiar_mira(self):
         self.label_mira.setPixmap(self.pixmap_mira_roja)
         self.timer_mira_roja.start()
 
+    # Cambiar mira a normal
+
     def mira_normal(self):
         self.label_mira.setPixmap(self.pixmap_mira)
 
+    # Cambiar lugar de explosión
     def mover_explosion(self, x, y):
         self.label_explosion.posicion = (x, y)
 
+    # Visibilizar explosión y cambiar los pixmap
     def explosion(self, fase):
         self.label_explosion.setPixmap(self.pixmap_explosiones[fase])
 
@@ -275,26 +286,31 @@ class VentanaJuego(QWidget):
         elif fase == -1:
             self.label_explosion.hide()
 
+    # Actualizar balas
     def actualizar_balas(self, balas):
         self.cuenta_balas.setText(f"X {balas}")
 
+    # Actualizar barra tiempo
     def actualizar_tiempo(self, tiempo):
         self.barra_tiempo.setValue(int(tiempo / 1000))
         self.barra_tiempo.repaint()
 
+    # Cambiar pixmap de perro
     def fin_nivel(self, paso):
         if paso:
             self.god.setPixmap(self.god_aliens[self.escenario - 1].scaled(
-                p.VENTANA_ANCHO, p.GOD_HEIGHT, 1, 1
-            ))
+                p.VENTANA_ANCHO, p.GOD_HEIGHT, 1, 1))
             self.repaint()
 
+    # Boton volver al menu de inicio
     def volver(self):
+        # Esconder todos los aliens presentes
         for key in self.aliens:
             self.aliens[key].hide()
 
         self.senal_boton_volver.emit()
         self.hide()
 
+    # Boton pausa
     def pausar_juego(self):
         self.senal_boton_pausa.emit()

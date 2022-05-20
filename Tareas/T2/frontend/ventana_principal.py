@@ -1,4 +1,3 @@
-import sys
 from os import path
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
@@ -21,9 +20,7 @@ class VentanaPrincipal(QWidget):
         # Geometria
         self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO)
         self.setWindowTitle("A cazar aliens!")
-        self.crear_elementos()
 
-    def crear_elementos(self) -> None:
         # Etiquetas
         self.titulo = QLabel("Elige el ambiente de caza espacial", self)
         self.titulo.setObjectName("titulo")
@@ -56,9 +53,9 @@ class VentanaPrincipal(QWidget):
 
         # Botones
         self.boton_1 = QRadioButton("Tutorial lunar", self)
-        self.boton_1.click()  # Opcion por default
         self.boton_2 = QRadioButton("Entrenamiento en Júpiter", self)
         self.boton_3 = QRadioButton("Invasión intergaláctica", self)
+        self.boton_1.click()  # Opcion por default
 
         self.boton_submit = QPushButton("Cazar aquí", self)
         self.boton_submit.clicked.connect(self.enviar_login)
@@ -135,9 +132,11 @@ class VentanaPrincipal(QWidget):
 
         self.setLayout(vbox5)
 
+    # Enviar usuario para ser validado
     def enviar_login(self) -> None:
         self.senal_enviar_login.emit(self.input_1.text())
 
+    # Pasar al juego si el usuario es valido, mostrar error en caso contrario
     def recibir_validacion(self, valido: bool, errores: list) -> None:
         if valido:
             self.hide()
@@ -156,9 +155,3 @@ class VentanaPrincipal(QWidget):
                 self.label_error.setText(" Usa carácteres alfanuméricos")
             if "null" in errores:
                 self.label_error.setText(" Ingresa un usuario")
-
-
-if __name__ == "__main__":
-    app = QApplication([])
-    ventana = VentanaPrincipal()
-    sys.exit(app.exec_())

@@ -1,4 +1,3 @@
-import sys
 from os import path
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
@@ -27,6 +26,7 @@ class VentanaPost(QWidget):
         self.label_titulo.setObjectName("titulo")
         self.icono_titulo = QLabel(self)
 
+        # Pixmaps aliens
         self.pixmaps = []
         for i in range(3):
             self.pixmaps.append(QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{i + 1}_dead.png")))
@@ -100,6 +100,7 @@ class VentanaPost(QWidget):
 
         self.setLayout(vbox1)
 
+    # Mostrar ventana y actualizar labels con respectivos valores
     def mostrar(self, nivel, escenario, balas, tiempo, puntaje, puntaje_nivel, siguiente, usuario):
         self.escenario = escenario
         self.icono_titulo.setPixmap(
@@ -111,6 +112,7 @@ class VentanaPost(QWidget):
         self.puntaje.setText(f"{puntaje} ptos")
         self.puntaje_nivel.setText(f"{puntaje_nivel} ptos")
 
+        # Cambiar label mensaje y desabilitar boton de continuar de ser necesario
         if siguiente:
             self.label_mensaje.setText("¡Puedes dominar el siguiente nivel!")
             self.label_mensaje.setStyleSheet("""
@@ -133,10 +135,12 @@ class VentanaPost(QWidget):
 
         self.show()
 
+    # Boton siguiente nivel
     def siguiente_nivel(self):
         self.senal_siguiente_nivel.emit(int(self.nivel.text()) + 1)
         self.hide()
 
+    # Boton volver al inicio y guardar puntajes
     def menu_inicio(self):
         guardar_puntaje(self.usuario, self.puntos)
         self.senal_menu_inicio.emit()

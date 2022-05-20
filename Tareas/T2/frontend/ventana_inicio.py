@@ -12,19 +12,18 @@ class VentanaInicio(QWidget):
     senal_jugar = pyqtSignal()
     senal_ranking = pyqtSignal()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        super().__init__()
 
-        # Geometria
         self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO, p.VENTANA_ALTO)
         self.setWindowTitle("A cazar aliens!")
-        self.crear_elementos()
 
-    def crear_elementos(self):
+        # Imágen logo
         self.logo = QLabel(self)
         pixmap = QPixmap(path.join(*p.RUTA_LOGO, "Logo.png"))
         self.logo.setPixmap(pixmap.scaled(p.ANCHO_LOGO, p.ALTO_LOGO, 1, 1))
 
+        # Botones
         self.boton_jugar = QPushButton("Jugar", self)
         self.boton_jugar.clicked.connect(self.jugar)
 
@@ -61,10 +60,3 @@ class VentanaInicio(QWidget):
     def ranking(self):
         self.senal_ranking.emit()
         self.hide()
-
-
-if __name__ == "__main__":
-    app = QApplication([])
-    ventana = VentanaInicio()
-    ventana.show()
-    sys.exit(app.exec_())

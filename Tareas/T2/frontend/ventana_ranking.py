@@ -20,35 +20,33 @@ class VentanaRanking(QWidget):
         # Geometria
         self.setGeometry(p.VENTANA_POS_X, p.VENTANA_POS_Y, p.VENTANA_ANCHO / 2, p.VENTANA_ALTO)
         self.setWindowTitle("A cazar aliens!")
-        self.crear_elementos()
 
-    def crear_elementos(self):
-
+        # Label titulo
         self.titulo = QLabel("Ranking", self)
         self.titulo.setObjectName("titulo")
 
-        hbox1 = utils.encapsular_h(self.titulo)
-
+        # FormLayout con puntajes
         self.ranking = QFormLayout()
         self.ranking.setLabelAlignment(Qt.AlignmentFlag.AlignLeft)
         self.ranking.setHorizontalSpacing(50)
         self.ranking.setVerticalSpacing(40)
         self.cargar_ranking()
 
+        # Boton volver al menu de inicio
         self.boton_volver = QPushButton("Volver", self)
         self.boton_volver.clicked.connect(self.volver)
 
-        hbox2 = utils.encapsular_h(self.boton_volver)
-
+        # Vbox de contenidos
         vbox1 = QVBoxLayout()
         vbox1.addStretch(1)
-        vbox1.addLayout(hbox1)
+        vbox1.addLayout(utils.encapsular_h(self.titulo))
         vbox1.addStretch(1)
         vbox1.addLayout(self.ranking)
         vbox1.addStretch(1)
-        vbox1.addLayout(hbox2)
+        vbox1.addLayout(utils.encapsular_h(self.boton_volver))
         vbox1.addStretch(1)
 
+        # Hbox para centrar objetos
         hbox3 = QHBoxLayout()
         hbox3.addStretch(1)
         hbox3.addLayout(vbox1)
@@ -56,9 +54,11 @@ class VentanaRanking(QWidget):
 
         self.setLayout(hbox3)
 
+    # Rellenar FormLayout
     def cargar_ranking(self):
-        puntajes = cargar_puntajes()
+        puntajes = cargar_puntajes()  # Lista ordenada de puntajes y usuarios
 
+        # Obtener mejores 5 puntajes
         for i in range(5):
             usuario = QLabel(f"{i + 1}. {puntajes[i][0]:13.13}", self)
             usuario.setObjectName("puntajes")
@@ -94,6 +94,7 @@ class VentanaRanking(QWidget):
 
             self.ranking.addRow(hbox)
 
+    # Boton volver
     def volver(self):
         self.hide()
         self.senal_volver.emit()

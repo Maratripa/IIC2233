@@ -24,8 +24,9 @@ class Mira(QObject):
 
         self.recargando = False
 
+        # Tiempo entre disparos
         self.timer_disparo = QTimer(self)
-        self.timer_disparo.setInterval(1000)
+        self.timer_disparo.setInterval(p.TIEMPO_RECARGA_NORMAL)
         self.timer_disparo.setSingleShot(True)
         self.timer_disparo.timeout.connect(self.reset_disparo)
 
@@ -55,17 +56,20 @@ class Mira(QObject):
         else:
             self._y = value
 
+    # Mover y disparar
     def actualizar(self, teclas: set) -> None:
         if 32 in teclas:
             self.disparar()
         self.mover(teclas)
 
+    # Disparar si no esta recargando
     def disparar(self) -> None:
         if not self.recargando:
             self.recargando = True
             self.timer_disparo.start()
             self.senal_disparando.emit()
 
+    # Mover en 4 direcciones + diagonales normalizadas
     def mover(self, teclas: set) -> None:
         dx = 0
         dy = 0
@@ -86,9 +90,11 @@ class Mira(QObject):
 
             self.senal_posicion.emit((self.x, self.y))
 
+    # Cheat code balas infinitas
     def balas_infinitas(self):
-        self.timer_disparo.setInterval(500)
+        self.timer_disparo.setInterval(p.TIEMPO_RECARGA_SUPER)
 
+    # Puede volver a disparar
     def reset_disparo(self):
         self.recargando = False
 
@@ -106,6 +112,7 @@ class Alien(QObject):
     def __init__(self, escenario: int, rapidez, lado_pantalla):
         super().__init__()
 
+        # Crear id única de alien
         self.id += 1
         Alien.id += 1
 
@@ -114,10 +121,12 @@ class Alien(QObject):
 
         self.rapidez = rapidez
 
+        # Velocidad en ángulo random pero siempre diagonal en cierto grado
         angulo = random.uniform(math.pi / 6, math.pi / 3)
         self.vx = math.cos(angulo) * self.rapidez * random.choice([-1, 1])
         self.vy = math.sin(angulo) * self.rapidez * random.choice([-1, 1])
 
+        # Evitar superposicion al instanciarse
         if lado_pantalla == 0:
             self._x = random.randint(0, p.VENTANA_ANCHO / 2 - self.width)
         else:
@@ -125,6 +134,7 @@ class Alien(QObject):
 
         self._y = random.randint(0, p.VENTANA_ALTO - self.height)
 
+        # Variable para eliminar alien
         self.muerto = False
 
     @property
@@ -157,6 +167,7 @@ class Alien(QObject):
         else:
             self._y = value
 
+    # Moverse
     def mover(self) -> None:
         if not self.muerto:
             self.x += int(self.vx)
@@ -165,11 +176,13 @@ class Alien(QObject):
         else:
             self.mover_abajo()
 
+    # Enviar señal de muerto y moverse hacia abajo
     def morir(self):
         self.senal_morir.emit(self.id)
         self.muerto = True
         self.vy = self.rapidez
 
+    # Moverse hacia abajo una vez muerto
     def mover_abajo(self):
         self.y += self.vy
         if self.y > p.VENTANA_ALTO:

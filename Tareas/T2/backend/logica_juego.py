@@ -1,5 +1,4 @@
 from os import path
-from time import sleep
 
 import functools
 
@@ -16,12 +15,10 @@ class Juego(QObject):
     senal_iniciar_juego = pyqtSignal(int, int, int, float, tuple)
     #                              (id , x  , y  , w  , h  , senales)
     senal_crear_aliens = pyqtSignal(int, int, int, int, int, list)
-
+    #                                   (tmp)
     senal_actualizar_tiempo = pyqtSignal(int)
-
+    #                                  (bls_str)
     senal_actualizar_balas = pyqtSignal(str)
-
-    senal_actualizar_puntaje = pyqtSignal(int)
     #                                (paso)
     senal_terminator_god = pyqtSignal(bool)
     #                                (lvl, esc, bls, tmp, ptt, ptn, paso, usr)
@@ -46,9 +43,8 @@ class Juego(QObject):
         # Timer juego
         self.timer_tiempo = Tiempo(self)
         self.timer_tiempo.setSingleShot(True)
-        self.timer_tiempo.timeout.connect(
-            lambda: self.terminar_nivel(False)
-        )
+        callback = functools.partial(self.terminar_nivel, False)
+        self.timer_tiempo.timeout.connect(callback)
 
         # Teclas apretadas
         self.teclas = set()
@@ -60,10 +56,12 @@ class Juego(QObject):
         self.mira = Mira(p.ANCHO_MIRA, p.ALTO_MIRA, (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
                                                      p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2))
 
+        # Efecto de sonido disparo
         self.sonido_disparo = QSoundEffect(self)
         self.sonido_disparo.setSource(QUrl.fromLocalFile(path.join(*p.RUTA_SONIDOS, "disparo.wav")))
         self.sonido_disparo.setVolume(0.3)
 
+        # Case para manejar explosion
         self.explotador = Explosion(self)
 
         # Aliens
@@ -73,9 +71,11 @@ class Juego(QObject):
         self.aliens_muertos = set()
         self.aliens_por_eliminar = []
 
+    # Se llama desde la ventana principal para instanciar el escenario y la partida
     def iniciar_juego(self, escenario, usuario):
         self.escenario = escenario
 
+        # Ponderador
         if escenario == 1:
             self.dificultad = p.PONDERADOR_TUTORIAL
         elif escenario == 2:
@@ -91,18 +91,16 @@ class Juego(QObject):
 
         self.iniciar_nivel(1)
 
+    # Se llama en el nivel inicial y cada vez que se pasa de nivel
     def iniciar_nivel(self, nivel: int) -> None:
-        if self.timer_tiempo.remainingTime != -1:
-            self.timer_tiempo.stop()
-        if self.timer.remainingTime != -1:
-            self.timer.stop()
-
         self.nivel = nivel
         self.pausa = False
 
+        # Actualizar tiempo y rapidez de aliens por ponderador
         self.tiempo *= self.dificultad
         self.rapidez_aliens /= self.dificultad
 
+        # Setear tiempo, aliens y balas del nivel
         self.timer_tiempo.setInterval(self.tiempo)
         self.cantidad_aliens = nivel * 2
         self.balas = self.cantidad_aliens * 2
@@ -114,25 +112,26 @@ class Juego(QObject):
         self.aliens_vivos = set()
         self.teclas = set()
 
-        self.mira.timer_disparo.setInterval(1000)
+        # Resetear tiempo y posicion mira
+        self.mira.timer_disparo.setInterval(p.TIEMPO_RECARGA_NORMAL)
         self.mira.x, self.mira.y = (p.VENTANA_ANCHO / 2 - p.ANCHO_MIRA / 2,
                                     p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2)
 
         self.senal_iniciar_juego.emit(nivel, self.escenario, self.balas,
                                       self.tiempo, (self.mira.x, self.mira.y))
-
         self.timer.start()
         self.timer_tiempo.start()
 
+    # Se llama 30 veces por segundo (idealmente)
     def actualizar_juego(self):
         if not self.pausa:
             self.mira.actualizar(self.teclas)
             self.manejar_aliens()
-
             self.senal_actualizar_tiempo.emit(self.timer_tiempo.remainingTime())
 
+    # Crear, eliminar y mover aliens
     def manejar_aliens(self):
-        # Crear mientras falten aliens por matar
+        # Crear aliens mientras falten aliens por matar
         if len(self.aliens_vivos) == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
             self.crear_aliens()
 
@@ -144,6 +143,7 @@ class Juego(QObject):
         for id in self.aliens:
             self.aliens[id].mover()
 
+    # Crear de a 2 aliens
     def crear_aliens(self):
         for i in range(2):  # Se usa 'i' para indicarle en que mitad de la pantalla aparecer
             alien = Alien(self.escenario, self.rapidez_aliens, i)
@@ -154,14 +154,15 @@ class Juego(QObject):
                 [alien.senal_posicion, alien.senal_morir, alien.senal_eliminar])
             alien.senal_eliminar.connect(self.eliminar_alien)
 
+    # Añadir alien a lista para eliminarlos una vez llegue al final de la pantalla
     def eliminar_alien(self, id: int):
         self.aliens_por_eliminar.append(id)
 
         # Terminar juego cuando el ultimo alien salga de la pantalla
         if len(self.aliens_muertos) == self.cantidad_aliens and self.ultimo_disparado == id:
             self.terminar_nivel(True)
-            self.timer_tiempo.stop()
 
+    # Parar timer de tiempo del nivel, y dejar al perro que haga lo suyo
     def terminar_nivel(self, paso_nivel: bool):
         tiempo_restante = int(self.timer_tiempo.remainingTime() / 1000)
         self.timer_tiempo.stop()
@@ -172,6 +173,7 @@ class Juego(QObject):
         self.timer_final.timeout.connect(callback)
         self.timer_final.start()
 
+    # Parar timer de framerate, calcular puntaje y pasar a ventana post-nivel
     def pasar_nivel(self, paso, tiempo_restante):
         self.timer.stop()
         self.senal_esconder_ventana_juego.emit()
@@ -185,11 +187,13 @@ class Juego(QObject):
                                        self.puntaje, puntos_nivel,
                                        paso, self.usuario)
 
+    # Calcular puntaje
     def calcular_puntaje_nivel(self, tiempo_restante) -> int:
         pts = int(self.cantidad_aliens * 100 +
                   (tiempo_restante * 30 + self.balas * 70) * self.nivel / self.dificultad)
         return pts
 
+    # Añadir y eliminar teclas del set, además de revisar los cheatcodes
     def actualizar_teclas(self, key: int) -> None:
         if key == 80:           # tecla: p
             self.pausar_juego()
@@ -209,14 +213,16 @@ class Juego(QObject):
             self.mira.balas_infinitas()
             self.senal_actualizar_balas.emit("INF")
 
+    # Método llamado por señal de la mira cuando no esta recargando
     def disparar(self):
         if not self.balas_infinitas:
             self.balas -= 1
             self.senal_actualizar_balas.emit(str(self.balas))
 
         self.sonido_disparo.play()
-        chocados = self.chequear_colision_aliens()
 
+        # Ver si le dimos a algun alien
+        chocados = self.chequear_colision_aliens()
         if chocados:
             self.crear_explosion(self.mira.x + self.mira.off_w,
                                  self.mira.y + self.mira.off_h)
@@ -231,6 +237,7 @@ class Juego(QObject):
             self.terminar_nivel(False)
             self.timer_tiempo.stop()
 
+    # Revisar colision para cada alien
     def chequear_colision_aliens(self) -> list:
         chocados = []
         for id in self.aliens:
@@ -246,10 +253,12 @@ class Juego(QObject):
 
         return chocados
 
+    # Crear explosion
     def crear_explosion(self, x, y):
         self.explotador.mover_explosion(x, y)
         self.explotador.start()
 
+    # Pausar timer y reanudarlo
     def pausar_juego(self):
         self.pausa = not self.pausa
         if self.pausa:
@@ -257,10 +266,12 @@ class Juego(QObject):
         else:
             self.timer_tiempo.reanudar()
 
+    # Volver al menu de inicio guardando puntaje acomulado hasta ese nivel
     def boton_volver(self):
         self.timer.stop()
         self.timer_tiempo.stop()
 
+        # Eliminar aliens
         aliens_por_eliminar = []
         for key in self.aliens:
             aliens_por_eliminar.append(key)
@@ -280,16 +291,14 @@ class Explosion(QThread):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.time_off = 100
+        self.time_off = p.TIEMPO_OFFSET_EXPLOSION
 
     # Explosion en un nuevo lugar
     def mover_explosion(self, x, y):
         self.senal_mover.emit(x, y)
 
     def run(self):
-        """
-
-        """
+        # Cambiar fase de explosion cada self.time_off msecs
         self.senal_explosion.emit(0)
         self.msleep(self.time_off)
         self.senal_explosion.emit(1)
@@ -299,6 +308,7 @@ class Explosion(QThread):
         self.senal_explosion.emit(-1)
 
 
+# Clase de timer con método reanudar()
 class Tiempo(QTimer):
     def __init__(self, parent):
         super().__init__(parent)

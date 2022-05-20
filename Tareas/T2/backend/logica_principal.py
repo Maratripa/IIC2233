@@ -1,11 +1,8 @@
-from tkinter.tix import Tree
 from PyQt5.QtCore import QObject, pyqtSignal
-
-import parametros as p
 
 
 class LogicaPrincipal(QObject):
-
+    #                                    (valido, errores)
     senal_respuesta_validacion = pyqtSignal(bool, list)
 
     def __init__(self) -> None:
