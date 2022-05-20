@@ -97,6 +97,7 @@ class Juego(QObject):
             self.timer.stop()
 
         self.nivel = nivel
+        self.pausa = False
 
         self.tiempo *= self.dificultad
         self.rapidez_aliens /= self.dificultad
@@ -254,6 +255,17 @@ class Juego(QObject):
             self.timer_tiempo.pausa()
         else:
             self.timer_tiempo.reanudar()
+
+    def boton_salir(self):
+        self.timer.stop()
+        self.timer_tiempo.stop()
+
+        aliens_por_eliminar = []
+        for key in self.aliens:
+            aliens_por_eliminar.append(key)
+
+        for i in aliens_por_eliminar:
+            del self.aliens[i]
 
 
 class Explosion(QThread):

@@ -290,8 +290,11 @@ class VentanaJuego(QWidget):
             self.repaint()
 
     def salir_juego(self):
+        for key in self.aliens:
+            self.aliens[key].hide()
+
         self.senal_boton_salir.emit()
-        self.close()
+        self.hide()
 
     def pausar_juego(self):
         self.senal_boton_pausa.emit()
