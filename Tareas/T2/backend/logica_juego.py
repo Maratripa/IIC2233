@@ -1,5 +1,8 @@
 from os import path
-from collections import deque
+from time import sleep
+
+import functools
+
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
 from PyQt5.QtMultimedia import QSound, QSoundEffect
 from backend.entidades import Mira, Alien
@@ -8,9 +11,9 @@ import parametros as p
 
 
 class Juego(QObject):
-    #                               (niv, esc, bal, tiemp, pos_mira)
+    #                               (lvl, esc, bls, tiemp, pos_mira)
     senal_iniciar_juego = pyqtSignal(int, int, int, float, tuple)
-    #                             (id , x  , y  , w  , h  , senales)
+    #                              (id , x  , y  , w  , h  , senales)
     senal_crear_aliens = pyqtSignal(int, int, int, int, int, list)
 
     senal_actualizar_tiempo = pyqtSignal(int)
@@ -18,7 +21,9 @@ class Juego(QObject):
     senal_actualizar_balas = pyqtSignal(str)
 
     senal_actualizar_puntaje = pyqtSignal(int)
-
+    #                                (paso)
+    senal_terminator_god = pyqtSignal(bool)
+    #                                (lvl, esc, bls, tmp, ptt, ptn, paso, usr)
     senal_terminar_nivel = pyqtSignal(int, int, int, int, int, int, bool, str)
 
     senal_esconder_ventana_juego = pyqtSignal()
@@ -27,9 +32,15 @@ class Juego(QObject):
         super().__init__()
 
         # Timer para framerate
-        self.timer = QTimer()
+        self.timer = QTimer(self)
         self.timer.setInterval(p.FRAME_TIME_MS)
         self.timer.timeout.connect(self.actualizar_juego)
+
+        # Timer termino nivel
+        self.timer_final = QTimer(self)
+        # Multiplicado para pasar segs a msegs
+        self.timer_final.setInterval(p.TIEMPO_TERMINATOR_DOG * 1000)
+        self.timer_final.setSingleShot(True)
 
         # Teclas apretadas
         self.teclas = set()
@@ -145,9 +156,18 @@ class Juego(QObject):
 
     def terminar_nivel(self, paso_nivel: bool):
         tiempo_restante = int(self.timer_tiempo.remainingTime() / 1000)
+        self.timer_tiempo.stop()
+        self.senal_terminator_god.emit(paso_nivel)
+
+        # Llamar a pasar_nivel pasado un tiempo con los argumentos respectivos
+        callback = functools.partial(self.pasar_nivel, paso_nivel, tiempo_restante)
+        self.timer_final.timeout.connect(callback)
+        self.timer_final.start()
+
+    def pasar_nivel(self, paso, tiempo_restante):
         self.timer.stop()
         self.senal_esconder_ventana_juego.emit()
-        if paso_nivel:
+        if paso:
             puntos_nivel = self.calcular_puntaje_nivel(tiempo_restante)
         else:
             puntos_nivel = 0
@@ -155,7 +175,7 @@ class Juego(QObject):
         self.senal_terminar_nivel.emit(self.nivel, self.escenario,
                                        self.balas, tiempo_restante,
                                        self.puntaje, puntos_nivel,
-                                       paso_nivel, self.usuario)
+                                       paso, self.usuario)
 
     def calcular_puntaje_nivel(self, tiempo_restante) -> int:
         pts = int(self.cantidad_aliens * 100 +

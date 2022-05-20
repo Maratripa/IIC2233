@@ -53,6 +53,7 @@ if __name__ == '__main__':
     logica_juego.senal_actualizar_tiempo.connect(ventana_juego.actualizar_tiempo)
     logica_juego.senal_terminar_nivel.connect(ventana_post.mostrar)
     logica_juego.senal_esconder_ventana_juego.connect(ventana_juego.hide)
+    logica_juego.senal_terminator_god.connect(ventana_juego.fin_nivel)
 
     logica_juego.explotador.senal_explosion.connect(ventana_juego.explosion)
     logica_juego.explotador.senal_mover.connect(ventana_juego.mover_explosion)

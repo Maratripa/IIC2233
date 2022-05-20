@@ -2,7 +2,7 @@ from os import path
 
 from PyQt5.QtCore import pyqtSignal, QTimer, Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import (QWidget, QLabel, QFrame,
+from PyQt5.QtWidgets import (QWidget, QLabel,
                              QVBoxLayout, QHBoxLayout, QPushButton,
                              QProgressBar)
 import parametros as p
@@ -18,11 +18,13 @@ class VentanaJuego(QWidget):
         super().__init__()
         self.setFocus()
 
+        # Timer de espera para volver la mira normal
         self.timer_mira_roja = QTimer(self)
         self.timer_mira_roja.setInterval(1000)
         self.timer_mira_roja.setSingleShot(True)
         self.timer_mira_roja.timeout.connect(self.mira_normal)
 
+        # Barra inferior
         self.barra_inferior = QLabel(self)
         self.barra_inferior.setGeometry(0, 600, p.VENTANA_ANCHO, 100)
 
@@ -50,13 +52,14 @@ class VentanaJuego(QWidget):
         self.label_explosion.stackUnder(self.label_mira)
         self.label_explosion.setScaledContents(True)
         self.label_explosion.hide()
-
+        # Posicion inicial explosion
         self.label_explosion.posicion = (0, 0)
-
-        self.pixmap_explosiones = []
-        for i in range(3):
-            self.pixmap_explosiones.append(
-                QPixmap(path.join(*p.RUTA_ELEMENTOS, f"Disparo_f{i + 1}.png")))
+        # Pixmaps explosiones
+        self.pixmap_explosiones = [
+            QPixmap(path.join(*p.RUTA_ELEMENTOS, "Disparo_f1.png")),
+            QPixmap(path.join(*p.RUTA_ELEMENTOS, "Disparo_f2.png")),
+            QPixmap(path.join(*p.RUTA_ELEMENTOS, "Disparo_f3.png"))
+        ]
 
         # Barra inferior
         # VBox tiempo
@@ -140,6 +143,7 @@ class VentanaJuego(QWidget):
         hbox2.addStretch(1)
 
         # VBox global
+        # Label para poner barra abajo
         self.label_vacio = QLabel(self)
         self.label_vacio.stackUnder(self.label_explosion)
         self.label_vacio.setObjectName("vacio")
@@ -152,12 +156,34 @@ class VentanaJuego(QWidget):
         # Setear Layout
         self.setLayout(vbox6)
 
+        # Terminator god
+        self.god = QLabel(self)
+        self.god.setObjectName("sprite")
+        self.god.stackUnder(self.label_mira)
+        #                                  ancho grande para escalar segun altura
+        self.god.setGeometry(0, p.GOD_POS_Y, p.VENTANA_ANCHO, p.GOD_HEIGHT)
+        self.pixmap_god_1 = QPixmap(path.join(*p.RUTA_GOD, "Dog1.png")).scaled(
+            p.VENTANA_ANCHO, p.GOD_HEIGHT, 1, 1)
+        self.god.setPixmap(self.pixmap_god_1)
+
+        # Pixmaps de perro y aliens
+        self.god_aliens = [
+            QPixmap(path.join(*p.RUTA_GOD, "Perro_y_alien1.png")),
+            QPixmap(path.join(*p.RUTA_GOD, "Perro_y_alien2.png")),
+            QPixmap(path.join(*p.RUTA_GOD, "Perro_y_alien3.png"))
+        ]
+
     def iniciar_nivel(self, nivel, escenario, balas, tiempo, pos_mira: tuple):
+        """
+        Esta funcion inicia todos los niveles y resetea labels a los valores iniciales
+        """
         self.nivel = nivel
+        self.escenario = escenario
 
         self.cuenta_nivel.setText(f"{nivel}")
         self.cuenta_balas.setText(f"X {balas}")
 
+        # Mapeo del tiempo a porcentaje
         self.barra_tiempo.setRange(0, int(tiempo / 1000))
         self.barra_tiempo.setValue(int(tiempo / 1000))
 
@@ -179,18 +205,24 @@ class VentanaJuego(QWidget):
         self.pixmap_alien = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{escenario}.png"))
         self.pixmap_alien_muerto = QPixmap(path.join(*p.RUTA_ALIEN, f"Alien{escenario}_dead.png"))
 
+        # Mira pixmap
         self.mira_normal()
         self.label_mira.move(*pos_mira)
+
+        # GOD Pixmap
+        self.god.setPixmap(self.pixmap_god_1)
         self.show()
 
     def keyPressEvent(self, event):
-        # print(event.key(), event.text())
+        # Enviar numero de tecla apretada para añadirla al set
         self.senal_actualizar_teclas.emit(event.key())
 
     def keyReleaseEvent(self, event):
+        # Enviar negativo del numero de la tecla para sacarla del set
         self.senal_actualizar_teclas.emit(-event.key())
 
     def agregar_label_alien(self, id, x, y, ancho, alto, senales):
+        # Crear label alien
         label = QLabel(self)
         label.setObjectName("sprite")
         label.setPixmap(self.pixmap_alien)
@@ -200,6 +232,7 @@ class VentanaJuego(QWidget):
         self.aliens[id] = label
         label.show()
 
+        # Conectar señales del alien
         senales[0].connect(self.mover_alien)
         senales[1].connect(self.matar_alien)
         senales[2].connect(self.eliminar_alien)
@@ -245,6 +278,13 @@ class VentanaJuego(QWidget):
     def actualizar_tiempo(self, tiempo):
         self.barra_tiempo.setValue(int(tiempo / 1000))
         self.barra_tiempo.repaint()
+
+    def fin_nivel(self, paso):
+        if paso:
+            self.god.setPixmap(self.god_aliens[self.escenario - 1].scaled(
+                p.VENTANA_ANCHO, p.GOD_HEIGHT, 1, 1
+            ))
+            self.repaint()
 
     def salir_juego(self):
         self.senal_boton_salir.emit()

@@ -149,10 +149,3 @@ class VentanaPost(QWidget):
 
     def salir(self):
         self.close()
-
-
-if __name__ == "__main__":
-    app = QApplication([])
-    ventana = VentanaPost()
-    ventana.show()
-    sys.exit(app.exec_())

@@ -40,6 +40,16 @@ VELOCIDAD_ALIEN = (1, 1)
 ANCHO_ALIEN = [64, 63, 116]
 ALTO_ALIEN = 70
 
+"""
+    TERMINATOR GOD
+"""
+RUTA_GOD = ["frontend", "assets", "Sprites", "Terminator-Dog"]
+
+GOD_POS_Y = 465
+GOD_HEIGHT = 150
+
+TIEMPO_TERMINATOR_DOG = 3
+
 
 """
     JUEGO

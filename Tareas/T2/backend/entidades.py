@@ -1,7 +1,7 @@
 import math
 import random
 
-from PyQt5.QtCore import QTimer, QObject, pyqtSignal
+from PyQt5.QtCore import QTimer, QObject, pyqtSignal, QThread
 
 import parametros as p
 
@@ -177,3 +177,36 @@ class Alien(QObject):
         else:
             self.vy += p.GRAVEDAD
             self.senal_posicion.emit(self.id, (self.x, self.y))
+
+
+class TerminatorGod(QThread):
+
+    def __init__(self, width):
+        super().__init__()
+
+        self._x = 0
+        self._y = p.GOD_POS_Y
+
+        self.width = width
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        if value < 0:
+            self._x = 0
+        elif value > p.VENTANA_ANCHO - self.width:
+            self._x = p.VENTANA_ANCHO - self.width
+        else:
+            self._x = value
+
+    def mover_x_a(self, i):
+
+        if i < self.x:
+            direccion = -1
+        elif i > self.x:
+            direccion = 1
+        else:
+            return
