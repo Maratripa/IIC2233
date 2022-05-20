@@ -116,6 +116,8 @@ Lo importante es que expliquen qué hace la función y que si saben que alguna p
 Para realizar mi tarea saqué código de:
 1. \<link de código>: este hace \<lo que hace> y está implementado en el archivo <nombre.py> en las líneas <número de líneas> y hace <explicación breve de que hace>
 
+https://stackoverflow.com/questions/13202014/passing-a-parameter-to-qtimer-timeout-signal
+
 
 
 ## Descuentos
