@@ -127,7 +127,10 @@ class Juego(QObject):
         if not self.pausa:
             self.mira.actualizar(self.teclas)
             self.manejar_aliens()
-            self.senal_actualizar_tiempo.emit(self.timer_tiempo.remainingTime())
+
+            tiempo_restante = self.timer_tiempo.remainingTime()
+            if tiempo_restante != -1:
+                self.senal_actualizar_tiempo.emit(tiempo_restante)
 
     # Crear, eliminar y mover aliens
     def manejar_aliens(self):
