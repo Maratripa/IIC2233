@@ -10,7 +10,7 @@ import parametros as p
 
 class VentanaJuego(QWidget):
 
-    senal_boton_salir = pyqtSignal()
+    senal_boton_volver = pyqtSignal()
     senal_boton_pausa = pyqtSignal()
     senal_actualizar_teclas = pyqtSignal(int)
 
@@ -120,13 +120,13 @@ class VentanaJuego(QWidget):
         self.boton_pausa = QPushButton("Pausa", self)
         self.boton_pausa.clicked.connect(self.pausar_juego)
         self.boton_pausa.setFocusPolicy(4)
-        self.boton_salir = QPushButton("Salir", self)
-        self.boton_salir.clicked.connect(self.salir_juego)
-        self.boton_salir.setFocusPolicy(4)
+        self.boton_volver = QPushButton("Volver", self)
+        self.boton_volver.clicked.connect(self.volver)
+        self.boton_volver.setFocusPolicy(4)
 
         vbox5 = QVBoxLayout()
         vbox5.addWidget(self.boton_pausa)
-        vbox5.addWidget(self.boton_salir)
+        vbox5.addWidget(self.boton_volver)
 
         # HBox barra
         hbox2 = QHBoxLayout()
@@ -289,11 +289,11 @@ class VentanaJuego(QWidget):
             ))
             self.repaint()
 
-    def salir_juego(self):
+    def volver(self):
         for key in self.aliens:
             self.aliens[key].hide()
 
-        self.senal_boton_salir.emit()
+        self.senal_boton_volver.emit()
         self.hide()
 
     def pausar_juego(self):

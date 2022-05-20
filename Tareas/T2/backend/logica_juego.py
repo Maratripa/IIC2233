@@ -4,9 +4,10 @@ from time import sleep
 import functools
 
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
-from PyQt5.QtMultimedia import QSound, QSoundEffect
+from PyQt5.QtMultimedia import QSoundEffect
 from backend.entidades import Mira, Alien
 
+from manejo_archivos import guardar_puntaje
 import parametros as p
 
 
@@ -42,6 +43,13 @@ class Juego(QObject):
         self.timer_final.setInterval(p.TIEMPO_TERMINATOR_DOG * 1000)
         self.timer_final.setSingleShot(True)
 
+        # Timer juego
+        self.timer_tiempo = Tiempo(self)
+        self.timer_tiempo.setSingleShot(True)
+        self.timer_tiempo.timeout.connect(
+            lambda: self.terminar_nivel(False)
+        )
+
         # Teclas apretadas
         self.teclas = set()
 
@@ -64,13 +72,6 @@ class Juego(QObject):
         self.aliens_vivos = set()
         self.aliens_muertos = set()
         self.aliens_por_eliminar = []
-
-        # Juego
-        self.timer_tiempo = Tiempo(self)
-        self.timer_tiempo.setSingleShot(True)
-        self.timer_tiempo.timeout.connect(
-            lambda: self.terminar_nivel(False)
-        )
 
     def iniciar_juego(self, escenario, usuario):
         self.escenario = escenario
@@ -256,7 +257,7 @@ class Juego(QObject):
         else:
             self.timer_tiempo.reanudar()
 
-    def boton_salir(self):
+    def boton_volver(self):
         self.timer.stop()
         self.timer_tiempo.stop()
 
@@ -266,6 +267,8 @@ class Juego(QObject):
 
         for i in aliens_por_eliminar:
             del self.aliens[i]
+
+        guardar_puntaje(self.usuario, self.puntaje)
 
 
 class Explosion(QThread):

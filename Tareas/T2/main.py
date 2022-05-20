@@ -46,8 +46,8 @@ if __name__ == '__main__':
 
     ventana_juego.senal_actualizar_teclas.connect(logica_juego.actualizar_teclas)
     ventana_juego.senal_boton_pausa.connect(logica_juego.pausar_juego)
-    ventana_juego.senal_boton_salir.connect(logica_juego.boton_salir)
-    ventana_juego.senal_boton_salir.connect(ventana_inicio.show)
+    ventana_juego.senal_boton_volver.connect(logica_juego.boton_volver)
+    ventana_juego.senal_boton_volver.connect(ventana_inicio.show)
 
     logica_juego.senal_iniciar_juego.connect(ventana_juego.iniciar_nivel)
     logica_juego.senal_crear_aliens.connect(ventana_juego.agregar_label_alien)

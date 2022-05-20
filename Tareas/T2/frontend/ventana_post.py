@@ -57,8 +57,6 @@ class VentanaPost(QWidget):
         # Botones
         self.boton_siguiente = QPushButton("Siguiente nivel", self)
         self.boton_siguiente.clicked.connect(self.siguiente_nivel)
-        self.boton_salir = QPushButton("Salir", self)
-        self.boton_salir.clicked.connect(self.salir)
         self.boton_menu = QPushButton("Menú de inicio", self)
         self.boton_menu.clicked.connect(self.menu_inicio)
 
@@ -98,8 +96,6 @@ class VentanaPost(QWidget):
         vbox1.addLayout(hbox2)
         vbox1.addStretch(1)
         vbox1.addLayout(hbox3)
-        vbox1.addStretch(1)
-        vbox1.addLayout(utils.encapsular_h(self.boton_salir))
         vbox1.addStretch(1)
 
         self.setLayout(vbox1)
@@ -145,6 +141,3 @@ class VentanaPost(QWidget):
         guardar_puntaje(self.usuario, self.puntos)
         self.senal_menu_inicio.emit()
         self.hide()
-
-    def salir(self):
-        self.close()
