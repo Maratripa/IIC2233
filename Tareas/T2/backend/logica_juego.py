@@ -12,8 +12,8 @@ import parametros as p
 
 
 class Juego(QObject):
-    #                               (lvl, esc, bls, tiemp, pos_mira)
-    senal_iniciar_juego = pyqtSignal(int, int, int, float, tuple)
+    #                               (lvl, esc, bls, tiemp, pts, pos_mira)
+    senal_iniciar_juego = pyqtSignal(int, int, int, float, int, tuple)
     #                              (id , x  , y  , w  , h  , senales)
     senal_crear_aliens = pyqtSignal(int, int, int, int, int, list)
     #                                   (tmp)
@@ -133,7 +133,8 @@ class Juego(QObject):
                                     p.VENTANA_ALTO / 2 - p.ALTO_MIRA / 2)
 
         self.senal_iniciar_juego.emit(nivel, self.escenario, self.balas,
-                                      self.tiempo, (self.mira.x, self.mira.y))
+                                      self.tiempo, self.puntaje,
+                                      (self.mira.x, self.mira.y))
         self.timer.start()
         self.timer_tiempo.start()
 

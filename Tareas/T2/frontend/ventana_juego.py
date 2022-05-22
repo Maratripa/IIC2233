@@ -101,7 +101,7 @@ class VentanaJuego(QWidget):
         self.label_puntaje = QLabel("Puntaje", self)
         self.label_puntaje.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        self.cuenta_puntaje = QLabel("0 ptos", self)
+        self.cuenta_puntaje = QLabel("0 pts", self)
         self.cuenta_puntaje.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         vbox3 = QVBoxLayout()
@@ -188,7 +188,7 @@ class VentanaJuego(QWidget):
         self.label_bomba.hide()
 
     # Esta funcion inicia todos los niveles y resetea labels a los valores iniciales
-    def iniciar_nivel(self, nivel, escenario, balas, tiempo, pos_mira: tuple):
+    def iniciar_nivel(self, nivel, escenario, balas, tiempo, puntaje, pos_mira: tuple):
         self.nivel = nivel
         self.escenario = escenario
 
@@ -202,6 +202,8 @@ class VentanaJuego(QWidget):
         # Mapeo del tiempo a porcentaje
         self.barra_tiempo.setRange(0, int(tiempo / 1000))
         self.barra_tiempo.setValue(int(tiempo / 1000))
+
+        self.cuenta_puntaje.setText(f"{puntaje} pts")
 
         if escenario == 1:
             pixmap_bg = QPixmap(path.join(*p.RUTA_FONDO, "Luna.png"))
