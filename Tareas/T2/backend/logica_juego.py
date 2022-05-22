@@ -3,7 +3,7 @@ from os import path
 import functools
 
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
-from PyQt5.QtMultimedia import QSoundEffect, QSound
+from PyQt5.QtMultimedia import QSoundEffect
 from backend.entidades import Mira, Alien
 
 from manejo_archivos import guardar_puntaje

@@ -182,8 +182,9 @@ class VentanaJuego(QWidget):
         self.nivel = nivel
         self.escenario = escenario
 
-        # Resetear aliens
-        self.aliens = {}
+        # Eliminar aliens que quedaron por cheatcode o volver
+        for id in [i for i in self.aliens]:
+            self.eliminar_alien(id)
 
         self.cuenta_nivel.setText(f"{nivel}")
         self.cuenta_balas.setText(f"X {balas}")
