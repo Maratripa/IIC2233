@@ -54,6 +54,13 @@ class VentanaRanking(QWidget):
 
         self.setLayout(hbox3)
 
+    def mostrar(self):
+        for i in range(self.ranking.rowCount() - 1, -1, -1):
+            self.ranking.removeRow(i)
+
+        self.cargar_ranking()
+        self.show()
+
     # Rellenar FormLayout
     def cargar_ranking(self):
         puntajes = cargar_puntajes()  # Lista ordenada de puntajes y usuarios

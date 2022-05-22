@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     # Señales ventanas
     # ventana inicio
-    ventana_inicio.senal_ranking.connect(ventana_ranking.show)
+    ventana_inicio.senal_ranking.connect(ventana_ranking.mostrar)
     ventana_inicio.senal_jugar.connect(ventana_principal.show)
 
     # ventana rakings
