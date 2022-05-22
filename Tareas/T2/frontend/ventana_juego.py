@@ -177,6 +177,16 @@ class VentanaJuego(QWidget):
             QPixmap(path.join(*p.RUTA_GOD, "Perro_y_alien3.png"))
         ]
 
+        # BONUS
+        self.label_bomba = QLabel(self)
+        self.label_bomba.setObjectName("sprite")
+        pixmap_bomba = QPixmap(path.join(*p.RUTA_BONUS, "Bomba_hielo.png"))
+        self.label_bomba.setPixmap(pixmap_bomba)
+        self.label_bomba.setGeometry(0, 0, p.ANCHO_BOMBA, p.ALTO_BOMBA)
+        self.label_bomba.setScaledContents(True)
+        self.label_bomba.stackUnder(self.label_mira)
+        self.label_bomba.hide()
+
     # Esta funcion inicia todos los niveles y resetea labels a los valores iniciales
     def iniciar_nivel(self, nivel, escenario, balas, tiempo, pos_mira: tuple):
         self.nivel = nivel
@@ -234,7 +244,7 @@ class VentanaJuego(QWidget):
         label.setPixmap(self.pixmap_alien)
         label.setGeometry(x, y, ancho, alto)
         label.setScaledContents(True)
-        label.stackUnder(self.label_explosion)
+        label.stackUnder(self.label_vacio)
         self.aliens[id] = label
         label.show()
 
@@ -295,6 +305,17 @@ class VentanaJuego(QWidget):
     def actualizar_tiempo(self, tiempo):
         self.barra_tiempo.setValue(int(tiempo / 1000))
         self.barra_tiempo.repaint()
+
+    # Mover bomba
+    def mover_bomba(self, x, y):
+        self.label_bomba.move(x, y)
+
+    # Cambiar estado bomba
+    def estado_bomba(self, estado):
+        if estado == 1:
+            self.label_bomba.show()
+        elif estado == -1:
+            self.label_bomba.hide()
 
     # Cambiar pixmap de perro
     def fin_nivel(self, paso):

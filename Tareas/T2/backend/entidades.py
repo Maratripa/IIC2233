@@ -192,6 +192,36 @@ class Alien(QObject):
             self.senal_posicion.emit(self.id, (self.x, self.y))
 
 
+class BombaHielo(QTimer):
+
+    senal_estado_bomba = pyqtSignal(int)
+    senal_pos_bomba = pyqtSignal(int, int)
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.width = p.ANCHO_BOMBA
+        self.height = p.ALTO_BOMBA
+
+        self.setInterval(p.TIEMPO_BOMBA * 1000)
+        self.setSingleShot(True)
+        self.timeout.connect(self.esconder)
+        self.activa = False
+
+    def partir(self):
+        self.x = random.randint(0, p.VENTANA_ANCHO - p.ANCHO_BOMBA)
+        self.y = random.randint(0, p.VENTANA_ALTO - p.ALTO_BOMBA)
+
+        self.senal_pos_bomba.emit(self.x, self.y)
+        self.senal_estado_bomba.emit(1)
+        self.activa = True
+        self.start()
+
+    def esconder(self):
+        self.activa = False
+        self.senal_estado_bomba.emit(-1)
+
+
 class TerminatorGod(QThread):
 
     def __init__(self, width):

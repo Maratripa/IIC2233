@@ -6,11 +6,11 @@ QWidget {
     font-weight: normal;
     font-size: 16px;
 }
-/*
-QLabel {
+
+/* QLabel {
     border: 2px solid #F28FAD;
-}
-*/
+} */
+
 QLabel#titulo {
     font-size: 30px;
     font-weight: bold;

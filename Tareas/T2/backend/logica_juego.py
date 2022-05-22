@@ -1,10 +1,11 @@
 from os import path
 
 import functools
+import random
 
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
 from PyQt5.QtMultimedia import QSoundEffect
-from backend.entidades import Mira, Alien
+from backend.entidades import Mira, Alien, BombaHielo
 
 from manejo_archivos import guardar_puntaje
 import parametros as p
@@ -77,6 +78,14 @@ class Juego(QObject):
         self.aliens_muertos = set()
         self.aliens_por_eliminar = []
 
+        # BONUS
+        self.bomba_hielo = BombaHielo(self)
+        self.congelado = False
+        self.timer_congelado = QTimer(self)
+        self.timer_congelado.setInterval(p.TIEMPO_CONGELAMIENTO * 1000)
+        self.timer_congelado.setSingleShot(True)
+        self.timer_congelado.timeout.connect(self.descongelar)
+
     # Se llama desde la ventana principal para instanciar el escenario y la partida
     def iniciar_juego(self, escenario, usuario):
         self.escenario = escenario
@@ -133,6 +142,7 @@ class Juego(QObject):
         if not self.pausa:
             self.mira.actualizar(self.teclas)
             self.manejar_aliens()
+            self.eventos()
 
             tiempo_restante = self.timer_tiempo.remainingTime()
             if tiempo_restante != -1:
@@ -149,8 +159,9 @@ class Juego(QObject):
             del self.aliens[self.aliens_por_eliminar.pop(i)]
 
         # Mover aliens
-        for id in self.aliens:
-            self.aliens[id].mover()
+        if not self.congelado:
+            for id in self.aliens:
+                self.aliens[id].mover()
 
     # Crear de a 2 aliens
     def crear_aliens(self):
@@ -170,6 +181,17 @@ class Juego(QObject):
         # Terminar juego cuando el ultimo alien salga de la pantalla
         if len(self.aliens_muertos) == self.cantidad_aliens and self.ultimo_disparado == id:
             self.terminar_nivel(True)
+
+    def eventos(self):
+        if random.random() < p.PROBABILIDAD_BOMBA and not self.bomba_hielo.activa:
+            self.bomba_hielo.partir()
+
+    def congelar(self):
+        self.bomba_hielo.esconder()
+        self.congelado = True
+
+    def descongelar(self):
+        self.congelado = False
 
     # Parar timer de tiempo del nivel, y dejar al perro que haga lo suyo
     def terminar_nivel(self, paso_nivel: bool):
@@ -243,6 +265,11 @@ class Juego(QObject):
                 self.aliens_muertos.add(id)
                 self.ultimo_disparado = id
 
+        if self.bomba_hielo.activa:
+            if self.chequear_colision_sprite(self.bomba_hielo):
+                self.congelar()
+                self.timer_congelado.start()
+
         # No quedan balas
         if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
             self.terminar_nivel(False)
@@ -263,6 +290,13 @@ class Juego(QObject):
                 chocados.append(id)
 
         return chocados
+
+    def chequear_colision_sprite(self, entity):
+        xm = self.mira.x + self.mira.off_w
+        ym = self.mira.y + self.mira.off_h
+
+        return (xm > entity.x and xm < entity.x + entity.width and
+                ym > entity.y and ym < entity.y + entity.height)
 
     # Crear explosion
     def crear_explosion(self, x, y):
