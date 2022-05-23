@@ -75,7 +75,7 @@ La lista de librerías externas que utilicé fue la siguiente:
 ### Librerías propias
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
-1. ```entidades.py```: Contiene a las clases ```Mira```, ```Alien```, ```BombaHielo```, ```EstrellaMuerte```, ```Tiempo``` y ```Explosion```. Estas clases son utilizadas en el archivo ```backend/logica_juego.py```.
+1. ```entidades.py```: Contiene a las clases ```Mira```, ```Alien```, ```BombaHielo```, ```EstrellaMuerte```ga , ```Tiempo``` y ```Explosion```. Estas clases son utilizadas en el archivo ```backend/logica_juego.py```.
 
 2. ```logica_juego.py```: Contiene la clase ```Juego```, esta se encarga de toda la lógica detrás de la ventana de juego.
 
