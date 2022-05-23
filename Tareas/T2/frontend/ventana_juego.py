@@ -187,6 +187,15 @@ class VentanaJuego(QWidget):
         self.label_bomba.stackUnder(self.label_mira)
         self.label_bomba.hide()
 
+        self.label_estrella = QLabel(self)
+        self.label_estrella.setObjectName("sprite")
+        pixmap_estrella = QPixmap(path.join(*p.RUTA_BONUS, "Estrella_muerte.png"))
+        self.label_estrella.setPixmap(pixmap_estrella)
+        self.label_estrella.setGeometry(0, 0, p.ANCHO_ESTRELLA, p.ALTO_ESTRELLA)
+        self.label_estrella.setScaledContents(True)
+        self.label_estrella.stackUnder(self.label_mira)
+        self.label_estrella.hide()
+
     # Esta funcion inicia todos los niveles y resetea labels a los valores iniciales
     def iniciar_nivel(self, nivel, escenario, balas, tiempo, puntaje, pos_mira: tuple):
         self.nivel = nivel
@@ -318,6 +327,17 @@ class VentanaJuego(QWidget):
             self.label_bomba.show()
         elif estado == -1:
             self.label_bomba.hide()
+
+    # Mover estrella
+    def mover_estrella(self, x, y):
+        self.label_estrella.move(x, y)
+
+    # Cambiar estado estrella
+    def estado_estrella(self, estado):
+        if estado == 1:
+            self.label_estrella.show()
+        elif estado == -1:
+            self.label_estrella.hide()
 
     # Cambiar pixmap de perro
     def fin_nivel(self, paso):

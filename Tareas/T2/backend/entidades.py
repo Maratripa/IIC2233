@@ -222,6 +222,36 @@ class BombaHielo(QTimer):
         self.senal_estado_bomba.emit(-1)
 
 
+class EstrellaMuerte(QTimer):
+
+    senal_pos_estrella = pyqtSignal(int, int)
+    senal_estado_estrella = pyqtSignal(int)
+
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.width = p.ANCHO_ESTRELLA
+        self.height = p.ALTO_ESTRELLA
+
+        self.setInterval(p.TIEMPO_ESTRELLA * 1000)
+        self.setSingleShot(True)
+        self.timeout.connect(self.esconder)
+        self.activa = False
+
+    def spawn(self):
+        self.x = random.randint(0, p.VENTANA_ANCHO - self.width)
+        self.y = random.randint(0, p.VENTANA_ALTO - self.height)
+
+        self.senal_pos_estrella.emit(self.x, self.y)
+        self.senal_estado_estrella.emit(1)
+        self.activa = True
+        self.start()
+
+    def esconder(self):
+        self.activa = False
+        self.senal_estado_estrella.emit(-1)
+
+
 # Clase encargada de mover y generar la explosion
 class Explosion(QThread):
     #                           (fase)

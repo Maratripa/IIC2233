@@ -5,7 +5,7 @@ import random
 
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QUrl
 from PyQt5.QtMultimedia import QSoundEffect
-from backend.entidades import Mira, Alien, BombaHielo, Tiempo, Explosion
+from backend.entidades import Mira, Alien, BombaHielo, Tiempo, Explosion, EstrellaMuerte
 
 from manejo_archivos import guardar_puntaje
 import parametros as p
@@ -85,6 +85,8 @@ class Juego(QObject):
         self.timer_congelado.setInterval(p.TIEMPO_CONGELAMIENTO * 1000)
         self.timer_congelado.setSingleShot(True)
         self.timer_congelado.timeout.connect(self.descongelar)
+
+        self.estrella_muerte = EstrellaMuerte(self)
 
     # Se llama desde la ventana principal para instanciar el escenario y la partida
     def iniciar_juego(self, escenario, usuario):
@@ -186,6 +188,8 @@ class Juego(QObject):
     def eventos(self):
         if random.random() < p.PROBABILIDAD_BOMBA and not self.bomba_hielo.activa:
             self.bomba_hielo.partir()
+        if random.random() < p.PROBABILIDAD_ESTRELLA and not self.estrella_muerte.activa:
+            self.estrella_muerte.spawn()
 
     def congelar(self):
         self.bomba_hielo.esconder()
@@ -274,6 +278,12 @@ class Juego(QObject):
                 if self.chequear_colision_sprite(self.bomba_hielo):
                     self.congelar()
                     self.timer_congelado.start()
+
+            if self.estrella_muerte.activa:
+                if self.chequear_colision_sprite(self.estrella_muerte):
+                    self.estrella_muerte.esconder()
+                    self.timer_tiempo.pausa()
+                    self.timer_tiempo.start(self.timer_tiempo.restante - p.TIEMPO_PERDIDO * 1000)
 
             # No quedan balas
             if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:

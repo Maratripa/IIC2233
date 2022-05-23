@@ -72,6 +72,9 @@ if __name__ == '__main__':
     logica_juego.bomba_hielo.senal_pos_bomba.connect(ventana_juego.mover_bomba)
     logica_juego.bomba_hielo.senal_estado_bomba.connect(ventana_juego.estado_bomba)
 
+    logica_juego.estrella_muerte.senal_pos_estrella.connect(ventana_juego.mover_estrella)
+    logica_juego.estrella_muerte.senal_estado_estrella.connect(ventana_juego.estado_estrella)
+
     # lógica ventana principal
     logica_principal.senal_respuesta_validacion.connect(ventana_principal.recibir_validacion)
 

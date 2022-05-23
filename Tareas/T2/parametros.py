@@ -82,6 +82,9 @@ RUTA_BONUS = ["frontend", "assets", "Sprites", "Bonus"]
 
 TIEMPO_ESTRELLA = 6  # secs
 TIEMPO_PERDIDO = 10  # secs
+PROBABILIDAD_ESTRELLA = 0.001
+ANCHO_ESTRELLA = 60
+ALTO_ESTRELLA = 61
 
 TIEMPO_BOMBA = 5  # secs
 TIEMPO_CONGELAMIENTO = 3  # secs
