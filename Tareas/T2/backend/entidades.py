@@ -222,34 +222,41 @@ class BombaHielo(QTimer):
         self.senal_estado_bomba.emit(-1)
 
 
-class TerminatorGod(QThread):
+class Explosion(QThread):
+    #                           (fase)
+    senal_explosion = pyqtSignal(int)
+    #                       (x  , y  )
+    senal_mover = pyqtSignal(int, int)
 
-    def __init__(self, width):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
 
-        self._x = 0
-        self._y = p.GOD_POS_Y
+        self.time_off = p.TIEMPO_OFFSET_EXPLOSION
 
-        self.width = width
+    # Explosion en un nuevo lugar
+    def mover_explosion(self, x, y):
+        self.senal_mover.emit(x, y)
 
-    @property
-    def x(self):
-        return self._x
+    def run(self):
+        # Cambiar fase de explosion cada self.time_off msecs
+        self.senal_explosion.emit(0)
+        self.msleep(self.time_off)
+        self.senal_explosion.emit(1)
+        self.msleep(self.time_off)
+        self.senal_explosion.emit(2)
+        self.msleep(self.time_off)
+        self.senal_explosion.emit(-1)
 
-    @x.setter
-    def x(self, value):
-        if value < 0:
-            self._x = 0
-        elif value > p.VENTANA_ANCHO - self.width:
-            self._x = p.VENTANA_ANCHO - self.width
-        else:
-            self._x = value
 
-    def mover_x_a(self, i):
+# Clase de timer con método reanudar()
+class Tiempo(QTimer):
+    def __init__(self, parent):
+        super().__init__(parent)
 
-        if i < self.x:
-            direccion = -1
-        elif i > self.x:
-            direccion = 1
-        else:
-            return
+    def pausa(self):
+        self.restante = self.remainingTime()
+        self.stop()
+
+    def reanudar(self):
+        self.setInterval(self.restante)
+        self.start()

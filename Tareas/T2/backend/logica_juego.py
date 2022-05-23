@@ -3,9 +3,9 @@ from os import path
 import functools
 import random
 
-from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QThread, QUrl
+from PyQt5.QtCore import QObject, pyqtSignal, QTimer, QUrl
 from PyQt5.QtMultimedia import QSoundEffect
-from backend.entidades import Mira, Alien, BombaHielo
+from backend.entidades import Mira, Alien, BombaHielo, Tiempo, Explosion
 
 from manejo_archivos import guardar_puntaje
 import parametros as p
@@ -326,43 +326,3 @@ class Juego(QObject):
             del self.aliens[i]
 
         guardar_puntaje(self.usuario, self.puntaje)
-
-
-class Explosion(QThread):
-    #                           (fase)
-    senal_explosion = pyqtSignal(int)
-    #                       (x  , y  )
-    senal_mover = pyqtSignal(int, int)
-
-    def __init__(self, parent):
-        super().__init__(parent)
-
-        self.time_off = p.TIEMPO_OFFSET_EXPLOSION
-
-    # Explosion en un nuevo lugar
-    def mover_explosion(self, x, y):
-        self.senal_mover.emit(x, y)
-
-    def run(self):
-        # Cambiar fase de explosion cada self.time_off msecs
-        self.senal_explosion.emit(0)
-        self.msleep(self.time_off)
-        self.senal_explosion.emit(1)
-        self.msleep(self.time_off)
-        self.senal_explosion.emit(2)
-        self.msleep(self.time_off)
-        self.senal_explosion.emit(-1)
-
-
-# Clase de timer con método reanudar()
-class Tiempo(QTimer):
-    def __init__(self, parent):
-        super().__init__(parent)
-
-    def pausa(self):
-        self.restante = self.remainingTime()
-        self.stop()
-
-    def reanudar(self):
-        self.setInterval(self.restante)
-        self.start()
