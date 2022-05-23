@@ -250,32 +250,32 @@ class Juego(QObject):
 
     # Método llamado por señal de la mira cuando no esta recargando
     def disparar(self):
-        if not self.balas_infinitas:
-            self.balas -= 1
-            self.senal_actualizar_balas.emit(str(self.balas))
+        if self.balas > 0:
+            if not self.balas_infinitas:
+                self.balas -= 1
+                self.senal_actualizar_balas.emit(str(self.balas))
 
-        self.sonido_disparo.play()
+            self.sonido_disparo.play()
 
-        # Ver si le dimos a algun alien
-        chocados = self.chequear_colision_aliens()
-        if chocados:
-            self.crear_explosion(self.mira.x + self.mira.off_w,
-                                 self.mira.y + self.mira.off_h)
-            for id in chocados:
-                self.aliens[id].morir()
-                self.aliens_vivos.remove(id)
-                self.aliens_muertos.add(id)
-                self.ultimo_disparado = id
+            # Ver si le dimos a algun alien
+            chocados = self.chequear_colision_aliens()
+            if chocados:
+                self.crear_explosion(self.mira.x + self.mira.off_w,
+                                     self.mira.y + self.mira.off_h)
+                for id in chocados:
+                    self.aliens[id].morir()
+                    self.aliens_vivos.remove(id)
+                    self.aliens_muertos.add(id)
+                    self.ultimo_disparado = id
 
-        if self.bomba_hielo.activa:
-            if self.chequear_colision_sprite(self.bomba_hielo):
-                self.congelar()
-                self.timer_congelado.start()
+            if self.bomba_hielo.activa:
+                if self.chequear_colision_sprite(self.bomba_hielo):
+                    self.congelar()
+                    self.timer_congelado.start()
 
-        # No quedan balas
-        if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
-            self.terminar_nivel(False)
-            self.timer_tiempo.stop()
+            # No quedan balas
+            if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
+                self.pasar_nivel(False, 0)
 
     # Revisar colision para cada alien
     def chequear_colision_aliens(self) -> list:
