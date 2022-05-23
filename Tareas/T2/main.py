@@ -13,11 +13,6 @@ from backend.logica_juego import Juego
 
 
 if __name__ == '__main__':
-    def hook(type, value, traceback):
-        print(type)
-        print(traceback)
-    sys.__excepthook__ = hook
-
     app = QApplication([])
     # Importar archivo css
     with open(path.join("frontend", "style.css"), 'r') as file:
@@ -81,4 +76,4 @@ if __name__ == '__main__':
     logica_principal.senal_respuesta_validacion.connect(ventana_principal.recibir_validacion)
 
     ventana_inicio.show()
-    app.exec()
+    sys.exit(app.exec_())
