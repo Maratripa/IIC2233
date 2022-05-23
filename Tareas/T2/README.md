@@ -35,7 +35,7 @@ en cierta línea del código o comentar una función>
 ##### ✅ Parametros.py <Todas las constantes se encuentran declaradas dentro del archivo ```parametros.py```\>
 #### Bonus: 10 décimas máximo
 ##### ✅ Risa Dog <Terminator Dog produce un sonido de risa al terminar el nivel en condición de victoria\>
-##### ❌ Estrella <\>
+##### ✅ Estrella <Aleatoriamente aparece una estrella de la muerte, que cuando es disparada, resta una cierta cantidad de tiempo a la cuenta regresiva\>
 ##### ❌ Disparos extra <\>
 ##### ✅ Bomba <Aleatoriamente aparece una bomba de hielo, que congela las aliens por una cierta cantidad de tiempo\>
 
@@ -75,7 +75,7 @@ La lista de librerías externas que utilicé fue la siguiente:
 ### Librerías propias
 Por otro lado, los módulos que fueron creados fueron los siguientes:
 
-1. ```entidades.py```: Contiene a las clases ```Mira```, ```Alien```, ```BombaHielo```, ```Tiempo``` y ```Explosion```. Estas clases son utilizadas en el archivo ```backend/logica_juego.py```.
+1. ```entidades.py```: Contiene a las clases ```Mira```, ```Alien```, ```BombaHielo```, ```EstrellaMuerte```, ```Tiempo``` y ```Explosion```. Estas clases son utilizadas en el archivo ```backend/logica_juego.py```.
 
 2. ```logica_juego.py```: Contiene la clase ```Juego```, esta se encarga de toda la lógica detrás de la ventana de juego.
 
