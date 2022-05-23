@@ -1,6 +1,10 @@
 # Tarea 2: DCComando Espacial :school_satchel:
 
+DCComando espacial es un juego donde se espera entrenar la IA encargada de las defensas contra los aliens que conquistaron el planeta tierra para el año 2050.
 
+En el juego se pueden escoger 3 escenarios, tutorial, entrenamiento e invasión, cada uno más desafiante que el anterior. En cada nivel aparecerán una cierta cantidad de aliens y el objetivo es disparar a todos los aliens del nivel para poder pasar al siguiente. 
+
+Para disparar a los aliens se cuenta con un arma de última tecnología que dispara balas especiales al presionar la tecla ```espacio```. Para mover el arma puedes presionar las teclas ```w a s d``` las cuales moverán la mira en la direccion deseada, si se presionan dos teclas no opuestas, la mira se moverá diagonalmente.
 
 ## Consideraciones generales :octocat:
 
