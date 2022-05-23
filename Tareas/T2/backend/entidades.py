@@ -222,6 +222,7 @@ class BombaHielo(QTimer):
         self.senal_estado_bomba.emit(-1)
 
 
+# Clase encargada de mover y generar la explosion
 class Explosion(QThread):
     #                           (fase)
     senal_explosion = pyqtSignal(int)
