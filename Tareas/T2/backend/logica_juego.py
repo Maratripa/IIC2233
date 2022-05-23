@@ -44,7 +44,7 @@ class Juego(QObject):
         # Timer juego
         self.timer_tiempo = Tiempo(self)
         self.timer_tiempo.setSingleShot(True)
-        callback = functools.partial(self.terminar_nivel, False)
+        callback = functools.partial(self.pasar_nivel, False, 0)
         self.timer_tiempo.timeout.connect(callback)
 
         # Teclas apretadas
@@ -283,7 +283,11 @@ class Juego(QObject):
                 if self.chequear_colision_sprite(self.estrella_muerte):
                     self.estrella_muerte.esconder()
                     self.timer_tiempo.pausa()
-                    self.timer_tiempo.start(self.timer_tiempo.restante - p.TIEMPO_PERDIDO * 1000)
+                    tiempo_restante = self.timer_tiempo.restante - p.TIEMPO_PERDIDO * 1000
+                    if tiempo_restante <= 0:
+                        self.pasar_nivel(False, 0)
+                    else:
+                        self.timer_tiempo.start(tiempo_restante)
 
             # No quedan balas
             if self.balas == 0 and len(self.aliens_muertos) != self.cantidad_aliens:
