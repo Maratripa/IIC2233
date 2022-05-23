@@ -101,6 +101,8 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 2. Para hacer del juego un poco más entretenido, se tiene un "vector" en ```parametros.py``` para la velocidad de los aliens, pero de este vector solo se utiliza la norma, que luego se aplica a un vector con direccion diagonal aleatorio en el archivo ```backend/entidades.py``` dentro de la clase ```Alien```.
 
+3. Al disparar a la bomba de hielo, también se pausa el timer de la cuenta regresiva, para hacer que sea realmente una ventaja en los niveles con poco tiempo.
+
 -------
 
 ## Referencias de código externo :book:
