@@ -238,14 +238,15 @@ class Juego(QObject):
         else:                   # keyReleaseEvent
             self.teclas.discard(-key)
 
-        if {67, 73, 65}.issubset(self.teclas):  # Cheatcode CIA
-            self.terminar_nivel(True)
-            self.timer_tiempo.stop()
+        if not self.pausa:
+            if {67, 73, 65}.issubset(self.teclas):  # Cheatcode CIA
+                self.terminar_nivel(True)
+                self.timer_tiempo.stop()
 
-        elif {79, 86, 78, 73}.issubset(self.teclas):  # Cheatcode OVNI
-            self.balas_infinitas = True
-            self.mira.balas_infinitas()
-            self.senal_actualizar_balas.emit("INF")
+            elif {79, 86, 78, 73}.issubset(self.teclas):  # Cheatcode OVNI
+                self.balas_infinitas = True
+                self.mira.balas_infinitas()
+                self.senal_actualizar_balas.emit("INF")
 
     # Método llamado por señal de la mira cuando no esta recargando
     def disparar(self):
