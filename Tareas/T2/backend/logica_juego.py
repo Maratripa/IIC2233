@@ -190,9 +190,11 @@ class Juego(QObject):
     def congelar(self):
         self.bomba_hielo.esconder()
         self.congelado = True
+        self.timer_tiempo.pausa()
 
     def descongelar(self):
         self.congelado = False
+        self.timer_tiempo.reanudar()
 
     # Parar timer de tiempo del nivel, y dejar al perro que haga lo suyo
     def terminar_nivel(self, paso_nivel: bool):
