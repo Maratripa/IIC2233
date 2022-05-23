@@ -30,8 +30,8 @@ en cierta línea del código o comentar una función>
 ##### ✅  C + I + A <Al presionar simultáneamente las teclas ```C + I + A``` se pasa automáticamente de nivel, con condición de victoria y se calcula el puntaje con las estadísticas del momento\>
 #### General: 14 pts (13%)
 ##### ✅ Modularización <El juego se encuentra dividido en backend/frontend y cada ventana tiene su propio archivo, tanto en frontend, como en backend de ser necesario\>
-##### ✅ Modelación <explicacion\>
-##### ✅ Archivos  <explicacion\>
+##### ✅ Modelación <Las funciones tienen un objetivo y están separadas coreectamente\>
+##### ✅ Archivos  <Se tiene un solo archivo de interfaz con los .txt y se manejas todas las opciones\>
 ##### ✅ Parametros.py <Todas las constantes se encuentran declaradas dentro del archivo ```parametros.py```\>
 #### Bonus: 10 décimas máximo
 ##### ✅ Risa Dog <Terminator Dog produce un sonido de risa al terminar el nivel en condición de victoria\>
