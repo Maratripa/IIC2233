@@ -6,5 +6,5 @@
     "ALTO_VENTANA": 600,
     "POS_VENTANA": [400, 200],
 
-    "RUTA_SPRITES": "Sprites"
+    "RUTA_SPRITES": ["frontend", "Sprites"]
 }

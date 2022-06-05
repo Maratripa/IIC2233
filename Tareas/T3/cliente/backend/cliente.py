@@ -1,6 +1,8 @@
 import socket
 import threading
 
+from backend.interfaz import Interfaz
+
 
 class Cliente:
     def __init__(self, host, port):
@@ -8,6 +10,8 @@ class Cliente:
         self.port = port
         self.socket_cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.conectado = False
+
+        self.interfaz = Interfaz(self)
 
         self.iniciar_cliente()
 
@@ -18,6 +22,7 @@ class Cliente:
             self.conectado = True
             self.log("Cliente inicializado")
             self.comenzar_a_escuchar()
+            self.interfaz.mostrar_ventana_inicio()
 
         except ConnectionError as e:
             self.log(e)
