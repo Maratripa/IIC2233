@@ -1,4 +1,4 @@
 {
-    "host": 0,
-    "port": 0
+    "HOST": "localhost",
+    "PORT": 35753
 }

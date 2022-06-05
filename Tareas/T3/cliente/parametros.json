@@ -1,4 +1,10 @@
 {
-    "host": 0,
-    "port": 0
+    "HOST": "localhost",
+    "PORT": 35753,
+
+    "ANCHO_VENTANA": 600,
+    "ALTO_VENTANA": 600,
+    "POS_VENTANA": [400, 200],
+
+    "RUTA_SPRITES": "Sprites"
 }
