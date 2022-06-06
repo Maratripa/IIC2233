@@ -37,6 +37,8 @@ class Logica:
             dict_respuesta["error"] = "usuario muy largo"
         elif not usuario.isalnum():
             dict_respuesta["error"] = "usuario no es alfanumérico"
+        elif len(self.usuarios) == data_json("MAXIMO_JUGADORES"):
+            dict_respuesta["error"] = "sala llena"
         else:
             dict_respuesta["estado"] = "aceptado"
             if not self.usuarios:
