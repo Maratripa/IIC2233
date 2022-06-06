@@ -1,2 +1,5 @@
 *.pdf
 Sprites/
+__pycache__/
+test*
+dump*
