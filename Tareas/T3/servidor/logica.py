@@ -52,8 +52,20 @@ class Logica:
 
         return (dict_respuesta, socket_cliente)
 
-    def enviar_mensaje(self, mensaje: dict, socket_cliente):
+    def enviar_mensaje(self, mensaje: dict, socket_cliente) -> bool:
         self.parent.enviar_mensaje(mensaje, socket_cliente)
+
+    def eliminar_cliente(self, id_cliente: int):
+        idx = None
+        for i, user in enumerate(self.usuarios):
+            if user.id == id_cliente:
+                idx = i
+
+        try:
+            self.usuarios.pop(idx).socket.close()
+            return True
+        except TypeError:
+            return False
 
 
 class Usuario:

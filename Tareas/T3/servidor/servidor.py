@@ -105,7 +105,8 @@ class Servidor:
 
     def eliminar_cliente(self, id_cliente: int, socket_cliente: socket.socket):
         self.log("Borrando socket del cliente %d..." % id_cliente)
-        socket_cliente.close()
+        if not self.logica.eliminar_cliente(id_cliente):
+            socket_cliente.close()  # Eliminar si no paso la ventana de inicio
 
     def log(self, mensaje):
         """Imprime un mensaje en consola"""
