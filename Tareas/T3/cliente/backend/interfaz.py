@@ -7,6 +7,8 @@ from frontend.ventana_espera import VentanaEspera
 class Interfaz(QObject):
     #                                       (admin, users)
     senal_cargar_pantalla_espera = pyqtSignal(bool, list)
+    #                                           (users)
+    senal_actualizar_lista_usuarios = pyqtSignal(list)
 
     def __init__(self, parent):
         super().__init__()
@@ -18,6 +20,7 @@ class Interfaz(QObject):
         self.ventana_inicio.senal_enviar_usuario.connect(parent.enviar_mensaje)
 
         self.senal_cargar_pantalla_espera.connect(self.ventana_espera.cargar_pantalla)
+        self.senal_actualizar_lista_usuarios.connect(self.ventana_espera.cargar_usuarios)
 
     def mostrar_ventana_inicio(self):
         self.ventana_inicio.mostrar()
@@ -34,3 +37,5 @@ class Interfaz(QObject):
                 self.senal_cargar_pantalla_espera.emit(mensaje["admin"], mensaje["usuarios"])
             else:
                 self.ventana_inicio.error_usuario(mensaje["error"])
+        elif comando == "actualizar_lista_usuarios":
+            self.senal_actualizar_lista_usuarios.emit(mensaje["usuarios"])

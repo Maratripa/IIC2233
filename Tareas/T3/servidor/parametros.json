@@ -1,6 +1,6 @@
 {
     "HOST": "localhost",
-    "PORT": 35753,
+    "PORT": 35754,
     "LARGO_USUARIO_MIN": 1,
     "LARGO_USUARIO_MAX": 10
 }

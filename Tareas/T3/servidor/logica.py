@@ -11,30 +11,31 @@ class Logica:
         self.colores = ("rojo", "amarillo", "azul", "verde")
         self.colores_idx = [0, 1, 2, 3]
 
-    def procesar_mensaje(self, mensaje: dict, socket_cliente, id_cliente: int) -> dict:
+    def procesar_mensaje(self, mensaje: dict, socket_cliente, id_cliente: int) -> None:
         try:
             comando = mensaje["comando"]
         except KeyError:
             return {}
 
         if comando == "validar_login":
-            respuesta = self.validar_login(mensaje["usuario"], id_cliente)
+            respuesta, socket_resp = self.validar_login(
+                mensaje["usuario"], socket_cliente, id_cliente)
+            self.enviar_mensaje(respuesta, socket_resp)
+            respuesta["comando"] = "actualizar_lista_usuarios"  # Actualizar comando para el resto
+            for user in self.usuarios:
+                if user.id != id_cliente:
+                    self.enviar_mensaje(respuesta, user.socket)
 
-        return respuesta
-
-    def validar_login(self, usuario: str, id_cliente: int) -> dict:
+    def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> tuple:
         dict_respuesta = {"comando": "respuesta_validacion_login"}
-        if usuario in [user["usuario"] for user in self.usuarios]:
-            dict_respuesta["estado"] = "rechazado"
+        dict_respuesta["estado"] = "rechazado"
+        if usuario in [user.data["usuario"] for user in self.usuarios.values()]:
             dict_respuesta["error"] = "usuario ya existe"
         elif data_json("LARGO_USUARIO_MIN") > len(usuario):
-            dict_respuesta["estado"] = "rechazado"
             dict_respuesta["error"] = "usuario muy corto"
         elif data_json("LARGO_USUARIO_MAX") < len(usuario):
-            dict_respuesta["estado"] = "rechazado"
             dict_respuesta["error"] = "usuario muy largo"
         elif not usuario.isalnum():
-            dict_respuesta["estado"] = "rechazado"
             dict_respuesta["error"] = "usuario no es alfanumérico"
         else:
             dict_respuesta["estado"] = "aceptado"
@@ -46,10 +47,20 @@ class Logica:
             random.shuffle(self.colores_idx)
             color = self.colores[self.colores_idx.pop()]
 
-            self.usuarios.append({
-                "usuario": usuario,
-                "color": color,
-            })
-            dict_respuesta["usuarios"] = self.usuarios
+            self.usuarios[id_cliente] = Usuario(usuario, socket_cliente, id_cliente, color)
+            dict_respuesta["usuarios"] = [user.data for user in self.usuarios.values()]
 
-        return dict_respuesta
+        return (dict_respuesta, socket_cliente)
+
+    def enviar_mensaje(self, mensaje: dict, socket_cliente):
+        self.parent.enviar_mensaje(mensaje, socket_cliente)
+
+
+class Usuario:
+    def __init__(self, usuario: str, socket_cliente, id_cliente: int, color: str):
+        self.socket = socket_cliente
+        self.id = id_cliente
+        self.data = {
+            "usuario": usuario,
+            "color": color
+        }

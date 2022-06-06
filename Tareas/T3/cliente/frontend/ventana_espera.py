@@ -36,7 +36,11 @@ class VentanaEspera(QWidget):
                 path.join(self.ruta_spites, "Fichas", "Simples", "ficha-verde.png"))
         }
 
+        self.admin = False
+
     def cargar_pantalla(self, admin: bool, usuarios: list = []):
+        self.admin = admin
+
         # Imagen fondo
         self.fondo = QLabel(self)
         pixmap_fondo = QPixmap(path.join(self.ruta_spites, "Logos", "fondo.png"))
@@ -60,8 +64,6 @@ class VentanaEspera(QWidget):
         # VL usuarios
         self.vl1 = QVBoxLayout()
         self.cargar_usuarios(usuarios)
-        if len(usuarios) >= data_json("MINIMO_JUGADORES") and admin:
-            self.boton_jugar.setEnabled(True)
 
         # HL usuarios
         hl2 = QHBoxLayout()
@@ -90,7 +92,10 @@ class VentanaEspera(QWidget):
         self.mostrar()
 
     def cargar_usuarios(self, usuarios: list) -> int:
-        for user in usuarios:
+        # Quitar todas las tarjetas actuales
+        numero = self.vl1.count()
+
+        for user in usuarios[numero:]:
             label_nombre = QLabel(user["usuario"], self)
             label_color = QLabel(user["color"], self)
             label_icono = QLabel(self)
@@ -106,7 +111,10 @@ class VentanaEspera(QWidget):
 
             self.vl1.addLayout(hl)
 
-        return len(usuarios)
+        if self.admin and len(usuarios) >= data_json("MINIMO_JUGADORES"):
+            self.boton_jugar.setEnabled(True)
+
+        self.repaint()
 
     def mostrar(self):
         self.show()

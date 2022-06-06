@@ -50,16 +50,18 @@ class Cliente:
         bloques_mensaje = self.codificar_mensaje(mensaje)
         len_bytes = len(bloques_mensaje).to_bytes(4, byteorder="little")
 
-        self.socket_cliente.sendall(len_bytes + b''.join(bloques_mensaje))
+        self.socket_cliente.sendall(len_bytes)
+        for bloque in bloques_mensaje:
+            self.socket_cliente.sendall(bloque)
 
     def recibir_mensaje(self) -> dict:
         """Recibe mensajes del servidor"""
-        len_bloques_bytes = self.socket_cliente.recv(4)
-        len_bloques = int.from_bytes(len_bloques_bytes, byteorder="little")
+        num_bloques_bytes = self.socket_cliente.recv(4)
+        num_bloques = int.from_bytes(num_bloques_bytes, byteorder="little")
 
         mensaje = bytearray()
 
-        for _ in range(len_bloques):
+        for _ in range(num_bloques):
             num_bloque_bytes = self.socket_cliente.recv(4)
             mensaje.extend(self.socket_cliente.recv(22))
 

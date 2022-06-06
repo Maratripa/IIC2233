@@ -49,20 +49,19 @@ class Servidor:
             try:
                 mensaje = self.recibir_mensaje(socket_cliente)
                 self.log(mensaje.__str__())
-                respuesta = self.logica.procesar_mensaje(mensaje, socket_cliente, id_cliente)
-                self.enviar_mensaje(respuesta, socket_cliente)
+                self.logica.procesar_mensaje(mensaje, socket_cliente, id_cliente)
             except ConnectionError:
                 self.eliminar_cliente(id_cliente, socket_cliente)
                 return
 
     def recibir_mensaje(self, socket_cliente: socket.socket) -> dict:
         """Recibe mensajes del cliente"""
-        len_bloques_bytes = socket_cliente.recv(4)
-        len_bloques = int.from_bytes(len_bloques_bytes, byteorder="little")
+        num_bloques_bytes = socket_cliente.recv(4)
+        num_bloques = int.from_bytes(num_bloques_bytes, byteorder="little")
 
         mensaje = bytearray()
 
-        for _ in range(len_bloques):
+        for _ in range(num_bloques):
             num_bloque_bytes = socket_cliente.recv(4)
             mensaje.extend(socket_cliente.recv(22))
 
@@ -78,7 +77,9 @@ class Servidor:
         bloques_mensaje = self.codificar_mensaje(mensaje)
         len_bytes = len(bloques_mensaje).to_bytes(4, byteorder="little")
 
-        socket_cliente.sendall(len_bytes + b''.join(bloques_mensaje))
+        socket_cliente.sendall(len_bytes)
+        for bloque in bloques_mensaje:
+            socket_cliente.sendall(bloque)
 
     def codificar_mensaje(self, mensaje: dict) -> list:
         """Toma el mensaje, lo codifica y retorna una lista con los bloques y sus tamano"""
