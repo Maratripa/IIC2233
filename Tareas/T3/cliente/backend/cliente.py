@@ -1,3 +1,4 @@
+import json
 import socket
 import threading
 
@@ -36,7 +37,60 @@ class Cliente:
         """Recibe mensajes desde el servidor y responde"""
         self.log("Escuchando servidor")
         while self.conectado:
-            pass
+            try:
+                mensaje = self.recibir_mensaje()
+                self.log(mensaje.__str__())
+                respuesta = self.interfaz.procesar_mensaje(mensaje)
+            except ConnectionError as e:
+                self.log(e.__str__())
+                return
+
+    def enviar_mensaje(self, mensaje: dict):
+        """Envia un mensaje al servidor"""
+        bloques_mensaje = self.codificar_mensaje(mensaje)
+        len_bytes = len(bloques_mensaje).to_bytes(4, byteorder="little")
+
+        self.socket_cliente.sendall(len_bytes + b''.join(bloques_mensaje))
+
+    def recibir_mensaje(self) -> dict:
+        """Recibe mensajes del servidor"""
+        len_bloques_bytes = self.socket_cliente.recv(4)
+        len_bloques = int.from_bytes(len_bloques_bytes, byteorder="little")
+
+        mensaje = bytearray()
+
+        for _ in range(len_bloques):
+            num_bloque_bytes = self.socket_cliente.recv(4)
+            mensaje.extend(self.socket_cliente.recv(22))
+
+        if not mensaje:
+            raise ConnectionError("ERROR: Could not read message")
+
+        mensaje_decodificado = self.decodificar_mensaje(mensaje)
+
+        return mensaje_decodificado
+
+    def codificar_mensaje(self, mensaje: dict) -> list:
+        """Toma el mensaje, lo codifica y retorna una lista con los bloques y sus tamano"""
+        mensaje_json = json.dumps(mensaje)
+        mensaje_bytes = mensaje_json.encode("utf-8")
+
+        mensaje_encriptado = mensaje_bytes  # TODO
+        bloques = []
+
+        while len(mensaje_encriptado) > 0:
+            bloque = mensaje_encriptado[:22]
+            num_bloque = len(bloque).to_bytes(4, byteorder="big")
+            bloques.append(num_bloque + bloque)
+            mensaje_encriptado = mensaje_encriptado[22:]
+
+        return bloques
+
+    def decodificar_mensaje(self, mensaje_bytes: bytes) -> dict:
+        mensaje_json = mensaje_bytes.decode("utf-8")
+        mensaje = json.loads(mensaje_json)
+
+        return mensaje
 
     def log(self, mensaje: str):
         """Imprime un mensaje en la consola"""

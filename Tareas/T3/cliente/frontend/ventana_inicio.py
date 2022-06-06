@@ -11,7 +11,7 @@ from utils import data_json
 
 class VentanaInicio(QWidget):
 
-    senal_enviar_usuario = pyqtSignal(str)
+    senal_enviar_usuario = pyqtSignal(dict)
 
     def __init__(self):
         super().__init__()
@@ -78,9 +78,12 @@ class VentanaInicio(QWidget):
         self.hide()
 
     def enviar_usuario(self):
-        self.senal_enviar_usuario.emit(self.input_usuario.text())
+        self.senal_enviar_usuario.emit({
+            "comando": "validar_login",
+            "usuario": self.input_usuario.text()
+        })
 
-    def mostrar_error(self, error: str):
+    def error_usuario(self, error: str):
         self.input_usuario.setText("")
         self.input_usuario.setPlaceholderText(error)
 

@@ -5,6 +5,11 @@ from backend.cliente import Cliente
 from utils import data_json
 
 if __name__ == "__main__":
+    def hook(type, value, traceback):
+        print(type)
+        print(traceback)
+    sys.__excepthook__ = hook
+
     HOST = data_json("HOST")
     PORT = data_json("PORT")
     try:
@@ -12,7 +17,7 @@ if __name__ == "__main__":
 
         cliente = Cliente(HOST, PORT)
 
-        sys.exit(app.exec_())
+        app.exec()
 
     except ConnectionError as e:
         print("Ocurrio un error.", e)
