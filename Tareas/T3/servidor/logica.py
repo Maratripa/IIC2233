@@ -10,6 +10,7 @@ class Logica:
 
         self.colores = ("rojo", "amarillo", "azul", "verde")
         self.colores_idx = [0, 1, 2, 3]
+        random.shuffle(self.colores_idx)
 
     def procesar_mensaje(self, mensaje: dict, socket_cliente, id_cliente: int) -> None:
         try:
@@ -46,8 +47,8 @@ class Logica:
             else:
                 dict_respuesta["admin"] = False
 
-            random.shuffle(self.colores_idx)
-            color = self.colores[self.colores_idx.pop()]
+            color = self.colores_idx.pop(0)
+            self.colores_idx.append(color)
 
             self.usuarios[id_cliente] = Usuario(usuario, socket_cliente, id_cliente, color)
             dict_respuesta["usuarios"] = [user.data for user in self.usuarios.values()]
