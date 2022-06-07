@@ -35,6 +35,7 @@ class Interfaz(QObject):
             if mensaje["estado"] == "aceptado":
                 self.ventana_inicio.esconder()
                 self.senal_cargar_pantalla_espera.emit(mensaje["admin"], mensaje["usuarios"])
+                print("MOSTRAR VENTANA DE ESPERA")
             else:
                 self.ventana_inicio.error_usuario(mensaje["error"])
         elif comando == "actualizar_lista_usuarios":

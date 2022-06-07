@@ -36,8 +36,6 @@ class VentanaEspera(QWidget):
                 path.join(self.ruta_spites, "Fichas", "Simples", "ficha-verde.png"))
         }
 
-        self.admin = False
-
     def cargar_pantalla(self, admin: bool, usuarios: list = []):
         self.admin = admin
 
@@ -89,17 +87,26 @@ class VentanaEspera(QWidget):
 
         self.setLayout(vl2)
 
+        print("ANTES DE MOSTRAR")
+
         self.mostrar()
 
     def cargar_usuarios(self, usuarios: list) -> int:
         # Quitar todas las tarjetas actuales
         numero = self.vl1.count()
 
+        print(f"NUMERO DE USUARIOS: {numero}")
+
+        print("DENTRO DE CARGAR USUARIOS")
+
         for user in usuarios[numero:]:
+            print(f"USUARIO: {user}")
             label_nombre = QLabel(user["usuario"], self)
             label_color = QLabel(user["color"], self)
             label_icono = QLabel(self)
             label_icono.setPixmap(self.iconos[user["color"]])
+
+            print("DENTRO DE ITERACION")
 
             # HL tarjeta usuario
             hl = QHBoxLayout()
@@ -115,6 +122,7 @@ class VentanaEspera(QWidget):
             self.boton_jugar.setEnabled(True)
 
         self.repaint()
+        print("FINAL DE CARGAR USUARIOS")
 
     def mostrar(self):
         self.show()

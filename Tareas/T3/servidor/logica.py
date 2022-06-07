@@ -30,7 +30,7 @@ class Logica:
     def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> tuple:
         dict_respuesta = {"comando": "respuesta_validacion_login"}
         dict_respuesta["estado"] = "rechazado"
-        if usuario in [user.data["usuario"] for user in self.usuarios.values()]:
+        if usuario in [user.data["usuario"] for user in self.usuarios]:
             dict_respuesta["error"] = "usuario ya existe"
         elif data_json("LARGO_USUARIO_MIN") > len(usuario):
             dict_respuesta["error"] = "usuario muy corto"
@@ -47,11 +47,12 @@ class Logica:
             else:
                 dict_respuesta["admin"] = False
 
-            color = self.colores_idx.pop(0)
-            self.colores_idx.append(color)
+            color_i = self.colores_idx.pop(0)
+            self.colores_idx.append(color_i)
 
-            self.usuarios[id_cliente] = Usuario(usuario, socket_cliente, id_cliente, color)
-            dict_respuesta["usuarios"] = [user.data for user in self.usuarios.values()]
+            self.usuarios.append(Usuario(usuario, socket_cliente,
+                                 id_cliente, self.colores[color_i]))
+            dict_respuesta["usuarios"] = [user.data for user in self.usuarios]
 
         return (dict_respuesta, socket_cliente)
 
