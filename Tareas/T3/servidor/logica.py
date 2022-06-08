@@ -22,10 +22,13 @@ class Logica:
             respuesta, socket_resp = self.validar_login(
                 mensaje["usuario"], socket_cliente, id_cliente)
             self.enviar_mensaje(respuesta, socket_resp)
-            respuesta["comando"] = "actualizar_lista_usuarios"  # Actualizar comando para el resto
-            for user in self.usuarios:
-                if user.id != id_cliente:
-                    self.enviar_mensaje(respuesta, user.socket)
+
+            # Actualizar comando para el resto si el usuario fue aceptado
+            if respuesta["estado"] == "aceptado":
+                respuesta["comando"] = "actualizar_lista_usuarios"
+                for user in self.usuarios:
+                    if user.id != id_cliente:
+                        self.enviar_mensaje(respuesta, user.socket)
 
     def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> tuple:
         dict_respuesta = {"comando": "respuesta_validacion_login"}
