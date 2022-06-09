@@ -15,16 +15,24 @@ class ListaPasillos:
     def __init__(self, primer_pasillo):
         self.primer_pasillo = primer_pasillo
 
-    def __iter__(self, primer_pasillo):
-        # Completar
-        pass
+    def __iter__(self):
+        return IteradorPasillos(self.primer_pasillo)
 
 
 class IteradorPasillos:
     def __init__(self, primer_pasillo):
-        # Completar
-        pass
-    # Completar
+        self.pasillo = primer_pasillo
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.pasillo == None:
+            raise StopIteration("Final de los pasillos")
+        else:
+            valor = self.pasillo
+            self.pasillo = self.pasillo.siguiente
+            return valor
 
 
 class Supermercado:
@@ -43,5 +51,4 @@ class Supermercado:
         return False
 
     def pasillos_a_recorrer(self, ingredientes_platos):
-        # Completar
-        pass
+        return filter(lambda x: self.pasillo_tiene_ingredientes(x, ingredientes_platos), self.pasillos)
