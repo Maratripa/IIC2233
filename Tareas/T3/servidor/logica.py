@@ -19,8 +19,8 @@ class Logica:
             return {}
 
         if comando == "validar_login":
-            respuesta, socket_resp = self.validar_login(
-                mensaje["usuario"], socket_cliente, id_cliente)
+            respuesta, socket_resp = self.validar_login(mensaje["usuario"], socket_cliente,
+                                                        id_cliente)
             self.enviar_mensaje(respuesta, socket_resp)
 
             # Actualizar comando para el resto si el usuario fue aceptado
@@ -29,6 +29,19 @@ class Logica:
                 for user in self.usuarios:
                     if user.id != id_cliente:
                         self.enviar_mensaje(respuesta, user.socket)
+
+        elif comando == "iniciar_partida":
+            respuesta = {"comando": "repuesta_iniciar_partida"}
+            if not (data_json("MINIMO_JUGADORES") <= len(mensaje["usuarios"])) and (
+                    len(mensaje["usuarios"]) <= data_json("MAXIMO_JUGADORES")):
+                respuesta["estado"] = "rechazado"
+                respuesta["error"] = "numero de usuarios no valido"
+            else:
+                respuesta["estado"] = "aceptado"
+                respuesta["usuarios"] = mensaje["usuarios"]
+
+            for user in self.usuarios:
+                self.enviar_mensaje(respuesta, user.socket)
 
     def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> tuple:
         dict_respuesta = {"comando": "respuesta_validacion_login"}
