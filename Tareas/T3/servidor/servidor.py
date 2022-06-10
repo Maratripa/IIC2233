@@ -2,6 +2,7 @@ import json
 import socket
 from threading import Thread
 from logica import Logica
+from utils import encriptar_mensaje, desencriptar_mensaje
 
 
 class Servidor:
@@ -68,7 +69,7 @@ class Servidor:
         if not mensaje:
             raise ConnectionError("ERROR: Could not read message")
 
-        mensaje_decodificado = self.decodificar_mensaje(mensaje)
+        mensaje_decodificado = self.decodificar_mensaje(bytes(mensaje))
 
         return mensaje_decodificado
 
@@ -86,7 +87,7 @@ class Servidor:
         mensaje_json = json.dumps(mensaje)
         mensaje_bytes = mensaje_json.encode("utf-8")
 
-        mensaje_encriptado = mensaje_bytes  # TODO
+        mensaje_encriptado = encriptar_mensaje(mensaje_bytes)
         bloques = []
 
         while len(mensaje_encriptado) > 0:
@@ -98,7 +99,9 @@ class Servidor:
         return bloques
 
     def decodificar_mensaje(self, mensaje_bytes: bytes) -> dict:
-        mensaje_json = mensaje_bytes.decode("utf-8")
+        mensaje_desencriptado = desencriptar_mensaje(mensaje_bytes)
+
+        mensaje_json = mensaje_desencriptado.decode("utf-8")
         mensaje = json.loads(mensaje_json)
 
         return mensaje

@@ -3,6 +3,7 @@ import socket
 import threading
 
 from backend.interfaz import Interfaz
+from utils import desencriptar_mensaje, encriptar_mensaje
 
 
 class Cliente:
@@ -68,7 +69,7 @@ class Cliente:
         if not mensaje:
             raise ConnectionError("ERROR: Could not read message")
 
-        mensaje_decodificado = self.decodificar_mensaje(mensaje)
+        mensaje_decodificado = self.decodificar_mensaje(bytes(mensaje))
 
         return mensaje_decodificado
 
@@ -77,7 +78,7 @@ class Cliente:
         mensaje_json = json.dumps(mensaje)
         mensaje_bytes = mensaje_json.encode("utf-8")
 
-        mensaje_encriptado = mensaje_bytes  # TODO
+        mensaje_encriptado = encriptar_mensaje(mensaje_bytes)
         bloques = []
 
         while len(mensaje_encriptado) > 0:
@@ -89,7 +90,9 @@ class Cliente:
         return bloques
 
     def decodificar_mensaje(self, mensaje_bytes: bytes) -> dict:
-        mensaje_json = mensaje_bytes.decode("utf-8")
+        mensaje_desencriptado = desencriptar_mensaje(mensaje_bytes)
+
+        mensaje_json = mensaje_desencriptado.decode("utf-8")
         mensaje = json.loads(mensaje_json)
 
         return mensaje
