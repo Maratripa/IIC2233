@@ -10,6 +10,8 @@ from utils import data_json
 
 
 class VentanaEspera(QWidget):
+    #                               (users)
+    senal_iniciar_juego = pyqtSignal(dict)
 
     def __init__(self):
         super().__init__()
@@ -51,6 +53,7 @@ class VentanaEspera(QWidget):
 
         # Boton iniciar partida
         self.boton_jugar = QPushButton("Iniciar Partida", self)
+        self.boton_jugar.clicked.connect(self.iniciar_juego)
         self.boton_jugar.setEnabled(False)  # Boton desabilitado por default
 
         # HL titular
@@ -112,7 +115,19 @@ class VentanaEspera(QWidget):
         if self.admin and len(usuarios) >= data_json("MINIMO_JUGADORES"):
             self.boton_jugar.setEnabled(True)
 
+        self.usuarios = usuarios
+
         self.repaint()
+
+    def iniciar_juego(self):
+        mensaje = {
+            "comando": "iniciar_partida",
+            "usuarios": self.usuarios
+        }
+        self.senal_iniciar_juego.emit(mensaje)
 
     def mostrar(self):
         self.show()
+
+    def esconder(self):
+        self.hide()
