@@ -10,7 +10,7 @@ from utils import data_json
 
 
 class VentanaInicio(QWidget):
-
+    #                                (user)
     senal_enviar_usuario = pyqtSignal(dict)
 
     def __init__(self):
