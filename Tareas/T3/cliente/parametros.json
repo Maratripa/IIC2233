@@ -8,5 +8,7 @@
 
     "MINIMO_JUGADORES": 2,
 
-    "RUTA_SPRITES": ["frontend", "Sprites"]
+    "RUTA_SPRITES": ["frontend", "Sprites"],
+
+    "TAMANO_DADO": 60
 }
