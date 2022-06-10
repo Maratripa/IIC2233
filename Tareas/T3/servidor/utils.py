@@ -106,7 +106,6 @@ def desencriptar_mensaje(mensaje_bytes: bytes) -> bytes:
     mensaje = []
     totlen = len(A) + len(B)
     iters = l
-    i = l - 1
     while len(mensaje) < totlen:
         etapa = iters % 6
         if etapa in {1, 3, 4}:
@@ -114,7 +113,6 @@ def desencriptar_mensaje(mensaje_bytes: bytes) -> bytes:
         else:
             mensaje.append(B.pop(-1))
 
-        i -= 1
         iters -= 1
 
     return bytes(reversed(mensaje))
