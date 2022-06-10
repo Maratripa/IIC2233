@@ -1,5 +1,6 @@
 import json
 from os import path
+from functools import cache
 
 
 def data_json(llave):
@@ -12,6 +13,7 @@ def data_json(llave):
 
 
 def suma_centro(array: list) -> int:
+    """Obtiene la suma de los bytes centrales"""
     l = len(array)
 
     if l == 1:
@@ -25,7 +27,9 @@ def suma_centro(array: list) -> int:
     return suma
 
 
-def encriptar_mensaje(mensaje_bytes: bytes) -> bytearray:
+@cache  # No encriptar el mismo mensaje muchas veces
+def encriptar_mensaje(mensaje_bytes: bytes) -> bytes:
+    """Encriptar el mensaje"""
     A = []
     B = []
     j = 0
@@ -65,12 +69,14 @@ def encriptar_mensaje(mensaje_bytes: bytes) -> bytearray:
         mensaje.extend(bytes(B))
         mensaje.extend(bytes(A))
 
-    return mensaje
+    return bytes(mensaje)
 
 
+@cache  # No desencriptar el mismo mensaje muchas veces
 def desencriptar_mensaje(mensaje_bytes: bytes) -> bytes:
+    """Desencriptar el mensaje"""
     n = mensaje_bytes[0]
-    mensaje_bytes = mensaje_bytes[1:]
+    mensaje_bytes = bytearray(mensaje_bytes[1:])
 
     l = len(mensaje_bytes)
 
