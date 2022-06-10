@@ -1,3 +1,4 @@
+from os import path
 from PyQt5.QtWidgets import (QWidget, QApplication, QLabel, QPushButton,
                              QVBoxLayout, QHBoxLayout)
 from PyQt5.QtGui import QPixmap
@@ -17,22 +18,26 @@ class VentanaJuego(QWidget):
                          ancho_ventana,  alto_ventana)
         self.setWindowTitle("DCCasillas")
 
+        ruta_sprites = path.join(*data_json("RUTA_SPRITES"))
+        ruta_fichas_simples = path.join(ruta_sprites, "Fichas", "Simples")
+        ruta_fichas_dobles = path.join(ruta_sprites, "Fichas", "Dobles")
+
         self.pixmaps = {
-            "tablero":  QPixmap("Sprites/Juego/tablero.png"),  # TODO
-            "dado":     QPixmap("Spreites/Logos/dado.png"),  # TODO
-            "estrella": QPixmap("Sprites/Juego/estrella.png"),
-            "logo":     QPixmap("Sprites/Logos/logo.png")
+            "tablero":  QPixmap(path.join(ruta_sprites, "Juego", "tablero.png")),
+            "dado":     QPixmap(path.join(ruta_sprites, "Logos", "dado.png")),
+            "estrella": QPixmap(path.join(ruta_sprites, "Juego", "estrella.png")),
+            "logo":     QPixmap(path.join(ruta_sprites, "Logos", "logo.png"))
         }
 
         self.fichas = {
-            "rojo":             QPixmap("Sprites/Fichas/Simples/ficha-roja.png"),
-            "amarillo":         QPixmap("Sprites/Fichas/Simples/ficha-amarilla.png"),
-            "verde":            QPixmap("Sprites/Fichas/Simples/ficha-verde.png"),
-            "azul":             QPixmap("Sprites/Fichas/Simples/ficha-azul.png"),
-            "rojo_doble":       QPixmap("Sprites/Fichas/Dobles/fichas-rojas.png"),
-            "amarillo_doble":   QPixmap("Sprites/Fichas/Dobles/fichas-amarillas.png"),
-            "verde_doble":      QPixmap("Sprites/Fichas/Dobles/fichas-verdes.png"),
-            "azul_doble":       QPixmap("Sprites/Fichas/Dobles/fichas-azules.png")
+            "rojo":             QPixmap(path.join(ruta_fichas_simples, "ficha-roja.png")),
+            "amarillo":         QPixmap(path.join(ruta_fichas_simples, "ficha-amarilla.png")),
+            "verde":            QPixmap(path.join(ruta_fichas_simples, "ficha-verde.png")),
+            "azul":             QPixmap(path.join(ruta_fichas_simples, "ficha-azul.png")),
+            "rojo_doble":       QPixmap(path.join(ruta_fichas_dobles, "fichas-rojas.png")),
+            "amarillo_doble":   QPixmap(path.join(ruta_fichas_dobles, "fichas-amarillas.png")),
+            "verde_doble":      QPixmap(path.join(ruta_fichas_dobles, "fichas-verdes.png")),
+            "azul_doble":       QPixmap(path.join(ruta_fichas_dobles, "fichas-azules.png"))
         }
 
         self.tarjetas_usuarios = []
@@ -42,16 +47,18 @@ class VentanaJuego(QWidget):
         self.tablero.setPixmap(self.pixmaps["tablero"])
 
         self.dado = QLabel(self)
+        self.dado.setFixedSize(data_json("TAMANO_DADO"), data_json("TAMANO_DADO"))
         self.dado.setPixmap(self.pixmaps["dado"])
+        self.dado.setScaledContents(True)
 
-        self.label_numero = QLabel("", self)
+        self.label_numero = QLabel("Número obtenido: ?", self)
 
         self.boton_dado = QPushButton("Tirar dado", self)
 
         self.label_turno = QLabel("Jugador de turno: ?", self)
 
         # VL texto y boton dado
-        vl1 = QVBoxLayout(self)
+        vl1 = QVBoxLayout()
         vl1.addWidget(self.boton_dado)
         vl1.addWidget(self.label_numero)
 
