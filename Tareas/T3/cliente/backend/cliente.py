@@ -40,8 +40,8 @@ class Cliente:
         while self.conectado:
             try:
                 mensaje = self.recibir_mensaje()
-                self.log(mensaje.__str__())
-                respuesta = self.interfaz.procesar_mensaje(mensaje)
+                # self.log(mensaje.__str__())
+                self.interfaz.procesar_mensaje(mensaje)
             except ConnectionError as e:
                 self.log(e.__str__())
                 return
