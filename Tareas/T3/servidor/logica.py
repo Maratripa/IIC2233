@@ -82,10 +82,13 @@ class Logica:
         jugador_actual = self.usuarios[self.turno % len(self.usuarios)]
         lanzamiento = random.randint(*data_json("RANGO_DADO"))
 
+        log(f"El jugador {jugador_actual.data['usuario']} ha lanzado el numero {lanzamiento}")
+
         self.turno += 1
         respuesta = {
             "comando": "actualizar_juego",
             "en_turno": True,
+            "num_dado": lanzamiento
         }
         jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
         self.enviar_mensaje(respuesta, jugador_nuevo.socket)
