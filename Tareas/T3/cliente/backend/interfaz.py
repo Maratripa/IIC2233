@@ -12,8 +12,8 @@ class Interfaz(QObject):
     senal_actualizar_lista_usuarios = pyqtSignal(list)
     #                                 (users)
     senal_iniciar_partida = pyqtSignal(list)
-    #                              (en_turno, usuarios)
-    senal_actualizar_juego = pyqtSignal(bool, list)
+    #                                  (mensaje)
+    senal_actualizar_juego = pyqtSignal(dict)
 
     def __init__(self, parent):
         super().__init__()
@@ -56,4 +56,4 @@ class Interfaz(QObject):
             else:
                 print("ERROR FATAL")
         elif comando == "actualizar_juego":
-            self.senal_actualizar_juego.emit(mensaje["en_turno"], [])
+            self.senal_actualizar_juego.emit(mensaje)
