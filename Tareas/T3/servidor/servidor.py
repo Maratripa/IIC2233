@@ -2,7 +2,7 @@ import json
 import socket
 from threading import Thread
 from logica import Logica
-from utils import encriptar_mensaje, desencriptar_mensaje
+from utils import encriptar_mensaje, desencriptar_mensaje, log
 
 
 class Servidor:
@@ -15,8 +15,8 @@ class Servidor:
 
         self.logica = Logica(self)
 
-        self.log("".center(80, '-'))
-        self.log("Inicializando servidor...")
+        log("".center(80, '-'))
+        log("Inicializando servidor...")
         self.iniciar_servidor()
 
     def iniciar_servidor(self):
@@ -25,7 +25,7 @@ class Servidor:
         self.socket_servidor.listen()
         self.conectado = True
 
-        self.log("Host: %s | Port: %d" % (self.host, self.port))
+        log(f"Host: {self.host} | Port: {self.port}")
         self.comenzar_a_aceptar()
 
     def comenzar_a_aceptar(self):
@@ -45,11 +45,11 @@ class Servidor:
                 return
 
     def escuchar_cliente(self, id_cliente: int, socket_cliente: socket.socket):
-        self.log("Comenzando a escuchar al cliente %d..." % id_cliente)
+        log(f"EVENTO: Comenzando a escuchar al cliente {id_cliente}...")
         while True:
             try:
                 mensaje = self.recibir_mensaje(socket_cliente)
-                self.log(mensaje.__str__())
+                # self.log(mensaje.__str__())
                 self.logica.procesar_mensaje(mensaje, socket_cliente, id_cliente)
             except ConnectionError:
                 self.eliminar_cliente(id_cliente, socket_cliente)
@@ -67,7 +67,7 @@ class Servidor:
             mensaje.extend(socket_cliente.recv(22))
 
         if not mensaje:
-            raise ConnectionError("ERROR: Could not read message")
+            raise ConnectionError("ERROR: No se pudo leer el mensaje")
 
         mensaje_decodificado = self.decodificar_mensaje(bytes(mensaje))
 
@@ -107,10 +107,6 @@ class Servidor:
         return mensaje
 
     def eliminar_cliente(self, id_cliente: int, socket_cliente: socket.socket):
-        self.log("Borrando socket del cliente %d..." % id_cliente)
+        log(f"EVENTO: Borrando socket del cliente {id_cliente}...")
         if not self.logica.eliminar_cliente(id_cliente):
             socket_cliente.close()  # Eliminar si no paso la ventana de inicio
-
-    def log(self, mensaje):
-        """Imprime un mensaje en consola"""
-        print("|" + mensaje.center(80, " ") + "|")
