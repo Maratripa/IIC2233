@@ -9,9 +9,8 @@ class Logica:
         self.usuarios = []
         self.turno = 0
 
-        self.colores = ("rojo", "amarillo", "azul", "verde")
-        self.colores_idx = [0, 1, 2, 3]
-        random.shuffle(self.colores_idx)
+        self.colores = ["rojo", "amarillo", "azul", "verde"]
+        random.shuffle(self.colores)
 
     def procesar_mensaje(self, mensaje: dict, socket_cliente, id_cliente: int) -> None:
         try:
@@ -20,9 +19,9 @@ class Logica:
             return {}
 
         if comando == "validar_login":
-            respuesta, socket_resp = self.validar_login(mensaje["usuario"], socket_cliente,
-                                                        id_cliente)
-            self.enviar_mensaje(respuesta, socket_resp)
+            respuesta = self.validar_login(mensaje["usuario"], socket_cliente,
+                                           id_cliente)
+            self.enviar_mensaje(respuesta, socket_cliente)
 
             # Actualizar comando para el resto si el usuario fue aceptado
             if respuesta["estado"] == "aceptado":
@@ -44,12 +43,13 @@ class Logica:
             for user in self.usuarios:
                 self.enviar_mensaje(respuesta, user.socket)
 
-            self.actualizar_juego()
+            if respuesta["estado"] == "aceptado":
+                self.iniciar_juego()
 
         elif comando == "tirar_dado":
-            pass
+            self.actualizar_juego()
 
-    def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> tuple:
+    def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> dict:
         dict_respuesta = {"comando": "respuesta_validacion_login"}
         dict_respuesta["estado"] = "rechazado"
         if usuario in [user.data["usuario"] for user in self.usuarios]:
@@ -69,20 +69,37 @@ class Logica:
             else:
                 dict_respuesta["admin"] = False
 
-            color_i = self.colores_idx.pop(0)
-            self.colores_idx.append(color_i)
+            color = self.colores.pop(0)
+            self.colores.append(color)
 
             self.usuarios.append(Usuario(usuario, socket_cliente,
-                                 id_cliente, self.colores[color_i]))
+                                 id_cliente, color))
             dict_respuesta["usuarios"] = [user.data for user in self.usuarios]
 
-        return (dict_respuesta, socket_cliente)
+        return dict_respuesta
+
+    def iniciar_juego(self):
+        self.turno = 0
+        log(f"EVENTO: Comienza la partida con {len(self.usuarios)} jugadores")
+        for user in self.usuarios:
+            log(f"EVENTO: {user.data['usuario']} se une a la partida")
+
+        respuesta = {
+            "comando": "actualizar_juego",
+            "en_turno": True,
+            "num_dado": '?'
+        }
+        self.enviar_mensaje(respuesta, self.usuarios[0].socket)
+        respuesta["en_turno"] = False
+        for user in self.usuarios:
+            if user != self.usuarios[0]:
+                self.enviar_mensaje(respuesta, user.socket)
 
     def actualizar_juego(self):
-        jugador_actual = self.usuarios[self.turno % len(self.usuarios)]
+        actual = self.usuarios[self.turno % len(self.usuarios)]
         lanzamiento = random.randint(*data_json("RANGO_DADO"))
 
-        log(f"El jugador {jugador_actual.data['usuario']} ha lanzado el numero {lanzamiento}")
+        log(f"EVENTO: El jugador {actual.data['usuario']} ha lanzado el numero {lanzamiento}")
 
         self.turno += 1
         respuesta = {
@@ -107,7 +124,13 @@ class Logica:
                 idx = i
 
         try:
+            color = self.usuarios[idx].data['color']
+            self.colores.insert(0, color)
             self.usuarios.pop(idx).socket.close()
+            for user in self.usuarios:
+                self.enviar_mensaje({"comando": "actualizar_lista_usuarios",
+                                     "usuarios": [user.data for user in self.usuarios]},
+                                    user.socket)
             return True
         except TypeError:
             return False
