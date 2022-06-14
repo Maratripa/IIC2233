@@ -12,6 +12,8 @@ class Interfaz(QObject):
     senal_actualizar_lista_usuarios = pyqtSignal(list)
     #                                 (users)
     senal_iniciar_partida = pyqtSignal(list)
+    #                              (en_turno, usuarios)
+    senal_actualizar_juego = pyqtSignal(bool, list)
 
     def __init__(self, parent):
         super().__init__()
@@ -23,10 +25,12 @@ class Interfaz(QObject):
         #  CONEXIONES
         self.ventana_inicio.senal_enviar_usuario.connect(parent.enviar_mensaje)
         self.ventana_espera.senal_iniciar_juego.connect(parent.enviar_mensaje)
+        self.ventana_juego.senal_tirar_dado.connect(parent.enviar_mensaje)
 
         self.senal_cargar_pantalla_espera.connect(self.ventana_espera.cargar_pantalla)
         self.senal_actualizar_lista_usuarios.connect(self.ventana_espera.cargar_usuarios)
         self.senal_iniciar_partida.connect(self.ventana_juego.init_gui)
+        self.senal_actualizar_juego.connect(self.ventana_juego.actualizar_juego)
 
     def mostrar_ventana_inicio(self):
         self.ventana_inicio.mostrar()
@@ -41,7 +45,6 @@ class Interfaz(QObject):
             if mensaje["estado"] == "aceptado":
                 self.ventana_inicio.esconder()
                 self.senal_cargar_pantalla_espera.emit(mensaje["admin"], mensaje["usuarios"])
-                print("MOSTRAR VENTANA DE ESPERA")
             else:
                 self.ventana_inicio.error_usuario(mensaje["error"])
         elif comando == "actualizar_lista_usuarios":
@@ -52,3 +55,5 @@ class Interfaz(QObject):
                 self.senal_iniciar_partida.emit(mensaje["usuarios"])
             else:
                 print("ERROR FATAL")
+        elif comando == "actualizar_juego":
+            self.senal_actualizar_juego.emit(mensaje["en_turno"], [])
