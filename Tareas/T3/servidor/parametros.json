@@ -5,5 +5,7 @@
     "LARGO_USUARIO_MAX": 10,
 
     "MINIMO_JUGADORES": 2,
-    "MAXIMO_JUGADORES": 4
+    "MAXIMO_JUGADORES": 4,
+
+    "RANGO_DADO": [1, 3]
 }
