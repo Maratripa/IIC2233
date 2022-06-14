@@ -12,6 +12,11 @@ def data_json(llave):
     return valor
 
 
+def log(mensaje: str):
+    """Imprime un mensaje en consola"""
+    print("|" + mensaje.center(80, " ") + "|")
+
+
 def suma_centro(array: list) -> int:
     """Obtiene la suma de los bytes centrales"""
     l = len(array)

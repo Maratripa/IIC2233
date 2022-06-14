@@ -1,6 +1,6 @@
 import sys
 from servidor import Servidor
-from utils import data_json
+from utils import data_json, log
 
 if __name__ == "__main__":
     HOST = data_json("HOST")
@@ -9,8 +9,8 @@ if __name__ == "__main__":
 
     try:
         while True:
-            input('|' + "[Presione Ctrl+c para cerrar]".center(80, '-') + '|' + '\n')
+            input('|' + "[Presione Ctrl+c para cerrar]".center(80, '-') + '|' + '\n\n')
     except KeyboardInterrupt:
-        print("\nCerrando servidor...\n".center(80, ' '))
+        log("\nCerrando servidor...\n")
         servidor.socket_servidor.close()
         sys.exit(0)
