@@ -6,6 +6,9 @@
     "ALTO_VENTANA": 600,
     "POS_VENTANA": [400, 200],
 
+    "ANCHO_VENTANA_JUEGO": 800,
+    "ALTO_VENTANA_JUEGO": 700,
+
     "MINIMO_JUGADORES": 2,
 
     "RUTA_SPRITES": ["frontend", "Sprites"],
