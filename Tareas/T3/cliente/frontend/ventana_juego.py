@@ -1,17 +1,21 @@
 from os import path
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QWidget, QApplication, QLabel, QPushButton,
-                             QVBoxLayout, QHBoxLayout)
+                             QVBoxLayout, QHBoxLayout, QFrame)
 from PyQt5.QtGui import QPixmap
 
 from utils import data_json
 
 
 class VentanaJuego(QWidget):
+    #                            (comando)
+    senal_tirar_dado = pyqtSignal(dict)
+
     def __init__(self):
         super().__init__()
 
-        ancho_ventana = data_json("ANCHO_VENTANA")
-        alto_ventana = data_json("ALTO_VENTANA")
+        ancho_ventana = data_json("ANCHO_VENTANA_JUEGO")
+        alto_ventana = data_json("ALTO_VENTANA_JUEGO")
         pos_ventana = data_json("POS_VENTANA")
 
         self.setGeometry(pos_ventana[0], pos_ventana[1],
@@ -54,6 +58,8 @@ class VentanaJuego(QWidget):
         self.label_numero = QLabel("Número obtenido: ?", self)
 
         self.boton_dado = QPushButton("Tirar dado", self)
+        self.boton_dado.setEnabled(False)  # Boton desabilitado por default
+        self.boton_dado.clicked.connect(self.tirar_dado)
 
         self.label_turno = QLabel("Jugador de turno: ?", self)
 
@@ -67,7 +73,7 @@ class VentanaJuego(QWidget):
         hl1.addStretch(1)
         hl1.addWidget(self.dado)
         hl1.addLayout(vl1)
-        hl1.addStretch(1)
+        hl1.addStretch(3)
 
         # VL dado y tablero
         vl2 = QVBoxLayout()
@@ -80,7 +86,9 @@ class VentanaJuego(QWidget):
         # VL usuarios
         self.vl3 = QVBoxLayout()
         self.vl3.addWidget(self.label_turno)
-        self.cargar_usuarios(usuarios)
+        self.vl3.addStretch(1)
+        self.vl3.addLayout(self.cargar_usuarios(usuarios))
+        self.vl3.addStretch(1)
 
         # HL global
         hl2 = QHBoxLayout()
@@ -91,10 +99,13 @@ class VentanaJuego(QWidget):
 
         self.mostrar()
 
-    def cargar_usuarios(self, usuarios: list):
+    def cargar_usuarios(self, usuarios: list) -> QVBoxLayout:
         num = self.vl3.count()
 
-        for user in usuarios[num - 1:]:
+        vl = QVBoxLayout()
+        vl.setSpacing(10)
+
+        for user in usuarios[num - 2:]:
             icono = QLabel(self)
             icono.setPixmap(self.fichas[user["color"]])
 
@@ -109,7 +120,18 @@ class VentanaJuego(QWidget):
                                      label_en_base, label_en_color, label_en_victoria)
 
             self.tarjetas_usuarios.append(tarjeta)
-            self.vl3.addLayout(tarjeta.layout())
+            vl.addWidget(tarjeta.layout())
+
+        return vl
+
+    def actualizar_juego(self, en_turno: bool, info: list):
+        if en_turno:
+            self.boton_dado.setEnabled(True)
+        else:
+            self.boton_dado.setEnabled(False)
+
+    def tirar_dado(self):
+        self.senal_tirar_dado.emit({"comando": "tirar_dado"})
 
     def mostrar(self):
         self.show()
@@ -125,19 +147,32 @@ class TarjetaUsuario:
         self.label_fichas_color = fichas_color
         self.label_fichas_victoria = victoria
 
-    def layout(self) -> QHBoxLayout:
+    def layout(self) -> QFrame:
         # VL datos
         vl1 = QVBoxLayout()
-        vl1.addWidget(self.label_usuario)
+        vl1.addStretch(1)
         vl1.addWidget(self.label_turno)
         vl1.addWidget(self.label_fichas_base)
         vl1.addWidget(self.label_fichas_color)
         vl1.addWidget(self.label_fichas_victoria)
+        vl1.addStretch(1)
+
+        # VL icono y usuario
+        vl2 = QVBoxLayout()
+        vl2.addStretch(1)
+        vl2.addWidget(self.label_icono)
+        vl2.addWidget(self.label_usuario)
+        vl2.addStretch(1)
 
         # HL tarjeta
         hl1 = QHBoxLayout()
-        hl1.addWidget(self.label_icono)
+        hl1.addLayout(vl2)
         hl1.addLayout(vl1)
         hl1.addStretch(1)
 
-        return hl1
+        frame = QFrame(self.parent)
+        frame.setLayout(hl1)
+        frame.setStyleSheet("border: 2 solid red;")
+        frame.setObjectName("tarjeta-usuario-juego")
+
+        return frame
