@@ -26,7 +26,7 @@ class VentanaEspera(QWidget):
 
         self.ruta_spites = path.join(*data_json("RUTA_SPRITES"))
 
-        self.usuarios = []
+        self.frames_usuarios = []
 
         # Diccionario pixmaps iconos
         self.iconos = {
@@ -98,7 +98,7 @@ class VentanaEspera(QWidget):
         # Quitar todas las tarjetas actuales
         # numero = self.vl1.count()
 
-        for frame in self.usuarios:
+        for frame in self.frames_usuarios:
             frame.hide()
             frame.setParent(None)
 
@@ -119,11 +119,12 @@ class VentanaEspera(QWidget):
             frame = QFrame(self)
             frame.setLayout(hl)
             self.vl1.addWidget(frame)
-            self.usuarios.append(frame)
+            self.frames_usuarios.append(frame)
 
         if self.admin and len(usuarios) >= data_json("MINIMO_JUGADORES"):
             self.boton_jugar.setEnabled(True)
 
+        self.usuarios = usuarios
         self.repaint()
 
     def iniciar_juego(self):
