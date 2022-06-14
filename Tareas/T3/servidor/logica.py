@@ -1,5 +1,5 @@
 import random
-from utils import data_json
+from utils import data_json, log
 
 
 class Logica:
@@ -7,6 +7,7 @@ class Logica:
         self.parent = parent
 
         self.usuarios = []
+        self.turno = 0
 
         self.colores = ("rojo", "amarillo", "azul", "verde")
         self.colores_idx = [0, 1, 2, 3]
@@ -43,6 +44,11 @@ class Logica:
             for user in self.usuarios:
                 self.enviar_mensaje(respuesta, user.socket)
 
+            self.actualizar_juego()
+
+        elif comando == "tirar_dado":
+            pass
+
     def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> tuple:
         dict_respuesta = {"comando": "respuesta_validacion_login"}
         dict_respuesta["estado"] = "rechazado"
@@ -71,6 +77,22 @@ class Logica:
             dict_respuesta["usuarios"] = [user.data for user in self.usuarios]
 
         return (dict_respuesta, socket_cliente)
+
+    def actualizar_juego(self):
+        jugador_actual = self.usuarios[self.turno % len(self.usuarios)]
+        lanzamiento = random.randint(*data_json("RANGO_DADO"))
+
+        self.turno += 1
+        respuesta = {
+            "comando": "actualizar_juego",
+            "en_turno": True,
+        }
+        jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
+        self.enviar_mensaje(respuesta, jugador_nuevo.socket)
+        respuesta["en_turno"] = False
+        for user in self.usuarios:
+            if user != jugador_nuevo:
+                self.enviar_mensaje(respuesta, user.socket)
 
     def enviar_mensaje(self, mensaje: dict, socket_cliente) -> bool:
         self.parent.enviar_mensaje(mensaje, socket_cliente)
