@@ -87,6 +87,7 @@ class Logica:
         respuesta = {
             "comando": "actualizar_juego",
             "en_turno": True,
+            "nombre_en_turno": self.usuarios[0].data["usuario"],
             "num_dado": '?'
         }
         self.enviar_mensaje(respuesta, self.usuarios[0].socket)
@@ -102,12 +103,13 @@ class Logica:
         log(f"EVENTO: El jugador {actual.data['usuario']} ha lanzado el numero {lanzamiento}")
 
         self.turno += 1
+        jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
         respuesta = {
             "comando": "actualizar_juego",
             "en_turno": True,
+            "nombre_en_turno": jugador_nuevo.data["usuario"],
             "num_dado": lanzamiento
         }
-        jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
         self.enviar_mensaje(respuesta, jugador_nuevo.socket)
         respuesta["en_turno"] = False
         for user in self.usuarios:
