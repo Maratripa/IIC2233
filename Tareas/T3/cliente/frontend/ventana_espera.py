@@ -4,7 +4,7 @@ from os import path
 
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton,
-                             QHBoxLayout, QVBoxLayout)
+                             QHBoxLayout, QVBoxLayout, QFrame)
 from PyQt5.QtGui import QPixmap
 from utils import data_json
 
@@ -25,6 +25,8 @@ class VentanaEspera(QWidget):
         self.setWindowTitle("DCCasillas")
 
         self.ruta_spites = path.join(*data_json("RUTA_SPRITES"))
+
+        self.usuarios = []
 
         # Diccionario pixmaps iconos
         self.iconos = {
@@ -79,24 +81,28 @@ class VentanaEspera(QWidget):
         hl3.addStretch(1)
 
         # VL global
-        vl2 = QVBoxLayout()
-        vl2.addStretch(1)
-        vl2.addLayout(hl1)
-        vl2.addStretch(1)
-        vl2.addLayout(hl2)
-        vl2.addStretch(1)
-        vl2.addLayout(hl3)
-        vl2.addStretch(1)
+        self.vl2 = QVBoxLayout()
+        self.vl2.addStretch(1)
+        self.vl2.addLayout(hl1)
+        self.vl2.addStretch(1)
+        self.vl2.addLayout(hl2)
+        self.vl2.addStretch(1)
+        self.vl2.addLayout(hl3)
+        self.vl2.addStretch(1)
 
-        self.setLayout(vl2)
+        self.setLayout(self.vl2)
 
         self.mostrar()
 
     def cargar_usuarios(self, usuarios: list) -> int:
         # Quitar todas las tarjetas actuales
-        numero = self.vl1.count()
+        # numero = self.vl1.count()
 
-        for user in usuarios[numero:]:
+        for frame in self.usuarios:
+            frame.hide()
+            frame.setParent(None)
+
+        for user in usuarios:
             label_nombre = QLabel(user["usuario"], self)
             label_color = QLabel(user["color"], self)
             label_icono = QLabel(self)
@@ -110,12 +116,13 @@ class VentanaEspera(QWidget):
             hl.addStretch(1)
             hl.addWidget(label_icono)
 
-            self.vl1.addLayout(hl)
+            frame = QFrame(self)
+            frame.setLayout(hl)
+            self.vl1.addWidget(frame)
+            self.usuarios.append(frame)
 
         if self.admin and len(usuarios) >= data_json("MINIMO_JUGADORES"):
             self.boton_jugar.setEnabled(True)
-
-        self.usuarios = usuarios
 
         self.repaint()
 
