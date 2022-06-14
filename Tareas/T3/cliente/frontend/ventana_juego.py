@@ -55,7 +55,7 @@ class VentanaJuego(QWidget):
         self.dado.setPixmap(self.pixmaps["dado"])
         self.dado.setScaledContents(True)
 
-        self.label_numero = QLabel("Número obtenido: ?", self)
+        self.label_numero = QLabel("Lanzamiento anterior: ?", self)
 
         self.boton_dado = QPushButton("Tirar dado", self)
         self.boton_dado.setEnabled(False)  # Boton desabilitado por default
@@ -124,11 +124,14 @@ class VentanaJuego(QWidget):
 
         return vl
 
-    def actualizar_juego(self, en_turno: bool, info: list):
-        if en_turno:
+    def actualizar_juego(self, info: dict):
+        if info["en_turno"]:
             self.boton_dado.setEnabled(True)
         else:
             self.boton_dado.setEnabled(False)
+
+        self.label_numero.setText(f"Lanzamiento anterior: {info['num_dado']}")
+        self.label_turno.setText(f"Jugador de turno: {info['nombre_en_turno']}")
 
     def tirar_dado(self):
         self.senal_tirar_dado.emit({"comando": "tirar_dado"})
