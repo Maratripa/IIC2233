@@ -84,11 +84,16 @@ class Logica:
         for user in self.usuarios:
             log(f"EVENTO: {user.data['usuario']} se une a la partida")
 
+        posiciones = {}
+        for user in self.usuarios:
+            posiciones[user.data['color']] = user.pos
+
         respuesta = {
             "comando": "actualizar_juego",
             "en_turno": True,
             "nombre_en_turno": self.usuarios[0].data["usuario"],
-            "num_dado": '?'
+            "num_dado": '?',
+            "posiciones": posiciones
         }
         self.enviar_mensaje(respuesta, self.usuarios[0].socket)
         respuesta["en_turno"] = False
@@ -102,13 +107,16 @@ class Logica:
 
         log(f"EVENTO: El jugador {actual.data['usuario']} ha lanzado el numero {lanzamiento}")
 
+        nueva_pos = actual.avanzar_jugador(lanzamiento)
+
         self.turno += 1
         jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
         respuesta = {
             "comando": "actualizar_juego",
             "en_turno": True,
             "nombre_en_turno": jugador_nuevo.data["usuario"],
-            "num_dado": lanzamiento
+            "num_dado": lanzamiento,
+            "posiciones": nueva_pos,
         }
         self.enviar_mensaje(respuesta, jugador_nuevo.socket)
         respuesta["en_turno"] = False
@@ -146,3 +154,39 @@ class Usuario:
             "usuario": usuario,
             "color": color
         }
+
+        self.avanzados = 0
+
+        if color == "azul":
+            self.dir = 0
+            self.pos = [0, 0]
+        elif color == "amarillo":
+            self.dir = 1
+            self.pos = [0, 5]
+        elif color == "verde":
+            self.dir = 2
+            self.pos = [5, 5]
+        elif color == "rojo":
+            self.dir = 3
+            self.pos = [5, 0]
+
+    def avanzar_jugador(self, numero):
+        if self.avanzados + numero < 23:
+            for _ in range(numero):
+                self.cambiar_direccion()
+                if self.dir == 0:
+                    self.pos[1] += 1
+                elif self.dir == 1:
+                    self.pos[0] += 1
+                elif self.dir == 2:
+                    self.pos[1] -= 1
+                elif self.dir == 3:
+                    self.pos[0] -= 1
+
+        return {self.data['color']: self.pos}
+
+    def cambiar_direccion(self):
+        if self.avanzados % 5 == 0 and self.avanzados < 19:
+            self.dir = (self.dir + 1) % 4
+        elif self.avanzados == 19:
+            self.dir = (self.dir + 1) % 4
