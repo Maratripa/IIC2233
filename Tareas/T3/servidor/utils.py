@@ -1,6 +1,5 @@
 import json
 from os import path
-from functools import cache
 
 
 def data_json(llave):
@@ -32,7 +31,6 @@ def suma_centro(array: list) -> int:
     return suma
 
 
-@cache  # No encriptar el mismo mensaje muchas veces
 def encriptar_mensaje(mensaje_bytes: bytes) -> bytes:
     """Encriptar el mensaje"""
     A = []
@@ -77,7 +75,6 @@ def encriptar_mensaje(mensaje_bytes: bytes) -> bytes:
     return bytes(mensaje)
 
 
-@cache  # No desencriptar el mismo mensaje muchas veces
 def desencriptar_mensaje(mensaje_bytes: bytes) -> bytes:
     """Desencriptar el mensaje"""
     n = mensaje_bytes[0]
