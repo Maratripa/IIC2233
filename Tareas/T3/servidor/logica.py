@@ -103,6 +103,29 @@ class Logica:
                 self.enviar_mensaje(respuesta, user.socket)
 
     def actualizar_juego(self):
+        actual = self.usuarios[self.turno % len(self.usuarios)]
+        lanzamiento = random.randint(*data_json("RANGO_DADO"))
+
+        nueva_pos = actual.avanzar_jugador(lanzamiento)
+
+        log(f"EVENTO: El jugador {actual.data['usuario']} ha lanzado el numero {lanzamiento}")
+        log(f"EVENTO: El jugador {actual.data['usuario']} se ha movido a {actual.pos}")
+
+        self.turno += 1
+        jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
+        respuesta = {
+            "comando": "actualizar_juego",
+            "en_turno": True,
+            "nombre_en_turno": jugador_nuevo.data["usuario"],
+            "num_dado": lanzamiento,
+            "posiciones": nueva_pos,
+        }
+        self.enviar_mensaje(respuesta, jugador_nuevo.socket)
+        respuesta["en_turno"] = False
+        for user in self.usuarios:
+            if user != jugador_nuevo:
+                self.enviar_mensaje(respuesta, user.socket)
+
         hay_ganador = False
         ganador = None
         for user in self.usuarios:
@@ -112,34 +135,12 @@ class Logica:
 
         if hay_ganador:
             self.terminar_juego(ganador)
-        else:
-            actual = self.usuarios[self.turno % len(self.usuarios)]
-            lanzamiento = random.randint(*data_json("RANGO_DADO"))
-
-            nueva_pos = actual.avanzar_jugador(lanzamiento)
-
-            log(f"EVENTO: El jugador {actual.data['usuario']} ha lanzado el numero {lanzamiento}")
-            log(f"EVENTO: El jugador {actual.data['usuario']} se ha movido a {actual.pos}")
-
-            self.turno += 1
-            jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
-            respuesta = {
-                "comando": "actualizar_juego",
-                "en_turno": True,
-                "nombre_en_turno": jugador_nuevo.data["usuario"],
-                "num_dado": lanzamiento,
-                "posiciones": nueva_pos,
-            }
-            self.enviar_mensaje(respuesta, jugador_nuevo.socket)
-            respuesta["en_turno"] = False
-            for user in self.usuarios:
-                if user != jugador_nuevo:
-                    self.enviar_mensaje(respuesta, user.socket)
 
     def terminar_juego(self, ganador):
         respuesta = {
             "comando": "terminar_juego",
-            "ganador": ganador.data['usuario']
+            "ganador": ganador.data['usuario'],
+            "usuarios": [user.data for user in self.usuarios]
         }
 
         for user in self.usuarios:
