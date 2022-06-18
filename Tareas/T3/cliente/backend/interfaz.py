@@ -3,6 +3,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from frontend.ventana_inicio import VentanaInicio
 from frontend.ventana_espera import VentanaEspera
 from frontend.ventana_juego import VentanaJuego
+from frontend.ventana_final import VentanaFinal
 
 
 class Interfaz(QObject):
@@ -14,6 +15,8 @@ class Interfaz(QObject):
     senal_iniciar_partida = pyqtSignal(list)
     #                                  (mensaje)
     senal_actualizar_juego = pyqtSignal(dict)
+    #                                   (ganador, users)
+    senal_cargar_pantalla_final = pyqtSignal(str, list)
 
     def __init__(self, parent):
         super().__init__()
@@ -21,6 +24,7 @@ class Interfaz(QObject):
         self.ventana_inicio = VentanaInicio()
         self.ventana_espera = VentanaEspera()
         self.ventana_juego = VentanaJuego()
+        self.ventana_final = VentanaFinal()
 
         #  CONEXIONES
         self.ventana_inicio.senal_enviar_usuario.connect(parent.enviar_mensaje)
@@ -31,6 +35,7 @@ class Interfaz(QObject):
         self.senal_actualizar_lista_usuarios.connect(self.ventana_espera.cargar_usuarios)
         self.senal_iniciar_partida.connect(self.ventana_juego.init_gui)
         self.senal_actualizar_juego.connect(self.ventana_juego.actualizar_juego)
+        self.senal_cargar_pantalla_final.connect(self.ventana_final.init_gui)
 
     def mostrar_ventana_inicio(self):
         self.ventana_inicio.mostrar()
@@ -57,3 +62,6 @@ class Interfaz(QObject):
                 print("ERROR FATAL")
         elif comando == "actualizar_juego":
             self.senal_actualizar_juego.emit(mensaje)
+        elif comando == "terminar_juego":
+            self.ventana_juego.esconder()
+            self.senal_cargar_pantalla_final.emit(mensaje['ganador'], mensaje['usuarios'])
