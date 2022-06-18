@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QWidget, QApplication, QLabel, QPushButton,
                              QVBoxLayout, QHBoxLayout, QFrame)
 from PyQt5.QtGui import QPixmap
 
-from utils import data_json
+from utils import data_json, posicion_ficha
 
 
 class VentanaJuego(QWidget):
@@ -33,7 +33,7 @@ class VentanaJuego(QWidget):
             "logo":     QPixmap(path.join(ruta_sprites, "Logos", "logo.png"))
         }
 
-        self.fichas = {
+        self.pixmap_fichas = {
             "rojo":             QPixmap(path.join(ruta_fichas_simples, "ficha-roja.png")),
             "amarillo":         QPixmap(path.join(ruta_fichas_simples, "ficha-amarilla.png")),
             "verde":            QPixmap(path.join(ruta_fichas_simples, "ficha-verde.png")),
@@ -43,6 +43,8 @@ class VentanaJuego(QWidget):
             "verde_doble":      QPixmap(path.join(ruta_fichas_dobles, "fichas-verdes.png")),
             "azul_doble":       QPixmap(path.join(ruta_fichas_dobles, "fichas-azules.png"))
         }
+
+        self.fichas = {}
 
         self.tarjetas_usuarios = []
 
@@ -83,9 +85,15 @@ class VentanaJuego(QWidget):
         vl2.addLayout(hl1)
         vl2.addStretch(1)
 
+        # HL label turno
+        hl1_1 = QHBoxLayout()
+        hl1_1.addStretch(1)
+        hl1_1.addWidget(self.label_turno)
+        hl1_1.addStretch(1)
+
         # VL usuarios
         self.vl3 = QVBoxLayout()
-        self.vl3.addWidget(self.label_turno)
+        self.vl3.addLayout(hl1_1)
         self.vl3.addStretch(1)
         self.vl3.addLayout(self.cargar_usuarios(usuarios))
         self.vl3.addStretch(1)
@@ -100,14 +108,12 @@ class VentanaJuego(QWidget):
         self.mostrar()
 
     def cargar_usuarios(self, usuarios: list) -> QVBoxLayout:
-        num = self.vl3.count()
-
         vl = QVBoxLayout()
         vl.setSpacing(10)
 
-        for user in usuarios[num - 2:]:
+        for user in usuarios:
             icono = QLabel(self)
-            icono.setPixmap(self.fichas[user["color"]])
+            icono.setPixmap(self.pixmap_fichas[user["color"]])
 
             usuario = user["usuario"]
             label_usuario = QLabel(usuario, self)
@@ -122,6 +128,11 @@ class VentanaJuego(QWidget):
             self.tarjetas_usuarios.append(tarjeta)
             vl.addWidget(tarjeta.layout())
 
+            label_ficha = QLabel(self)
+            label_ficha.setPixmap(self.pixmap_fichas[user['color']])
+
+            self.fichas[user['color']] = label_ficha
+
         return vl
 
     def actualizar_juego(self, info: dict):
@@ -132,6 +143,10 @@ class VentanaJuego(QWidget):
 
         self.label_numero.setText(f"Lanzamiento anterior: {info['num_dado']}")
         self.label_turno.setText(f"Jugador de turno: {info['nombre_en_turno']}")
+
+        for key in info['posiciones']:
+            pos_ficha = posicion_ficha(*info['posiciones'][key])
+            self.fichas[key].move(*pos_ficha)
 
     def tirar_dado(self):
         self.senal_tirar_dado.emit({"comando": "tirar_dado"})
