@@ -119,6 +119,7 @@ class Logica:
             "nombre_en_turno": jugador_nuevo.data["usuario"],
             "num_dado": lanzamiento,
             "posiciones": nueva_pos,
+            "segunda": actual.segunda
         }
         self.enviar_mensaje(respuesta, jugador_nuevo.socket)
         respuesta["en_turno"] = False
@@ -178,19 +179,23 @@ class Usuario:
         }
 
         self.avanzados = 0
+        self.segunda = False
 
         if color == "azul":
-            self.dir = 0
-            self.pos = [0, 0]
+            self.dir_inicial = 0
+            self.pos_inicial = [0, 0]
         elif color == "amarillo":
-            self.dir = 1
-            self.pos = [0, 5]
+            self.dir_inicial = 1
+            self.pos_inicial = [0, 5]
         elif color == "verde":
-            self.dir = 2
-            self.pos = [5, 5]
+            self.dir_inicial = 2
+            self.pos_inicial = [5, 5]
         elif color == "rojo":
-            self.dir = 3
-            self.pos = [5, 0]
+            self.dir_inicial = 3
+            self.pos_inicial = [5, 0]
+        
+        self.pos = [self.pos_inicial[0], self.pos_inicial[1]]
+        self.dir = self.dir_inicial
 
     def avanzar_jugador(self, numero) -> dict:
         if self.avanzados + numero < 23:
@@ -207,6 +212,13 @@ class Usuario:
                 elif self.dir == 3:
                     self.pos[0] -= 1
                 self.avanzados += 1
+            
+            if self.avanzados == 22:
+                if not self.segunda:
+                    self.segunda = True
+                    self.avanzados = 0
+                    self.pos = self.pos_inicial
+                    self.dir = self.dir_inicial
 
         return {self.data['color']: self.pos}
 
