@@ -64,7 +64,13 @@ class Cliente:
 
         for _ in range(num_bloques):
             num_bloque_bytes = self.socket_cliente.recv(4)
-            mensaje.extend(self.socket_cliente.recv(22))
+            completo = int.from_bytes(self.socket_cliente.recv(1), byteorder="big")
+            largo = int.from_bytes(self.socket_cliente.recv(1), byteorder="big")
+
+            if completo:
+                mensaje.extend(self.socket_cliente.recv(20))
+            else:
+                mensaje.extend(self.socket_cliente.recv(largo))
 
         if not mensaje:
             raise ConnectionError("ERROR: Could not read message")
@@ -80,17 +86,25 @@ class Cliente:
 
         mensaje_encriptado = encriptar_mensaje(mensaje_bytes)
         bloques = []
-
+        i = 0
         while len(mensaje_encriptado) > 0:
-            bloque = mensaje_encriptado[:22]
-            num_bloque = len(bloque).to_bytes(4, byteorder="big")
-            bloques.append(num_bloque + bloque)
-            mensaje_encriptado = mensaje_encriptado[22:]
+            bloque = mensaje_encriptado[:20]
+            num_bloque = i.to_bytes(4, byteorder="big")
+            mensaje_encriptado = mensaje_encriptado[20:]
+
+            if len(bloque) < 20:
+                bloques.append(num_bloque + b'\x00' + len(bloque).to_bytes(1, byteorder="big") + bloque)
+            else:
+                bloques.append(num_bloque + b'\x01' + len(bloque).to_bytes(1, byteorder="big") + bloque)
+            
+            i += 1
+
 
         return bloques
 
     def decodificar_mensaje(self, mensaje_bytes: bytes) -> dict:
         mensaje_desencriptado = desencriptar_mensaje(mensaje_bytes)
+        print(mensaje_desencriptado)
 
         mensaje_json = mensaje_desencriptado.decode("utf-8")
         mensaje = json.loads(mensaje_json)
