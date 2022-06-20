@@ -106,7 +106,9 @@ class Logica:
         actual = self.usuarios[self.turno % len(self.usuarios)]
         lanzamiento = random.randint(*data_json("RANGO_DADO"))
 
-        nueva_pos = actual.avanzar_jugador(lanzamiento)
+        actual.avanzar_jugador(lanzamiento)
+
+        self.revisar_colisiones(actual)
 
         log(f"EVENTO: El jugador {actual.data['usuario']} ha lanzado el numero {lanzamiento}")
         log(f"EVENTO: El jugador {actual.data['usuario']} se ha movido a {actual.pos}")
@@ -118,8 +120,8 @@ class Logica:
             "en_turno": True,
             "nombre_en_turno": jugador_nuevo.data["usuario"],
             "num_dado": lanzamiento,
-            "posiciones": nueva_pos,
-            "segunda": actual.segunda
+            "posiciones": {user.data['color']: user.pos for user in self.usuarios},
+            "segunda": {user.data['color']: user.segunda for user in self.usuarios}
         }
         self.enviar_mensaje(respuesta, jugador_nuevo.socket)
         respuesta["en_turno"] = False
@@ -136,6 +138,14 @@ class Logica:
 
         if hay_ganador:
             self.terminar_juego(ganador)
+    
+    def revisar_colisiones(self, jugador_movido):
+        for user in self.usuarios:
+            if user != jugador_movido:
+                if user.pos == jugador_movido.pos:
+                    user.pos = user.pos_inicial[:]
+                    user.dir = user.dir_inicial
+                    user.avanzados = 0
 
     def terminar_juego(self, ganador):
         respuesta = {
@@ -194,10 +204,10 @@ class Usuario:
             self.dir_inicial = 3
             self.pos_inicial = [5, 0]
         
-        self.pos = [self.pos_inicial[0], self.pos_inicial[1]]
+        self.pos = self.pos_inicial[:]
         self.dir = self.dir_inicial
 
-    def avanzar_jugador(self, numero) -> dict:
+    def avanzar_jugador(self, numero):
         if self.avanzados + numero < 23:
             for _ in range(numero):
                 if self.avanzados != 0:
@@ -217,10 +227,8 @@ class Usuario:
                 if not self.segunda:
                     self.segunda = True
                     self.avanzados = 0
-                    self.pos = self.pos_inicial
+                    self.pos = self.pos_inicial[:]
                     self.dir = self.dir_inicial
-
-        return {self.data['color']: self.pos}
 
     def cambiar_direccion(self):
         if self.avanzados % 5 == 0 and self.avanzados < 19:
