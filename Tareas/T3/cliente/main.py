@@ -1,4 +1,5 @@
 import sys
+from os import path
 
 from PyQt5.QtWidgets import QApplication
 from backend.cliente import Cliente
@@ -14,6 +15,9 @@ if __name__ == "__main__":
     PORT = data_json("PORT")
     try:
         app = QApplication(sys.argv)
+
+        with open(path.join("frontend", "style.css"), "r") as f:
+            app.setStyleSheet(f.read())
 
         cliente = Cliente(HOST, PORT)
 

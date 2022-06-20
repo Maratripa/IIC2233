@@ -52,6 +52,7 @@ class VentanaEspera(QWidget):
 
         # Label titular
         self.titular = QLabel("Esperando a iniciar la partida", self)
+        self.titular.setObjectName("titulo")
 
         # Boton iniciar partida
         self.boton_jugar = QPushButton("Iniciar Partida", self)
@@ -110,13 +111,16 @@ class VentanaEspera(QWidget):
 
             # HL tarjeta usuario
             hl = QHBoxLayout()
+            hl.addStretch(1)
             hl.addWidget(label_nombre)
-            hl.addStretch(1)
+            hl.addStretch(2)
             hl.addWidget(label_color)
-            hl.addStretch(1)
+            hl.addStretch(2)
             hl.addWidget(label_icono)
 
             frame = QFrame(self)
+            frame.setObjectName("tarjeta-sala-espera")
+            frame.setFixedWidth(self.ancho_ventana * 0.5)
             frame.setLayout(hl)
             self.vl1.addWidget(frame)
             self.frames_usuarios.append(frame)

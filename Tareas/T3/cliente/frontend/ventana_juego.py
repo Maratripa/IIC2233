@@ -64,6 +64,7 @@ class VentanaJuego(QWidget):
         self.boton_dado.clicked.connect(self.tirar_dado)
 
         self.label_turno = QLabel("Jugador de turno: ?", self)
+        self.label_turno.setObjectName("label-turno")
 
         # VL texto y boton dado
         vl1 = QVBoxLayout()
@@ -72,10 +73,11 @@ class VentanaJuego(QWidget):
 
         # HL dado
         hl1 = QHBoxLayout()
-        hl1.addStretch(1)
+        hl1.addStretch(2)
         hl1.addWidget(self.dado)
+        hl1.addStretch(1)
         hl1.addLayout(vl1)
-        hl1.addStretch(3)
+        hl1.addStretch(4)
 
         # VL dado y tablero
         vl2 = QVBoxLayout()
@@ -117,6 +119,7 @@ class VentanaJuego(QWidget):
 
             usuario = user["usuario"]
             label_usuario = QLabel(usuario, self)
+            label_usuario.setObjectName("label-usuario")
             label_turno = QLabel(f"Turno: {usuarios.index(user) + 1}", self)
             label_en_base = QLabel(f"Fichas en base: {2}", self)
             label_en_color = QLabel(f"Fichas en color: {0}", self)
@@ -154,6 +157,9 @@ class VentanaJuego(QWidget):
     def mostrar(self):
         self.show()
 
+    def esconder(self):
+        self.hide()
+
 
 class TarjetaUsuario:
     def __init__(self, parent, usuario, icono, turno, base, fichas_color, victoria):
@@ -185,12 +191,12 @@ class TarjetaUsuario:
         # HL tarjeta
         hl1 = QHBoxLayout()
         hl1.addLayout(vl2)
+        hl1.addStretch(1)
         hl1.addLayout(vl1)
         hl1.addStretch(1)
 
         frame = QFrame(self.parent)
         frame.setLayout(hl1)
-        frame.setStyleSheet("border: 2 solid red;")
         frame.setObjectName("tarjeta-usuario-juego")
 
         return frame

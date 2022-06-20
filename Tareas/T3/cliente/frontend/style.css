@@ -1,0 +1,70 @@
+QWidget {
+    font-family: "DejaVu Sans Mono", "JetBrains Mono", "Roboto Mono", "Ubuntu Mono";
+    font-weight: normal;
+    font-size: 16px;
+}
+
+QLabel#titulo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+QLabel#label-turno {
+    font-size: 20px;
+    font-weight: bold;
+
+    background-color: #7dc4e4;
+    border: 2px solid #7dc4e4;
+    border-radius: 10px;
+
+    padding: 10px 10px;
+}
+
+QLabel#label-usuario {
+    font-weight: bold;
+}
+
+QFrame#tarjeta-sala-espera {
+    background-color: #FFFFFF;
+    border: 2px solid #7dc4e4;
+    border-radius: 10px;
+}
+
+QFrame#tarjeta-usuario-juego {
+    background-color: #FFFFFF;
+    border: 2px solid #7dc4e4;
+    border-radius: 10px;
+}
+
+QLineEdit {
+    border: 1px solid #7dc4e4;
+    border-radius: 10px;
+
+    padding: 3px 7px;
+    font-size: 14px;
+
+    width: 100%;
+}
+
+QPushButton {
+    background-color: #8aadf4;
+    color: #161320;
+    border: 1px solid #8aadf4;
+    border-radius: 10px;
+
+    padding: 2px 7px;
+}
+
+QPushButton:pressed {
+    background-color: #b7bdf8;
+    color: #302D41;
+
+    border: 2px solid #b7bdf8;
+}
+
+QPushButton:disabled {
+    background-color: #6e738d;
+    color: #494d64;
+
+    border: 2px solid #6e738d;
+}
