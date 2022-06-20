@@ -72,6 +72,11 @@ class Logica:
             self.usuarios.append(Usuario(usuario, socket_cliente,
                                  id_cliente, color))
             dict_respuesta["usuarios"] = [user.data for user in self.usuarios]
+        
+        if dict_respuesta["estado"] == "aceptado":
+            log(f"VALIDACIÓN: El usuario '{usuario}' ha sido aceptado")
+        else:
+            log(f"VALIDACIÓN: El usuario '{usuario}' ha sido rechazado")
 
         return dict_respuesta
 
@@ -129,6 +134,7 @@ class Logica:
 
         self.turno += 1
         jugador_nuevo = self.usuarios[self.turno % len(self.usuarios)]
+        log(f"EVENTO: Comienza el turno del jugador {jugador_nuevo.data['usuario']}")
         respuesta = {
             "comando": "actualizar_juego",
             "en_turno": True,
@@ -158,12 +164,15 @@ class Logica:
         for user in self.usuarios:
             if user != jugador_movido:
                 if user.pos == jugador_movido.pos:
+                    log(f"EVENTO: El jugador {jugador_movido.data['usuario']} \
+                        se ha comido a {user.data['usuario']}")
                     user.pos = user.pos_inicial[:]
                     user.dir = user.dir_inicial
                     user.avanzados = 0
                     user.avanzar_jugador(0)
 
     def terminar_juego(self, ganador):
+        log(f"EVENTO: El jugador {ganador.data['usuario']} ha ganado")
         respuesta = {
             "comando": "terminar_juego",
             "ganador": ganador.data['usuario'],

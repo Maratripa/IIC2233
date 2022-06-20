@@ -104,7 +104,6 @@ class Cliente:
 
     def decodificar_mensaje(self, mensaje_bytes: bytes) -> dict:
         mensaje_desencriptado = desencriptar_mensaje(mensaje_bytes)
-        print(mensaje_desencriptado)
 
         mensaje_json = mensaje_desencriptado.decode("utf-8")
         mensaje = json.loads(mensaje_json)
