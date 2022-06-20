@@ -12,7 +12,7 @@ def data_json(llave):
 
 
 def posicion_ficha(i, j) -> list:
-    return [23 + 76 * j, 90 + 76 * i]
+    return [23 + 76 * j, 75 + 76 * i]
 
 def posicion_estrella(i, j) -> list:
     return [35 + 76 * j, 89 + 76 * i]

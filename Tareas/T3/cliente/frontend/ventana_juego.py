@@ -117,6 +117,8 @@ class VentanaJuego(QWidget):
         vl = QVBoxLayout()
         vl.setSpacing(10)
 
+        tamano_ficha = data_json("TAMANO_FICHA")
+
         for user in usuarios:
             icono = QLabel(self)
             icono.setPixmap(self.pixmap_fichas[user["color"]])
@@ -137,9 +139,11 @@ class VentanaJuego(QWidget):
 
             label_ficha = QLabel(self)
             label_ficha.setPixmap(self.pixmap_fichas[user['color']])
+            label_ficha.setFixedSize(tamano_ficha, tamano_ficha)
 
             label_segunda_ficha = QLabel(self)
             label_segunda_ficha.setPixmap(self.pixmap_fichas[user['color']])
+            label_segunda_ficha.setFixedSize(tamano_ficha, tamano_ficha)
 
             self.fichas[user['color']] = label_ficha
             self.fichas[f"{user['color']}_segunda"] = label_segunda_ficha
