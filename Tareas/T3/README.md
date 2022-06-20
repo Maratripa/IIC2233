@@ -35,7 +35,7 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ##### ✅ Ventana inicio <Se muestran todos los elementos y se verifica si el usuario cumple con todos los requisitos\>
 ##### ✅ Sala de Espera <Se muestran todos los elementos, se inicia la partida al llegar a la cantidad máxima de usuarios, y el admin puede iniciar la partida antes en caso de cumplir con la cantidad mínima de usuarios\>
 ##### ✅ Sala de juego <Se muestran todos los elementos, la información se actualiza para todos los jugadores, se ve quien es el jugador de turno, y solo ese jugador puede tirar el dado, el rango del dado es entre 1 y 3, el jugador se mueve correctamente por las casillas blancas hasta llegar a la recta de su color y se redirige a la ventana final cuando uno de los jugadores logra avanzar sus dos fichas al la casilla de victoria\>
-##### 🟠 Ventana final <Se muestran todos los elementos, se indica el ganador de la partida y hay un botón que redirige a la ventana de inicio, pero no se puede volver a jugar\>
+##### ✅ Ventana final <Se muestran todos los elementos, se indica el ganador de la partida y hay un botón que redirige a la ventana de inicio\>
 #### Reglas de DCCasillas: 18 pts (14%)
 ##### ✅ Inicio del juego <Se asignan los turnos por orden de llegada a la sala de espera y los colores son aleatorios\>
 ##### ✅ Ronda <El jugador de turno tiene la opcion de tirar el dado, las fichas se mueven correctamente, la segunda ficha se mueve unicamente cuando la primera ya llegó a la casilla de victoria, la acción de comer una ficha esta implementada correctamente y se calcula correctamente la cantidad de casillas avanzadas\>
@@ -43,9 +43,9 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 #### General: 4 pts (3%)
 ##### ✅ Parámetros (JSON) <Todos los parametros se encuentran en un archivo json\>
 #### Bonus: 5 décimas máximo
-##### ❌✅🟠 Cheatcode <explicacion\>
-##### ❌✅🟠 Turnos con tiempo <explicacion\>
-##### ❌✅🟠 Rebote <explicacion\>
+##### ❌ Cheatcode <explicacion\>
+##### ❌ Turnos con tiempo <explicacion\>
+##### ❌ Rebote <explicacion\>
 
 ## Ejecución servidor :computer:
 El módulo principal de la tarea a ejecutar es  ```servidor/main.py``` desde el directorio ```servidor/```. Además se debe crear los siguientes archivos y directorios adicionales:
