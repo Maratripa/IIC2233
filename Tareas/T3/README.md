@@ -1,14 +1,4 @@
-# Tarea X: Nombre de la tarea :school_satchel:
-
-
-Un buen ```README.md``` puede marcar una gran diferencia en la facilidad con la que corregimos una tarea, y consecuentemente cómo funciona su programa, por lo en general, entre más ordenado y limpio sea éste, mejor será 
-
-Para nuestra suerte, GitHub soporta el formato [MarkDown](https://es.wikipedia.org/wiki/Markdown), el cual permite utilizar una amplia variedad de estilos de texto, tanto para resaltar cosas importantes como para separar ideas o poner código de manera ordenada ([pueden ver casi todas las funcionalidades que incluye aquí](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet))
-
-Un buen ```README.md``` no tiene por que ser muy extenso tampoco, hay que ser **concisos** (a menos que lo consideren necesario) pero **tampoco pueden** faltar cosas. Lo importante es que sea claro y limpio 
-
-**Dejar claro lo que NO pudieron implementar y lo que no funciona a la perfección. Esto puede sonar innecesario pero permite que el ayudante se enfoque en lo que sí podría subir su puntaje.**
-
+# Tarea 3: DCCasillas :school_satchel:
 ## Consideraciones generales :octocat:
 
 <Descripción de lo que hace y que **_no_** hace la tarea que entregaron junto
@@ -27,57 +17,87 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ⚠️⚠️
 
 #### Networking: 23 pts (18%)
-##### ❌✅🟠 Protocolo <explicacion\>
-##### ❌✅🟠 Correcto uso de sockets <explicacion\>
-##### ❌✅🟠 Conexión <explicacion\>
-##### ❌✅🟠 Manejo de clientes <explicacion\>
+##### ✅ Protocolo <Se utiliza protocolo TCP/IP para la conexión servidor-cliente\>
+##### ✅ Correcto uso de sockets <Se crean los sockets de manera correcta y se utilizan threads para trabajar concurrentemente\>
+##### ✅ Conexión <La conexión se mantiene estable a lo largo de todo el juego\>
+##### ❌✅🟠 Manejo de clientes <Se pueden conectar múltiples clientes, por lo menos más de la cantidad máxima de jugadores\>
 #### Arquitectura Cliente - Servidor: 31 pts (25%)
-##### ❌✅🟠 Roles <explicacion\>
-##### ❌✅🟠 Consistencia <explicacion\>
+##### ✅ Roles <El cliente está separado del servidor y cada las tareas se reparten acorde al enunciado\>
+##### ✅ Consistencia <Todos los clientes se actualizan como se espera y se utiliza un lock para el envío de información\>
 ##### ❌✅🟠 Logs <explicacion\>
 #### Manejo de Bytes: 26 pts (21%)
-##### ❌✅🟠 Codificación <explicacion\>
-##### ❌✅🟠 Decodificación <explicacion\>
-##### ❌✅🟠 Encriptación <explicacion\>
-##### ❌✅🟠 Desencriptación <explicacion\>
-##### ❌✅🟠 Integración <explicacion\>
+##### ✅ Codificación <El mensaje se codifica según el enunciado, utilizando big endian y little endian correspondientemente\>
+##### ✅ Decodificación <El mensaje se decodifica según el enunciado, obteniendo cada uno de los parametros con su respectivo byteorder\>
+##### ✅ Encriptación <La encriptación funciona según el enunciado, separando el mensaje en dos partes y ordenandolos según sus valores del medio\>
+##### ✅ Desencriptación <Se logra recuperar el mensaje original solo a traves del mensaje encriptado\>
+##### ✅ Integración <Se utiliza el protocolo de envío para toda comunicación entre servidor y cliente\>
 #### Interfaz: 23 pts (18%)
-##### ❌✅🟠 Ventana inicio <explicacion\>
-##### ❌✅🟠 Sala de Espera <explicacion\>
-##### ❌✅🟠 Sala de juego <explicacion\>
-##### ❌✅🟠 Ventana final <explicacion\>
+##### ✅ Ventana inicio <Se muestran todos los elementos y se verifica si el usuario cumple con todos los requisitos\>
+##### ✅ Sala de Espera <Se muestran todos los elementos, se inicia la partida al llegar a la cantidad máxima de usuarios, y el admin puede iniciar la partida antes en caso de cumplir con la cantidad mínima de usuarios\>
+##### ✅ Sala de juego <Se muestran todos los elementos, la información se actualiza para todos los jugadores, se ve quien es el jugador de turno, y solo ese jugador puede tirar el dado, el rango del dado es entre 1 y 3, el jugador se mueve correctamente por las casillas blancas hasta llegar a la recta de su color y se redirige a la ventana final cuando uno de los jugadores logra avanzar sus dos fichas al la casilla de victoria\>
+##### 🟠 Ventana final <Se muestran todos los elementos, se indica el ganador de la partida y hay un botón que redirige a la ventana de inicio, pero no se puede volver a jugar\>
 #### Reglas de DCCasillas: 18 pts (14%)
-##### ❌✅🟠 Inicio del juego <explicacion\>
-##### ❌✅🟠 Ronda <explicacion\>
-##### ❌✅🟠 Termino del juego <explicacion\>
+##### ✅ Inicio del juego <Se asignan los turnos por orden de llegada a la sala de espera y los colores son aleatorios\>
+##### ✅ Ronda <El jugador de turno tiene la opcion de tirar el dado, las fichas se mueven correctamente, la segunda ficha se mueve unicamente cuando la primera ya llegó a la casilla de victoria, la acción de comer una ficha esta implementada correctamente y se calcula correctamente la cantidad de casillas avanzadas\>
+##### ✅ Termino del juego <Se asigna correctamente el ganador según quién logra llevar sus dos fichas a la casilla de victoria\>
 #### General: 4 pts (3%)
-##### ❌✅🟠 Parámetros (JSON) <explicacion\>
+##### ✅ Parámetros (JSON) <Todos los parametros se encuentran en un archivo json\>
 #### Bonus: 5 décimas máximo
 ##### ❌✅🟠 Cheatcode <explicacion\>
 ##### ❌✅🟠 Turnos con tiempo <explicacion\>
 ##### ❌✅🟠 Rebote <explicacion\>
 
-## Ejecución :computer:
-El módulo principal de la tarea a ejecutar es  ```archivo.py```. Además se debe crear los siguientes archivos y directorios adicionales:
-1. ```archivo.ext``` en ```ubicación```
-2. ```directorio``` en ```ubicación```
-3. ...
+## Ejecución servidor :computer:
+El módulo principal de la tarea a ejecutar es  ```servidor/main.py``` desde el directorio ```servidor/```. Además se debe crear los siguientes archivos y directorios adicionales:
+1. ```servidor/``` en ```./```
+2. ```parametros.json``` en ```./servidor/```
+
+## Ejecución cliente :computer:
+El módulo principal de la tarea a ejecutar es  ```cliente/main.py``` desde el directorio ```cliente/```. Además se debe crear los siguientes archivos y directorios adicionales:
+1. ```cliente/``` en ```./```
+2. ```backend/``` en ```./cliente/```
+3. ```frontend/``` en ```./cliente/```
+4. ```Sprites/``` en ```.cliente/frontend/```
+5. ```parametros.json``` en ```./cliente/```
+6. ```style.css``` en ```./cliente/frontend/```
 
 
 ## Librerías :books:
 ### Librerías externas utilizadas
-La lista de librerías externas que utilicé fue la siguiente:
+La lista de librerías externas que utilicé para el cliente fue la siguiente:
 
-1. ```librería_1```: ```función() / módulo```
-2. ```librería_2```: ```función() / módulo``` (debe instalarse)
-3. ...
+1. ```json```: ```dumps(), loads(), load()```
+2. ```socket```: ```socket```
+3. ```threading```: ```Thread```
+4. ```PyQt5```: ```QtCore, QtWidgets, QtGui```
+5. ```sys```: ```argv, exit()```
+6. ```os```: ```path```
+
+La lista de librerías externas que utilicé para el servidor fue la siguiente:
+
+1. ```json```: ```dumps(), loads(), load()```
+2. ```socket```: ```socket```
+3. ```threading```: ```Thread, Lock```
+4. ```sys```: ```exit()```
+5. ```os```: ```path```
+6. ```random```: ```shuffle(), randint()```
 
 ### Librerías propias
-Por otro lado, los módulos que fueron creados fueron los siguientes:
+Por otro lado, los módulos que fueron creados para el cliente fueron los siguientes:
 
-1. ```librería_1```: Contiene a ```ClaseA```, ```ClaseB```, (ser general, tampoco es necesario especificar cada una)...
-2. ```librería_2```: Hecha para <insertar descripción **breve** de lo que hace o qué contiene>
-3. ...
+1. ```./cliente/utils.py```: contiene funciones logicas utilizadas por el cliente
+2. ```./cliente/backend/cliente.py```: Contiene a ```Cliente```, clase encargada de manejar la conexión con el servidor
+3. ```./cliente/backend/interfaz.py```: Contiene a ```Interfaz```, clase encargada de conectar el cliente con la interfaz gráfica
+4. ```./cliente/frontend/ventana_inicio.py```: Contiene a ```VentanaInicio```
+5. ```./cliente/frontend/ventana_espera.py```: Contiene a ```VentanaEspera```
+6. ```./cliente/frontend/ventana_juego.py```: Contiene a ```VentanaJuego```
+7. ```./cliente/frontend/ventana_final.py```: Contiene a ```VentanaFinal```
+
+Por otro lado, los módulos que fueron creados para el servidor fueron los siguientes:
+
+1. ```./servidor/servidor.py```: Contiene a ```Servidor```, clase encargada de manejar las conexiones con los clientes
+2. ```./servidor/logica.py```: Contiene a ```Logica```, clase encargada de la lógica detrás del servidor
+3. ```./servidor/utils.py```: contiene funciones logicas utilizadas por el servidor
 
 ## Supuestos y consideraciones adicionales :thinking:
 Los supuestos que realicé durante la tarea son los siguientes:
@@ -88,42 +108,10 @@ Los supuestos que realicé durante la tarea son los siguientes:
 
 PD: <una última consideración (de ser necesaria) o comentario hecho anteriormente que se quiera **recalcar**>
 
-
--------
-
-
-
-**EXTRA:** si van a explicar qué hace específicamente un método, no lo coloquen en el README mismo. Pueden hacerlo directamente comentando el método en su archivo. Por ejemplo:
-
-```python
-class Corrector:
-
-    def __init__(self):
-          pass
-
-    # Este método coloca un 6 en las tareas que recibe
-    def corregir(self, tarea):
-        tarea.nota  = 6
-        return tarea
-```
-
-Si quieren ser más formales, pueden usar alguna convención de documentación. Google tiene la suya, Python tiene otra y hay muchas más. La de Python es la [PEP287, conocida como reST](https://www.python.org/dev/peps/pep-0287/). Lo más básico es documentar así:
-
-```python
-def funcion(argumento):
-    """
-    Mi función hace X con el argumento
-    """
-    return argumento_modificado
-```
-Lo importante es que expliquen qué hace la función y que si saben que alguna parte puede quedar complicada de entender o tienen alguna función mágica usen los comentarios/documentación para que el ayudante entienda sus intenciones.
-
 ## Referencias de código externo :book:
 
 Para realizar mi tarea saqué código de:
 1. \<link de código>: este hace \<lo que hace> y está implementado en el archivo <nombre.py> en las líneas <número de líneas> y hace <explicación breve de que hace>
-
-
 
 ## Descuentos
 La guía de descuentos se encuentra [link](https://github.com/IIC2233/syllabus/blob/main/Tareas/Descuentos.md).
