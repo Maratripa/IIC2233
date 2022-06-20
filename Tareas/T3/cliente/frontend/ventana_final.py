@@ -62,9 +62,9 @@ class VentanaFinal(QWidget):
 
         for user in usuarios:
             label_nombre = QLabel(f"{user['usuario']}", self)
-            label_en_base = QLabel    (f"Fichas en base:  0", self)
-            label_en_color = QLabel   (f"Fichas en color: 0", self)
-            label_en_victoria = QLabel(f"Fichas victoria: 0", self)
+            label_en_base = QLabel(f"Fichas en base:  {user['en_base']}", self)
+            label_en_color = QLabel(f"Fichas en color: {user['en_color']}", self)
+            label_en_victoria = QLabel(f"Fichas victoria: {user['en_victoria']}", self)
 
             # VL nombre
             vl1 = QVBoxLayout()
