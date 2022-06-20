@@ -13,5 +13,10 @@
 
     "RUTA_SPRITES": ["frontend", "Sprites"],
 
-    "TAMANO_DADO": 60
+    "TAMANO_DADO": 60,
+    "TAMANO_ESTRELLA": 30,
+    "POS_ESTRELLA_ROJO": [2, 1],
+    "POS_ESTRELLA_AZUL": [1, 3],
+    "POS_ESTRELLA_AMARILLO": [3, 4],
+    "POS_ESTRELLA_VERDE": [4, 2]
 }
