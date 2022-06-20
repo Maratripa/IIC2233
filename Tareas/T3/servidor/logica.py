@@ -148,6 +148,7 @@ class Logica:
                     user.pos = user.pos_inicial[:]
                     user.dir = user.dir_inicial
                     user.avanzados = 0
+                    user.avanzar_jugador(0)
 
     def terminar_juego(self, ganador):
         respuesta = {
@@ -245,7 +246,7 @@ class Usuario:
             self.data["en_color"] = 0
         elif not self.segunda and 19 < self.avanzados < 22:
             self.data["en_color"] = 1
-        elif not self.segunda and self.avanzados == 22:
+        elif self.avanzados == 22:
             self.data["en_color"] = 0
         elif self.segunda and self.avanzados <= 19:
             self.data["en_color"] = 0
