@@ -29,9 +29,10 @@ class VentanaFinal(QWidget):
         self.fondo.setGeometry(0, 0, self.ancho_ventana, alto_ventana)
         self.fondo.setScaledContents(True)
 
-    def init_gui(self, ganador, usuarios):
-        label_ganador = QLabel(f"¡Felicidades {ganador}!", self)
-        label_ganador.setObjectName("titulo")
+        self.frames = []
+
+        self.label_ganador = QLabel(f"¡Felicidades {''}!", self)
+        self.label_ganador.setObjectName("titulo")
 
         boton_volver = QPushButton("Volver al inicio", self)
         boton_volver.clicked.connect(self.volver_inicio)
@@ -39,15 +40,18 @@ class VentanaFinal(QWidget):
         # HL ganador
         hl1 = QHBoxLayout()
         hl1.addStretch(1)
-        hl1.addWidget(label_ganador)
+        hl1.addWidget(self.label_ganador)
         hl1.addStretch(1)
+
+        # VL jugadores
+        self.vl1_1 = QVBoxLayout()
 
         # VL global
         vl1 = QVBoxLayout()
         vl1.addStretch(1)
         vl1.addLayout(hl1)
         vl1.addStretch(1)
-        vl1.addLayout(self.cargar_usuarios(usuarios))
+        vl1.addLayout(self.vl1_1)
         vl1.addStretch(1)
         vl1.addWidget(boton_volver)
         vl1.addStretch(1)
@@ -59,12 +63,13 @@ class VentanaFinal(QWidget):
         hl2.addStretch(1)
 
         self.setLayout(hl2)
-        self.mostrar()
 
-    def cargar_usuarios(self, usuarios: list) -> QVBoxLayout:
-        # VL global
-        vl = QVBoxLayout()
-        vl.setSpacing(10)
+    def cargar_usuarios(self, ganador: str, usuarios: list):
+        self.label_ganador.setText(f"¡Felicidades {ganador}!")
+
+        for f in self.frames:
+            f.hide()
+            f.setParent(None)
 
         for user in usuarios:
             label_nombre = QLabel(f"{user['usuario']}", self)
@@ -97,11 +102,12 @@ class VentanaFinal(QWidget):
             frame.setObjectName("tarjeta-usuario-juego")
             frame.setFixedWidth(self.ancho_ventana * 0.5)
             frame.setLayout(hl)
+            self.frames.append(frame)
 
-            vl.addWidget(frame)
-
-        vl.addStretch(1)
-        return vl
+            self.vl1_1.addWidget(frame)
+        
+        self.repaint()
+        self.mostrar()
     
     def volver_inicio(self):
         self.senal_volver_inicio.emit()

@@ -36,9 +36,9 @@ class Interfaz(QObject):
 
         self.senal_cargar_pantalla_espera.connect(self.ventana_espera.cargar_usuarios)
         self.senal_actualizar_lista_usuarios.connect(self.ventana_espera.cargar_usuarios)
-        self.senal_iniciar_partida.connect(self.ventana_juego.init_gui)
+        self.senal_iniciar_partida.connect(self.ventana_juego.cargar_usuarios)
         self.senal_actualizar_juego.connect(self.ventana_juego.actualizar_juego)
-        self.senal_cargar_pantalla_final.connect(self.ventana_final.init_gui)
+        self.senal_cargar_pantalla_final.connect(self.ventana_final.cargar_usuarios)
 
     def mostrar_ventana_inicio(self):
         self.ventana_inicio.mostrar()

@@ -115,6 +115,7 @@ class Logica:
             "data": {user.data['color']: user.data for user in self.usuarios},
             "posiciones": posiciones
         }
+
         self.enviar_mensaje(respuesta, self.usuarios[0].socket)
         respuesta["en_turno"] = False
         for user in self.usuarios:
@@ -164,8 +165,8 @@ class Logica:
         for user in self.usuarios:
             if user != jugador_movido:
                 if user.pos == jugador_movido.pos:
-                    log(f"EVENTO: El jugador {jugador_movido.data['usuario']} \
-                        se ha comido a {user.data['usuario']}")
+                    log(f"EVENTO: El jugador {jugador_movido.data['usuario']} " +
+                        f"se ha comido a {user.data['usuario']}")
                     user.pos = user.pos_inicial[:]
                     user.dir = user.dir_inicial
                     user.avanzados = 0

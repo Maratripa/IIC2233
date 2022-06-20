@@ -52,7 +52,6 @@ class VentanaJuego(QWidget):
 
         self.estrellas = {}
 
-    def init_gui(self, usuarios: list):
         self.tablero = QLabel(self)
         self.tablero.setPixmap(self.pixmaps["tablero"])
 
@@ -98,11 +97,16 @@ class VentanaJuego(QWidget):
         hl1_1.addStretch(1)
 
         # VL usuarios
+        self.vl3_1 = QVBoxLayout()
+
+        # VL usuarios y turno
         self.vl3 = QVBoxLayout()
+        self.vl3.setSpacing(10)
         self.vl3.addLayout(hl1_1)
         self.vl3.addStretch(1)
-        self.vl3.addLayout(self.cargar_usuarios(usuarios))
+        self.vl3.addLayout(self.vl3_1)
         self.vl3.addStretch(1)
+
 
         # HL global
         hl2 = QHBoxLayout()
@@ -111,11 +115,25 @@ class VentanaJuego(QWidget):
 
         self.setLayout(hl2)
 
-        self.mostrar()
+    def cargar_usuarios(self, usuarios: list):
 
-    def cargar_usuarios(self, usuarios: list) -> QVBoxLayout:
-        vl = QVBoxLayout()
-        vl.setSpacing(10)
+        for key in self.fichas.keys():
+            self.fichas[key].hide()
+            self.fichas[key].setParent(None)
+        
+        self.fichas = {}
+        
+        for key in self.estrellas.keys():
+            self.estrellas[key].hide()
+            self.estrellas[key].setParent(None)
+        
+        self.estrellas = {}
+
+        for key in self.tarjetas_usuarios.keys():
+            self.tarjetas_usuarios[key].hide()
+            self.tarjetas_usuarios[key].setParent(None)
+        
+        self.tarjetas_usuarios = {}
 
         tamano_ficha = data_json("TAMANO_FICHA")
 
@@ -135,7 +153,7 @@ class VentanaJuego(QWidget):
                                      label_en_base, label_en_color, label_en_victoria)
 
             self.tarjetas_usuarios[user['color']] = tarjeta
-            vl.addWidget(tarjeta.layout())
+            self.vl3_1.addWidget(tarjeta.layout())
 
             label_ficha = QLabel(self)
             label_ficha.setPixmap(self.pixmap_fichas[user['color']])
@@ -157,7 +175,8 @@ class VentanaJuego(QWidget):
                 *posicion_estrella(*data_json(f"POS_ESTRELLA_{user['color'].upper()}")))
             self.estrellas[user['color']].stackUnder(label_segunda_ficha)
 
-        return vl
+        self.repaint()
+        self.mostrar()
 
     def actualizar_juego(self, info: dict):
         if info["en_turno"]:
@@ -226,13 +245,19 @@ class TarjetaUsuario:
         hl1.addLayout(vl1)
         hl1.addStretch(1)
 
-        frame = QFrame(self.parent)
-        frame.setLayout(hl1)
-        frame.setObjectName("tarjeta-usuario-juego")
+        self.frame = QFrame(self.parent)
+        self.frame.setLayout(hl1)
+        self.frame.setObjectName("tarjeta-usuario-juego")
 
-        return frame
+        return self.frame
     
     def actualizar_tarjeta(self, data: dict):
         self.label_fichas_base.setText(f"Fichas en base: {data['en_base']}")
         self.label_fichas_color.setText(f"Fichas en color: {data['en_color']}")
         self.label_fichas_victoria.setText(f"Fichas en victoria: {data['en_victoria']}")
+    
+    def hide(self):
+        self.frame.hide()
+
+    def setParent(self, parent):
+        self.frame.setParent(parent)
