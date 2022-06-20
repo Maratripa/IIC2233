@@ -134,7 +134,11 @@ class VentanaJuego(QWidget):
             label_ficha = QLabel(self)
             label_ficha.setPixmap(self.pixmap_fichas[user['color']])
 
+            label_segunda_ficha = QLabel(self)
+            label_segunda_ficha.setPixmap(self.pixmap_fichas[user['color']])
+
             self.fichas[user['color']] = label_ficha
+            self.fichas[f"{user['color']}_segunda"] = label_segunda_ficha
 
         return vl
 
@@ -149,7 +153,14 @@ class VentanaJuego(QWidget):
 
         for key in info['posiciones']:
             pos_ficha = posicion_ficha(*info['posiciones'][key])
-            self.fichas[key].move(*pos_ficha)
+            if "segunda" in info.keys():
+                if info['segunda'][key]:
+                    self.fichas[f"{key}_segunda"].move(*pos_ficha)
+                else:
+                    self.fichas[key].move(*pos_ficha)
+            else:
+                self.fichas[f"{key}_segunda"].move(*pos_ficha)
+                self.fichas[key].move(*pos_ficha)
 
     def tirar_dado(self):
         self.senal_tirar_dado.emit({"comando": "tirar_dado"})

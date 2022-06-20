@@ -132,7 +132,7 @@ class Logica:
         hay_ganador = False
         ganador = None
         for user in self.usuarios:
-            if user.avanzados == 22:
+            if user.avanzados == 22 and user.segunda:
                 hay_ganador = True
                 ganador = user
 
@@ -208,6 +208,12 @@ class Usuario:
         self.dir = self.dir_inicial
 
     def avanzar_jugador(self, numero):
+        if self.avanzados == 22 and not self.segunda:
+            self.segunda = True
+            self.avanzados = 0
+            self.pos = self.pos_inicial[:]
+            self.dir = self.dir_inicial
+        
         if self.avanzados + numero < 23:
             for _ in range(numero):
                 if self.avanzados != 0:
@@ -222,13 +228,6 @@ class Usuario:
                 elif self.dir == 3:
                     self.pos[0] -= 1
                 self.avanzados += 1
-            
-            if self.avanzados == 22:
-                if not self.segunda:
-                    self.segunda = True
-                    self.avanzados = 0
-                    self.pos = self.pos_inicial[:]
-                    self.dir = self.dir_inicial
 
     def cambiar_direccion(self):
         if self.avanzados % 5 == 0 and self.avanzados < 19:
