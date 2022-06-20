@@ -42,34 +42,23 @@ class VentanaInicio(QWidget):
         self.boton_validar = QPushButton("JUGAR", self)
         self.boton_validar.clicked.connect(self.enviar_usuario)
 
-        # HL logo
-        hl1 = QHBoxLayout()
-        hl1.addStretch(1)
-        hl1.addWidget(self.logo)
-        hl1.addStretch(1)
-
-        # HL input
-        hl2 = QHBoxLayout()
-        hl2.addStretch(1)
-        hl2.addWidget(self.input_usuario)
-        hl2.addStretch(1)
-
-        # HL boton
-        hl3 = QHBoxLayout()
-        hl3.addStretch(1)
-        hl3.addWidget(self.boton_validar)
-        hl3.addStretch(1)
-
         # VL global
         vl1 = QVBoxLayout()
         vl1.addStretch(1)
-        vl1.addLayout(hl1)
+        vl1.addWidget(self.logo)
         vl1.addStretch(1)
-        vl1.addLayout(hl2)
-        vl1.addLayout(hl3)
+        vl1.addWidget(self.input_usuario)
+        vl1.addWidget(self.boton_validar)
         vl1.addStretch(1)
 
-        self.setLayout(vl1)
+        # HL global
+        hl = QHBoxLayout()
+        hl.addStretch(1)
+        hl.addLayout(vl1)
+        hl.addStretch(1)
+
+
+        self.setLayout(hl)
 
     def mostrar(self):
         self.show()
