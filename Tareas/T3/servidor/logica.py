@@ -31,22 +31,12 @@ class Logica:
                 for user in self.usuarios:
                     if user.id != id_cliente:
                         self.enviar_mensaje(respuesta, user.socket)
+            
+            if len(self.usuarios) == data_json("MAXIMO_JUGADORES"):
+                self.iniciar_juego([user.data for user in self.usuarios])
 
         elif comando == "iniciar_partida":
-            respuesta = {"comando": "repuesta_iniciar_partida"}
-            if not (data_json("MINIMO_JUGADORES") <= len(mensaje["usuarios"])) and (
-                    len(mensaje["usuarios"]) <= data_json("MAXIMO_JUGADORES")):
-                respuesta["estado"] = "rechazado"
-                respuesta["error"] = "numero de usuarios no valido"
-            else:
-                respuesta["estado"] = "aceptado"
-                respuesta["usuarios"] = mensaje["usuarios"]
-
-            for user in self.usuarios:
-                self.enviar_mensaje(respuesta, user.socket)
-
-            if respuesta["estado"] == "aceptado":
-                self.iniciar_juego()
+            self.iniciar_juego(mensaje["usuarios"])
 
         elif comando == "tirar_dado":
             self.actualizar_juego()
@@ -85,7 +75,22 @@ class Logica:
 
         return dict_respuesta
 
-    def iniciar_juego(self):
+    def iniciar_juego(self, usuarios):
+        respuesta = {"comando": "repuesta_iniciar_partida"}
+        if not (data_json("MINIMO_JUGADORES") <= len(usuarios)) and (
+                len(usuarios) <= data_json("MAXIMO_JUGADORES")):
+            respuesta["estado"] = "rechazado"
+            respuesta["error"] = "numero de usuarios no valido"
+        else:
+            respuesta["estado"] = "aceptado"
+            respuesta["usuarios"] = usuarios
+
+        for user in self.usuarios:
+            self.enviar_mensaje(respuesta, user.socket)
+
+        if respuesta["estado"] == "rechazado":
+            return
+            
         self.partida_en_curso = True
         self.turno = 0
         log(f"EVENTO: Comienza la partida con {len(self.usuarios)} jugadores")

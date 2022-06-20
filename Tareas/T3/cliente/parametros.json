@@ -10,6 +10,7 @@
     "ALTO_VENTANA_JUEGO": 700,
 
     "MINIMO_JUGADORES": 2,
+    "MAXIMO_JUGADORES": 4,
 
     "RUTA_SPRITES": ["frontend", "Sprites"],
 
