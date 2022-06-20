@@ -49,7 +49,7 @@ class Servidor:
         while True:
             try:
                 mensaje = self.recibir_mensaje(socket_cliente)
-                # self.log(mensaje.__str__())
+                log(f"DEBUG: Comando -> {mensaje['comando']}")
                 self.logica.procesar_mensaje(mensaje, socket_cliente, id_cliente)
             except ConnectionError:
                 self.eliminar_cliente(id_cliente, socket_cliente)

@@ -50,6 +50,9 @@ class Logica:
 
         elif comando == "tirar_dado":
             self.actualizar_juego()
+        
+        elif comando == "volver_inicio":
+            self.volver_inicio()
 
     def validar_login(self, usuario: str, socket_cliente, id_cliente: int) -> dict:
         dict_respuesta = {"comando": "respuesta_validacion_login"}
@@ -164,6 +167,13 @@ class Logica:
 
         for user in self.usuarios:
             self.parent.enviar_mensaje(respuesta, user.socket)
+    
+    def volver_inicio(self):
+        if self.partida_en_curso:
+            self.partida_en_curso = False
+            self.turno = 0
+            self.usuarios = []
+            random.shuffle(self.colores)
 
     def enviar_mensaje(self, mensaje: dict, socket_cliente) -> bool:
         self.parent.enviar_mensaje(mensaje, socket_cliente)
@@ -178,7 +188,7 @@ class Logica:
             color = self.usuarios[idx].data['color']
             self.colores.insert(0, color)
             self.usuarios.pop(idx).socket.close()
-            for user in self.usuarios:
+            for user in self.usuarios and not self.partida_en_curso:
                 self.enviar_mensaje({"comando": "actualizar_lista_usuarios",
                                      "usuarios": [user.data for user in self.usuarios]},
                                     user.socket)

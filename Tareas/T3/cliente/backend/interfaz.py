@@ -7,8 +7,8 @@ from frontend.ventana_final import VentanaFinal
 
 
 class Interfaz(QObject):
-    #                                       (admin, users)
-    senal_cargar_pantalla_espera = pyqtSignal(bool, list)
+    #                                       (users, admin)
+    senal_cargar_pantalla_espera = pyqtSignal(list, bool)
     #                                           (users)
     senal_actualizar_lista_usuarios = pyqtSignal(list)
     #                                 (users)
@@ -21,6 +21,8 @@ class Interfaz(QObject):
     def __init__(self, parent):
         super().__init__()
 
+        self.parent = parent
+
         self.ventana_inicio = VentanaInicio()
         self.ventana_espera = VentanaEspera()
         self.ventana_juego = VentanaJuego()
@@ -30,8 +32,9 @@ class Interfaz(QObject):
         self.ventana_inicio.senal_enviar_usuario.connect(parent.enviar_mensaje)
         self.ventana_espera.senal_iniciar_juego.connect(parent.enviar_mensaje)
         self.ventana_juego.senal_tirar_dado.connect(parent.enviar_mensaje)
+        self.ventana_final.senal_volver_inicio.connect(self.volver_inicio)
 
-        self.senal_cargar_pantalla_espera.connect(self.ventana_espera.cargar_pantalla)
+        self.senal_cargar_pantalla_espera.connect(self.ventana_espera.cargar_usuarios)
         self.senal_actualizar_lista_usuarios.connect(self.ventana_espera.cargar_usuarios)
         self.senal_iniciar_partida.connect(self.ventana_juego.init_gui)
         self.senal_actualizar_juego.connect(self.ventana_juego.actualizar_juego)
@@ -49,7 +52,8 @@ class Interfaz(QObject):
         if comando == "respuesta_validacion_login":
             if mensaje["estado"] == "aceptado":
                 self.ventana_inicio.esconder()
-                self.senal_cargar_pantalla_espera.emit(mensaje["admin"], mensaje["usuarios"])
+                self.senal_cargar_pantalla_espera.emit(mensaje["usuarios"], mensaje["admin"])
+                self.ventana_espera.mostrar()
             else:
                 self.ventana_inicio.error_usuario(mensaje["error"])
         elif comando == "actualizar_lista_usuarios":
@@ -65,3 +69,10 @@ class Interfaz(QObject):
         elif comando == "terminar_juego":
             self.ventana_juego.esconder()
             self.senal_cargar_pantalla_final.emit(mensaje['ganador'], mensaje['usuarios'])
+    
+    def volver_inicio(self):
+        self.ventana_final.esconder()
+        self.ventana_inicio.mostrar()
+
+        mensaje = {"comando": "volver_inicio"}
+        self.parent.enviar_mensaje(mensaje)

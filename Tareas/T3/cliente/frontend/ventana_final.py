@@ -10,6 +10,8 @@ from utils import data_json
 
 class VentanaFinal(QWidget):
 
+    senal_volver_inicio = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
@@ -32,6 +34,9 @@ class VentanaFinal(QWidget):
         label_ganador = QLabel(f"¡Felicidades {ganador}!", self)
         label_ganador.setObjectName("titulo")
 
+        boton_volver = QPushButton("Volver al inicio", self)
+        boton_volver.clicked.connect(self.volver_inicio)
+
         # HL ganador
         hl1 = QHBoxLayout()
         hl1.addStretch(1)
@@ -44,6 +49,8 @@ class VentanaFinal(QWidget):
         vl1.addLayout(hl1)
         vl1.addStretch(1)
         vl1.addLayout(self.cargar_usuarios(usuarios))
+        vl1.addStretch(1)
+        vl1.addWidget(boton_volver)
         vl1.addStretch(1)
 
         # HL global
@@ -96,6 +103,12 @@ class VentanaFinal(QWidget):
 
         vl.addStretch(1)
         return vl
+    
+    def volver_inicio(self):
+        self.senal_volver_inicio.emit()
 
     def mostrar(self):
         self.show()
+    
+    def esconder(self):
+        self.hide()
