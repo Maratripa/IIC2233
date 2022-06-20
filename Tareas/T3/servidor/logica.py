@@ -227,9 +227,6 @@ class Usuario:
         
         if self.avanzados + numero < 23:
             for _ in range(numero):
-                if self.avanzados != 0:
-                    self.cambiar_direccion()
-
                 if self.dir == 0:
                     self.pos[1] += 1
                 elif self.dir == 1:
@@ -239,6 +236,9 @@ class Usuario:
                 elif self.dir == 3:
                     self.pos[0] -= 1
                 self.avanzados += 1
+
+                if self.avanzados != 0:
+                    self.cambiar_direccion()
         
         if not self.segunda and self.avanzados == 0:
             self.data["en_base"] = 2
@@ -270,5 +270,16 @@ class Usuario:
     def cambiar_direccion(self):
         if self.avanzados % 5 == 0 and self.avanzados < 19:
             self.dir = (self.dir + 1) % 4
+
+            if self.dir == 0:
+                self.pos[1] += 1
+            elif self.dir == 1:
+                self.pos[0] += 1
+            elif self.dir == 2:
+                self.pos[1] -= 1
+            elif self.dir == 3:
+                self.pos[0] -= 1
+            self.avanzados += 1
+        
         elif self.avanzados == 19:
             self.dir = (self.dir + 1) % 4
