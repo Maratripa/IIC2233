@@ -144,6 +144,7 @@ class VentanaJuego(QWidget):
             label_segunda_ficha = QLabel(self)
             label_segunda_ficha.setPixmap(self.pixmap_fichas[user['color']])
             label_segunda_ficha.setFixedSize(tamano_ficha, tamano_ficha)
+            label_segunda_ficha.stackUnder(label_ficha)
 
             self.fichas[user['color']] = label_ficha
             self.fichas[f"{user['color']}_segunda"] = label_segunda_ficha
@@ -154,6 +155,7 @@ class VentanaJuego(QWidget):
             self.estrellas[user['color']].setScaledContents(True)
             self.estrellas[user['color']].move(
                 *posicion_estrella(*data_json(f"POS_ESTRELLA_{user['color'].upper()}")))
+            self.estrellas[user['color']].stackUnder(label_segunda_ficha)
 
         return vl
 
