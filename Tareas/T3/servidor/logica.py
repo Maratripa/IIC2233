@@ -9,6 +9,8 @@ class Logica:
         self.usuarios = []
         self.turno = 0
 
+        self.partida_en_curso = False
+
         self.colores = ["rojo", "amarillo", "azul", "verde"]
         random.shuffle(self.colores)
 
@@ -62,6 +64,8 @@ class Logica:
             dict_respuesta["error"] = "usuario no es alfanumérico"
         elif len(self.usuarios) == data_json("MAXIMO_JUGADORES"):
             dict_respuesta["error"] = "sala llena"
+        elif self.partida_en_curso:
+            dict_respuesta["error"] = "partida en curso"
         else:
             dict_respuesta["estado"] = "aceptado"
             if not self.usuarios:
@@ -79,6 +83,7 @@ class Logica:
         return dict_respuesta
 
     def iniciar_juego(self):
+        self.partida_en_curso = True
         self.turno = 0
         log(f"EVENTO: Comienza la partida con {len(self.usuarios)} jugadores")
         for user in self.usuarios:
