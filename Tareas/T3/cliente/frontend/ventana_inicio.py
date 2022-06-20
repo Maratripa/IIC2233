@@ -1,5 +1,3 @@
-import sys
-
 from os import path
 
 from PyQt5.QtCore import pyqtSignal
@@ -75,10 +73,3 @@ class VentanaInicio(QWidget):
     def error_usuario(self, error: str):
         self.input_usuario.setText("")
         self.input_usuario.setPlaceholderText(error)
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    ventana = VentanaInicio()
-    ventana.mostrar()
-    sys.exit(app.exec_())

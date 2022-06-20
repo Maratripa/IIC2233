@@ -1,5 +1,3 @@
-import sys
-
 from os import path
 
 from PyQt5.QtCore import pyqtSignal
