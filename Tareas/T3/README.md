@@ -20,11 +20,11 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 ##### ✅ Protocolo <Se utiliza protocolo TCP/IP para la conexión servidor-cliente\>
 ##### ✅ Correcto uso de sockets <Se crean los sockets de manera correcta y se utilizan threads para trabajar concurrentemente\>
 ##### ✅ Conexión <La conexión se mantiene estable a lo largo de todo el juego\>
-##### ❌✅🟠 Manejo de clientes <Se pueden conectar múltiples clientes, por lo menos más de la cantidad máxima de jugadores\>
+##### ✅ Manejo de clientes <Se pueden conectar múltiples clientes, por lo menos más de la cantidad máxima de jugadores\>
 #### Arquitectura Cliente - Servidor: 31 pts (25%)
 ##### ✅ Roles <El cliente está separado del servidor y cada las tareas se reparten acorde al enunciado\>
 ##### ✅ Consistencia <Todos los clientes se actualizan como se espera y se utiliza un lock para el envío de información\>
-##### ❌✅🟠 Logs <explicacion\>
+##### ✅ Logs <Se implementan los logs requeridos por enunciado\>
 #### Manejo de Bytes: 26 pts (21%)
 ##### ✅ Codificación <El mensaje se codifica según el enunciado, utilizando big endian y little endian correspondientemente\>
 ##### ✅ Decodificación <El mensaje se decodifica según el enunciado, obteniendo cada uno de los parametros con su respectivo byteorder\>
