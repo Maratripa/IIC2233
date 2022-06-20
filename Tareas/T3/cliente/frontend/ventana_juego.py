@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QWidget, QApplication, QLabel, QPushButton,
                              QVBoxLayout, QHBoxLayout, QFrame)
 from PyQt5.QtGui import QPixmap
 
-from utils import data_json, posicion_ficha
+from utils import data_json, posicion_ficha, posicion_estrella
 
 
 class VentanaJuego(QWidget):
@@ -25,6 +25,8 @@ class VentanaJuego(QWidget):
         ruta_sprites = path.join(*data_json("RUTA_SPRITES"))
         ruta_fichas_simples = path.join(ruta_sprites, "Fichas", "Simples")
         ruta_fichas_dobles = path.join(ruta_sprites, "Fichas", "Dobles")
+
+        self.tamano_estrella = data_json("TAMANO_ESTRELLA")
 
         self.pixmaps = {
             "tablero":  QPixmap(path.join(ruta_sprites, "Juego", "tablero.png")),
@@ -47,6 +49,8 @@ class VentanaJuego(QWidget):
         self.fichas = {}
 
         self.tarjetas_usuarios = {}
+
+        self.estrellas = {}
 
     def init_gui(self, usuarios: list):
         self.tablero = QLabel(self)
@@ -139,6 +143,13 @@ class VentanaJuego(QWidget):
 
             self.fichas[user['color']] = label_ficha
             self.fichas[f"{user['color']}_segunda"] = label_segunda_ficha
+
+            self.estrellas[user['color']] = QLabel(self)
+            self.estrellas[user['color']].setPixmap(self.pixmaps["estrella"])
+            self.estrellas[user['color']].setFixedSize(self.tamano_estrella, self.tamano_estrella)
+            self.estrellas[user['color']].setScaledContents(True)
+            self.estrellas[user['color']].move(
+                *posicion_estrella(*data_json(f"POS_ESTRELLA_{user['color'].upper()}")))
 
         return vl
 
