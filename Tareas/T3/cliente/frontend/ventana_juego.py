@@ -46,7 +46,7 @@ class VentanaJuego(QWidget):
 
         self.fichas = {}
 
-        self.tarjetas_usuarios = []
+        self.tarjetas_usuarios = {}
 
     def init_gui(self, usuarios: list):
         self.tablero = QLabel(self)
@@ -128,7 +128,7 @@ class VentanaJuego(QWidget):
             tarjeta = TarjetaUsuario(self, label_usuario, icono, label_turno,
                                      label_en_base, label_en_color, label_en_victoria)
 
-            self.tarjetas_usuarios.append(tarjeta)
+            self.tarjetas_usuarios[user['color']] = tarjeta
             vl.addWidget(tarjeta.layout())
 
             label_ficha = QLabel(self)
@@ -161,6 +161,9 @@ class VentanaJuego(QWidget):
             else:
                 self.fichas[f"{key}_segunda"].move(*pos_ficha)
                 self.fichas[key].move(*pos_ficha)
+        
+        for key in info["data"]:
+            self.tarjetas_usuarios[key].actualizar_tarjeta(info["data"][key])
 
     def tirar_dado(self):
         self.senal_tirar_dado.emit({"comando": "tirar_dado"})
@@ -211,3 +214,8 @@ class TarjetaUsuario:
         frame.setObjectName("tarjeta-usuario-juego")
 
         return frame
+    
+    def actualizar_tarjeta(self, data: dict):
+        self.label_fichas_base.setText(f"Fichas en base: {data['en_base']}")
+        self.label_fichas_color.setText(f"Fichas en color: {data['en_color']}")
+        self.label_fichas_victoria.setText(f"Fichas en victoria: {data['en_victoria']}")

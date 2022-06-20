@@ -94,6 +94,7 @@ class Logica:
             "en_turno": True,
             "nombre_en_turno": self.usuarios[0].data["usuario"],
             "num_dado": '?',
+            "data": {user.data['color']: user.data for user in self.usuarios},
             "posiciones": posiciones
         }
         self.enviar_mensaje(respuesta, self.usuarios[0].socket)
@@ -120,6 +121,7 @@ class Logica:
             "en_turno": True,
             "nombre_en_turno": jugador_nuevo.data["usuario"],
             "num_dado": lanzamiento,
+            "data": {user.data['color']: user.data for user in self.usuarios},
             "posiciones": {user.data['color']: user.pos for user in self.usuarios},
             "segunda": {user.data['color']: user.segunda for user in self.usuarios}
         }
@@ -185,7 +187,10 @@ class Usuario:
         self.id = id_cliente
         self.data = {
             "usuario": usuario,
-            "color": color
+            "color": color,
+            "en_base": 2,
+            "en_color": 0,
+            "en_victoria": 0
         }
 
         self.avanzados = 0
@@ -228,6 +233,33 @@ class Usuario:
                 elif self.dir == 3:
                     self.pos[0] -= 1
                 self.avanzados += 1
+        
+        if not self.segunda and self.avanzados == 0:
+            self.data["en_base"] = 2
+        elif not self.segunda:
+            self.data["en_base"] = 1
+        elif self.segunda and self.avanzados != 0:
+            self.data["en_base"] = 0
+        
+        if not self.segunda and self.avanzados <= 19:
+            self.data["en_color"] = 0
+        elif not self.segunda and 19 < self.avanzados < 22:
+            self.data["en_color"] = 1
+        elif not self.segunda and self.avanzados == 22:
+            self.data["en_color"] = 0
+        elif self.segunda and self.avanzados <= 19:
+            self.data["en_color"] = 0
+        elif self.segunda and 19 < self.avanzados < 22:
+            self.data["en_color"] = 1
+        
+        if not self.segunda and self.avanzados < 22:
+            self.data["en_victoria"] = 0
+        elif not self.segunda and self.avanzados == 22:
+            self.data["en_victoria"] = 1
+        elif self.segunda and self.avanzados < 22:
+            self.data["en_victoria"] = 1
+        elif self.segunda and self.avanzados == 22:
+            self.data["en_victoria"] = 2
 
     def cambiar_direccion(self):
         if self.avanzados % 5 == 0 and self.avanzados < 19:
