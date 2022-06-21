@@ -91,12 +91,14 @@ class Interfaz(QObject):
     def mostrar_popup(self, mensaje: str):
         self.popup = PopUp(mensaje)
         self.popup.senal_cerrar.connect(self.cerrar)
-        print("mostrar popup")
         self.popup.show()
     
     def cerrar(self):
         self.parent.socket_cliente.close()
         self.ventana_inicio.close()
+        self.ventana_espera.close()
+        self.ventana_juego.close()
+        self.ventana_final.close()
 class PopUp(QWidget):
 
     senal_cerrar = pyqtSignal()
