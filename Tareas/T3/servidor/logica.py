@@ -222,6 +222,9 @@ class Logica:
                     if user != self.usuarios[self.turno % len(self.usuarios)]:
                         self.enviar_mensaje(mensaje, user.socket)
                 
+                if len(self.usuarios) == 1:
+                    self.terminar_juego(self.usuarios[0])
+                
             return True
         except TypeError:
             return False
