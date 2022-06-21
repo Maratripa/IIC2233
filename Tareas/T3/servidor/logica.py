@@ -283,6 +283,31 @@ class Usuario:
                 if self.avanzados != 0:
                     self.cambiar_direccion()
         
+        elif self.avanzados + numero > 22:
+            pos_objetivo = 22 - (self.avanzados + numero - 22)
+            if pos_objetivo < self.avanzados:
+                while self.avanzados != pos_objetivo:
+                    if self.dir == 0:
+                        self.pos[1] -= 1
+                    elif self.dir == 1:
+                        self.pos[0] -= 1
+                    elif self.dir == 2:
+                        self.pos[1] += 1
+                    elif self.dir == 3:
+                        self.pos[0] += 1
+                    self.avanzados -= 1
+            elif pos_objetivo > self.avanzados:
+                while self.avanzados != pos_objetivo:
+                    if self.dir == 0:
+                        self.pos[1] += 1
+                    elif self.dir == 1:
+                        self.pos[0] += 1
+                    elif self.dir == 2:
+                        self.pos[1] -= 1
+                    elif self.dir == 3:
+                        self.pos[0] -= 1
+                    self.avanzados += 1
+        
         if not self.segunda and self.avanzados == 0:
             self.data["en_base"] = 2
         elif not self.segunda:
