@@ -15,15 +15,6 @@ Si en la recta no se consigue un número exacto para llegar a la meta, la ficha 
 
 ## Cosas implementadas y no implementadas :white_check_mark: :x:
 
-Explicación: mantén el emoji correspondiente, de manera honesta, para cada item. Si quieres, también puedes agregarlos a los títulos:
-- ❌ si **NO** completaste lo pedido
-- ✅ si completaste **correctamente** lo pedido
-- 🟠 si el item está **incompleto** o tiene algunos errores
-
-**⚠️⚠️NO BASTA CON SOLO PONER EL COLOR DE LO IMPLEMENTADO**,
-SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
-⚠️⚠️
-
 #### Networking: 23 pts (18%)
 ##### ✅ Protocolo <Se utiliza protocolo TCP/IP para la conexión servidor-cliente\>
 ##### ✅ Correcto uso de sockets <Se crean los sockets de manera correcta y se utilizan threads para trabajar concurrentemente\>
@@ -110,14 +101,12 @@ Por otro lado, los módulos que fueron creados para el servidor fueron los sigui
 ## Supuestos y consideraciones adicionales :thinking:
 Los supuestos que realicé durante la tarea son los siguientes:
 
-1. <Descripción/consideración 1 y justificación del por qué es válido/a> 
-2. <Descripción/consideración 2 y justificación del por qué es válido/a>
-3. ...
+1. No implementé los pixmap de las fichas dobles, ya que esta información se encuentra en el resumen por jugador, al indicar cuántas fichas hay en la base.
 
 ## Referencias de código externo :book:
 
 Para realizar mi tarea saqué código de:
-1. 
+1. https://docs.python.org/3/library/socket.html: Dudas generales de funcionamiento de sockets.
 
 ## Descuentos
 La guía de descuentos se encuentra [link](https://github.com/IIC2233/syllabus/blob/main/Tareas/Descuentos.md).
