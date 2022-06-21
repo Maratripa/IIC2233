@@ -1,11 +1,19 @@
 # Tarea 3: DCCasillas :school_satchel:
 ## Consideraciones generales :octocat:
 
-<Descripción de lo que hace y que **_no_** hace la tarea que entregaron junto
-con detalles de último minuto y consideraciones como por ejemplo cambiar algo
-en cierta línea del código o comentar una función>
+DCCasillas es un juego multijugador, donde el objetivo de cada jugador es llevar sus dos fichas a la casilla de victoria. Cada jugador debe ingresar a la sala colocando un nombre de usuario válido, para luego pasar a la sala de espera, junto con los demás jugadores. Cuando se cumpla el requisito mínimo de jugadores, el admin puede iniciar la partida, en otro caso, la partida inicia automáticamente al alcanzar la cantidad máxima de jugadores.
 
-### Cosas implementadas y no implementadas :white_check_mark: :x:
+Dentro del juego, los jugadores se turnan para lanzar el dado según orden de llegada a la sala de espera. Cuando presionan el boton para lanzar el dado, su ficha se moverá por las casillas blancas hasta llegar a la recta de color para llegar a la casilla de victoria.
+
+Una vez el jugador tenga su primera ficha en la casilla de victoria, el jugador podrá empezar a mover su segunda ficha hacia la victoria.
+
+Una vez un jugador logra llevar sus dos fichas a la meta, el jugador será el ganador y la partida terminará, pudiendo volver al inicio para comenzar otra partida.
+
+Dentro del juego, si una ficha cae sobre otra, la que estaba previamente en la casilla volverá al inicio de su color, a esta acción se le llama "comer" una ficha.
+
+Si en la recta no se consigue un número exacto para llegar a la meta, la ficha no podrá llegar. En el caso que lance un número menos, la ficha se acercará, y en caso de que lazce un número mayor, la ficha rebotará en la meta, y se devolverá.
+
+## Cosas implementadas y no implementadas :white_check_mark: :x:
 
 Explicación: mantén el emoji correspondiente, de manera honesta, para cada item. Si quieres, también puedes agregarlos a los títulos:
 - ❌ si **NO** completaste lo pedido
@@ -45,7 +53,7 @@ SINO QUE SE DEBERÁ EXPLICAR QUÉ SE REALIZO DETALLADAMENTE EN CADA ITEM.
 #### Bonus: 5 décimas máximo
 ##### ❌ Cheatcode <explicacion\>
 ##### ❌ Turnos con tiempo <explicacion\>
-##### ❌ Rebote <explicacion\>
+##### ✅ Rebote <El jugador rebota si se pasa de la cantidad de casillas para llegar a la casilla de victoria\>
 
 ## Ejecución servidor :computer:
 El módulo principal de la tarea a ejecutar es  ```servidor/main.py``` desde el directorio ```servidor/```. Además se debe crear los siguientes archivos y directorios adicionales:
@@ -106,12 +114,10 @@ Los supuestos que realicé durante la tarea son los siguientes:
 2. <Descripción/consideración 2 y justificación del por qué es válido/a>
 3. ...
 
-PD: <una última consideración (de ser necesaria) o comentario hecho anteriormente que se quiera **recalcar**>
-
 ## Referencias de código externo :book:
 
 Para realizar mi tarea saqué código de:
-1. \<link de código>: este hace \<lo que hace> y está implementado en el archivo <nombre.py> en las líneas <número de líneas> y hace <explicación breve de que hace>
+1. 
 
 ## Descuentos
 La guía de descuentos se encuentra [link](https://github.com/IIC2233/syllabus/blob/main/Tareas/Descuentos.md).
