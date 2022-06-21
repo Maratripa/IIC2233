@@ -203,10 +203,25 @@ class Logica:
             color = self.usuarios[idx].data['color']
             self.colores.insert(0, color)
             self.usuarios.pop(idx).socket.close()
-            for user in self.usuarios and not self.partida_en_curso:
-                self.enviar_mensaje({"comando": "actualizar_lista_usuarios",
-                                     "usuarios": [user.data for user in self.usuarios]},
-                                    user.socket)
+            if not self.partida_en_curso:
+                if idx == 0:
+                    self.enviar_mensaje({"comando": "soy_admin"}, self.usuarios[0].socket)
+                for user in self.usuarios:
+                    self.enviar_mensaje({"comando": "actualizar_lista_usuarios",
+                                        "usuarios": [user.data for user in self.usuarios]},
+                                        user.socket)
+            elif self.usuarios:
+                mensaje = {
+                    "comando": "actualizar_lista_jugadores",
+                    "color_eliminado": color,
+                    "en_turno": True
+                }
+                self.enviar_mensaje(mensaje, self.usuarios[self.turno % len(self.usuarios)].socket)
+                mensaje["en_turno"] = False
+                for user in self.usuarios:
+                    if user != self.usuarios[self.turno % len(self.usuarios)]:
+                        self.enviar_mensaje(mensaje, user.socket)
+                
             return True
         except TypeError:
             return False

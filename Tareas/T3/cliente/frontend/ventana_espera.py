@@ -124,6 +124,9 @@ class VentanaEspera(QWidget):
 
         self.usuarios = usuarios
         self.repaint()
+    
+    def hacer_admin(self):
+        self.admin = True
 
     def iniciar_juego(self):
         mensaje = {

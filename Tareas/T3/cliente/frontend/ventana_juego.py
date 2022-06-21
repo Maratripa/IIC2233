@@ -116,7 +116,6 @@ class VentanaJuego(QWidget):
         self.setLayout(hl2)
 
     def cargar_usuarios(self, usuarios: list):
-
         for key in self.fichas.keys():
             self.fichas[key].hide()
             self.fichas[key].setParent(None)
@@ -200,6 +199,23 @@ class VentanaJuego(QWidget):
         
         for key in info["data"]:
             self.tarjetas_usuarios[key].actualizar_tarjeta(info["data"][key])
+    
+    def actualizar_jugadores(self, info: dict):
+        if info["en_turno"]:
+            self.boton_dado.setEnabled(True)
+        else:
+            self.boton_dado.setEnabled(False)
+        
+        self.fichas[info['color_eliminado']].hide()
+        self.fichas[info['color_eliminado']].setParent(None)
+        self.fichas[f"{info['color_eliminado']}_segunda"].hide()
+        self.fichas[f"{info['color_eliminado']}_segunda"].setParent(None)
+        self.estrellas[info['color_eliminado']].hide()
+        self.estrellas[info['color_eliminado']].setParent(None)
+        self.tarjetas_usuarios[info['color_eliminado']].hide()
+        self.tarjetas_usuarios[info['color_eliminado']].setParent(None)
+
+        self.repaint()
 
     def tirar_dado(self):
         self.senal_tirar_dado.emit({"comando": "tirar_dado"})

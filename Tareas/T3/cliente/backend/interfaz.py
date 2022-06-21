@@ -11,12 +11,16 @@ class Interfaz(QObject):
     senal_cargar_pantalla_espera = pyqtSignal(list, bool)
     #                                           (users)
     senal_actualizar_lista_usuarios = pyqtSignal(list)
+    #
+    senal_hacer_admin = pyqtSignal()
     #                                 (users)
     senal_iniciar_partida = pyqtSignal(list)
     #                                  (mensaje)
     senal_actualizar_juego = pyqtSignal(dict)
     #                                   (ganador, users)
     senal_cargar_pantalla_final = pyqtSignal(str, list)
+    #                                      (info)
+    senal_actualizar_jugadores = pyqtSignal(dict)
 
     def __init__(self, parent):
         super().__init__()
@@ -36,8 +40,10 @@ class Interfaz(QObject):
 
         self.senal_cargar_pantalla_espera.connect(self.ventana_espera.cargar_usuarios)
         self.senal_actualizar_lista_usuarios.connect(self.ventana_espera.cargar_usuarios)
+        self.senal_hacer_admin.connect(self.ventana_espera.hacer_admin)
         self.senal_iniciar_partida.connect(self.ventana_juego.cargar_usuarios)
         self.senal_actualizar_juego.connect(self.ventana_juego.actualizar_juego)
+        self.senal_actualizar_jugadores.connect(self.ventana_juego.actualizar_jugadores)
         self.senal_cargar_pantalla_final.connect(self.ventana_final.cargar_usuarios)
 
     def mostrar_ventana_inicio(self):
@@ -58,6 +64,8 @@ class Interfaz(QObject):
                 self.ventana_inicio.error_usuario(mensaje["error"])
         elif comando == "actualizar_lista_usuarios":
             self.senal_actualizar_lista_usuarios.emit(mensaje["usuarios"])
+        elif comando == "soy_admin":
+            self.senal_hacer_admin.emit()
         elif comando == "repuesta_iniciar_partida":
             if mensaje["estado"] == "aceptado":
                 self.ventana_espera.esconder()
@@ -69,6 +77,8 @@ class Interfaz(QObject):
         elif comando == "terminar_juego":
             self.ventana_juego.esconder()
             self.senal_cargar_pantalla_final.emit(mensaje['ganador'], mensaje['usuarios'])
+        elif comando == "actualizar_lista_jugadores":
+            self.senal_actualizar_jugadores.emit(mensaje)
     
     def volver_inicio(self):
         self.ventana_final.esconder()
