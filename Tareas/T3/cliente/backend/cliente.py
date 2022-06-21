@@ -43,7 +43,7 @@ class Cliente:
                 # self.log(mensaje.__str__())
                 self.interfaz.procesar_mensaje(mensaje)
             except ConnectionError as e:
-                self.log(e.__str__())
+                self.interfaz.mostrar_popup("Servidor desconectado")
                 return
 
     def enviar_mensaje(self, mensaje: dict):

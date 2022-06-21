@@ -1,4 +1,5 @@
 from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5.QtWidgets import (QWidget, QLabel)
 
 from frontend.ventana_inicio import VentanaInicio
 from frontend.ventana_espera import VentanaEspera
@@ -86,3 +87,28 @@ class Interfaz(QObject):
 
         mensaje = {"comando": "volver_inicio"}
         self.parent.enviar_mensaje(mensaje)
+    
+    def mostrar_popup(self, mensaje: str):
+        self.popup = PopUp(mensaje)
+        self.popup.senal_cerrar.connect(self.cerrar)
+        print("mostrar popup")
+        self.popup.show()
+    
+    def cerrar(self):
+        self.parent.socket_cliente.close()
+        self.ventana_inicio.close()
+class PopUp(QWidget):
+
+    senal_cerrar = pyqtSignal()
+
+    def __init__(self, mensaje):
+        super().__init__()
+
+        mensaje = QLabel(mensaje, self)
+
+        self.setWindowTitle("Error")
+        self.setGeometry(400, 200, 200, 100)
+    
+    def closeEvent(self, event):
+        self.senal_cerrar.emit()
+        event.accept()
