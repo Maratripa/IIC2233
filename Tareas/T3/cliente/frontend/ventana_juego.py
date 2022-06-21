@@ -24,7 +24,6 @@ class VentanaJuego(QWidget):
 
         ruta_sprites = path.join(*data_json("RUTA_SPRITES"))
         ruta_fichas_simples = path.join(ruta_sprites, "Fichas", "Simples")
-        ruta_fichas_dobles = path.join(ruta_sprites, "Fichas", "Dobles")
 
         self.tamano_estrella = data_json("TAMANO_ESTRELLA")
 
@@ -39,11 +38,7 @@ class VentanaJuego(QWidget):
             "rojo":             QPixmap(path.join(ruta_fichas_simples, "ficha-roja.png")),
             "amarillo":         QPixmap(path.join(ruta_fichas_simples, "ficha-amarilla.png")),
             "verde":            QPixmap(path.join(ruta_fichas_simples, "ficha-verde.png")),
-            "azul":             QPixmap(path.join(ruta_fichas_simples, "ficha-azul.png")),
-            "rojo_doble":       QPixmap(path.join(ruta_fichas_dobles, "fichas-rojas.png")),
-            "amarillo_doble":   QPixmap(path.join(ruta_fichas_dobles, "fichas-amarillas.png")),
-            "verde_doble":      QPixmap(path.join(ruta_fichas_dobles, "fichas-verdes.png")),
-            "azul_doble":       QPixmap(path.join(ruta_fichas_dobles, "fichas-azules.png"))
+            "azul":             QPixmap(path.join(ruta_fichas_simples, "ficha-azul.png"))
         }
 
         self.fichas = {}
